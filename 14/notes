@@ -1,0 +1,10 @@
+
+generics don't exist at runtime- only the compiler knows about it
+
+write p instancof Node<?> -- just treat it as a node sort of
+
+can't check if t is the right one
+
+need to distinguish positions out of different lists
+- different color list- all nodes in the list are made with the
+same color

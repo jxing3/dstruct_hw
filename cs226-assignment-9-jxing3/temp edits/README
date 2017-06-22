@@ -1,0 +1,257 @@
+cracklib.txt = ~53k (words=lines)
+dictionary.txt = ~235k (words=lines)
+war.txt = ~65k lines (568k words with average of 8.7 words/line)
+
+BinarySearchTreeMap:
+--------------------------
+Sorted:
+cracklib5k.txt:		0.790s (7.5k+ gets a stack overflow)
+   1 33.88% 33.88% 10351665 304112 BinarySearchTreeMap.insert
+   2 13.64% 47.52%    4995 304079 BinarySearchTreeMap.find
+   3 13.35% 60.87%    4995 304157 BinarySearchTreeMap.find
+   7  1.33% 91.46%     442 304163 BinarySearchTreeMap.find
+  80  0.02% 96.99%    9102 304262 BinarySearchTreeMap.iteratorHelper
+  98  0.02% 97.40%    4551 304110 BinarySearchTreeMap.insert
+ 121  0.02% 97.85%    4553 304096 BinarySearchTreeMap.insert
+ 122  0.02% 97.86%    4552 304106 BinarySearchTreeMap.insert
+ 133  0.02% 98.04%    4995 304080 BinarySearchTreeMap.has
+ 134  0.02% 98.06%    4995 304160 BinarySearchTreeMap.get
+ 152  0.01% 98.31%    4553 304097 BinarySearchTreeMap.insert
+ 153  0.01% 98.33%    4995 304158 BinarySearchTreeMap.findForSure
+ 182  0.01% 98.67%    4995 304081 BinarySearchTreeMap.has
+ 202  0.01% 98.88%    4551 304109 BinarySearchTreeMap$Node.<init>
+
+dictionary1k.txt:	0.146s
+   1 25.53% 25.53%  390271 304112 BinarySearchTreeMap.insert
+   2  9.77% 35.30%     998 304079 BinarySearchTreeMap.find
+   3  9.51% 44.81%     998 304183 BinarySearchTreeMap.find
+  72  0.14% 84.46%    1990 304158 BinarySearchTreeMap.iteratorHelper
+  99  0.10% 87.54%     998 304096 BinarySearchTreeMap.insert
+ 127  0.08% 89.97%     998 304097 BinarySearchTreeMap.insert
+ 128  0.08% 90.05%     997 304106 BinarySearchTreeMap.insert
+ 129  0.08% 90.13%     995 304110 BinarySearchTreeMap.insert
+ 132  0.08% 90.37%     998 304186 BinarySearchTreeMap.get
+ 170  0.06% 92.86%     998 304184 BinarySearchTreeMap.findForSure
+ 228  0.04% 95.36%     998 304185 BinarySearchTreeMap.get
+ 407  0.02% 99.46%     998 304080 BinarySearchTreeMap.has
+ 408  0.02% 99.48%     998 304081 BinarySearchTreeMap.has
+ 412  0.02% 99.56%     995 304109 BinarySearchTreeMap$Node.<init>
+
+
+dictionary5k.txt:	0.715s (7.5k+ gets a stack overflow)
+   1 35.47% 35.47% 9264349 304112 BinarySearchTreeMap.insert
+   2 13.07% 48.54%    4998 304079 BinarySearchTreeMap.find
+   3 12.93% 61.47%    4998 304230 BinarySearchTreeMap.find
+  64  0.04% 95.95%    9990 304205 BinarySearchTreeMap.iteratorHelper
+ 117  0.02% 97.43%    4998 304096 BinarySearchTreeMap.insert
+ 122  0.02% 97.54%    4995 304110 BinarySearchTreeMap.insert
+ 141  0.02% 97.88%    4998 304231 BinarySearchTreeMap.findForSure
+ 160  0.01% 98.18%    4998 304080 BinarySearchTreeMap.has
+ 161  0.01% 98.19%    4998 304081 BinarySearchTreeMap.has
+ 162  0.01% 98.21%    4998 304098 BinarySearchTreeMap.insert
+ 163  0.01% 98.22%    4998 304233 BinarySearchTreeMap.get
+ 183  0.01% 98.50%    4998 304232 BinarySearchTreeMap.get
+ 207  0.01% 98.80%    4998 304097 BinarySearchTreeMap.insert
+
+For both the dictionary and cracklib files, they are in ascending order, the only difference is that the full cracklib is about a fifth the size of dictionary so when we use the head command to shorten the files, the two from these two files should perform essentially the same. This means that for the Binary Search Tree which adds items based on their correct position, each item is going to be placed to the right of the previous node. This explains why the max size is the same for both files (aprox 5k). After a certain number of recursive calls, the JVM crashes with a stack overflow which indicates that there were too many recursions. The time spent in insert for these makes sense since every insertion is going to be at the end of a list of increasingly long linked list. It also makes sense the the time spent in find is high, but less than that of insert since find usually going to complete somewhere in the middle of what is essentially a linked list.
+We observe the time it takes to complete the 5k and 1k files are roughly proportion to O(n). 
+
+
+Sorted:
+war500.txt:			0.128s
+   8  1.98% 22.92%    4102 304158 BinarySearchTreeMap.find
+  15  1.69% 35.47%    4102 304122 BinarySearchTreeMap.find
+  16  1.43% 36.90%   13305 304155 BinarySearchTreeMap.insert
+  25  1.04% 47.24%    2788 304164 BinarySearchTreeMap.find
+  46  0.46% 61.44%    4102 304159 BinarySearchTreeMap.findForSure
+  58  0.36% 65.99%    4102 304160 BinarySearchTreeMap.get
+  59  0.36% 66.35%    4102 304161 BinarySearchTreeMap.get
+  65  0.33% 68.40%    4102 304123 BinarySearchTreeMap.has
+  71  0.29% 70.22%    4102 304124 BinarySearchTreeMap.has
+  82  0.26% 73.21%    1314 304139 BinarySearchTreeMap.insert
+  83  0.26% 73.47%    2788 304165 BinarySearchTreeMap.findForSure
+  84  0.26% 73.73%    2622 304212 BinarySearchTreeMap.iteratorHelper
+ 101  0.20% 77.41%    2788 304166 BinarySearchTreeMap.put
+ 102  0.20% 77.60%    2788 304167 BinarySearchTreeMap.put
+ 138  0.13% 83.26%    1314 304140 BinarySearchTreeMap.insert
+ 181  0.10% 88.00%    1314 304141 BinarySearchTreeMap.insert
+ 182  0.10% 88.10%    1313 304149 BinarySearchTreeMap.insert
+ 431  0.03% 99.48%    1311 304153 BinarySearchTreeMap.insert
+
+
+war30k.txt:			0.564s
+   8  2.70% 31.20%  251623 304122 BinarySearchTreeMap.find
+   9  2.58% 33.78%  251623 304158 BinarySearchTreeMap.find
+  10  2.48% 36.26%  238302 304164 BinarySearchTreeMap.find
+  44  0.43% 76.13%  200062 304155 BinarySearchTreeMap.insert
+  50  0.37% 78.44%  251623 304160 BinarySearchTreeMap.get
+  52  0.37% 79.17%  251623 304161 BinarySearchTreeMap.get
+  53  0.35% 79.52%  251623 304124 BinarySearchTreeMap.has
+  54  0.35% 79.87%  238302 304166 BinarySearchTreeMap.put
+  55  0.34% 80.21%  238302 304165 BinarySearchTreeMap.findForSure
+  56  0.34% 80.55%  238302 304167 BinarySearchTreeMap.put
+  57  0.34% 80.89%  251623 304123 BinarySearchTreeMap.has
+  58  0.33% 81.22%  251623 304159 BinarySearchTreeMap.findForSure
+ 170  0.05% 94.14%   26636 304259 BinarySearchTreeMap.iteratorHelper
+ 211  0.04% 95.87%   13320 304149 BinarySearchTreeMap.insert
+ 237  0.03% 96.79%   13321 304139 BinarySearchTreeMap.insert
+ 256  0.03% 97.36%   13318 304153 BinarySearchTreeMap.insert
+ 283  0.02% 98.01%   13321 304141 BinarySearchTreeMap.insert
+ 290  0.02% 98.16%   13321 304140 BinarySearchTreeMap.insert
+
+war.txt:			0.890s
+   8  2.73% 31.29%  554288 304157 BinarySearchTreeMap.find
+   9  2.71% 34.00%  554288 304121 BinarySearchTreeMap.find
+  10  2.56% 36.55%  534946 304163 BinarySearchTreeMap.find
+  49  0.38% 78.94%  554288 304123 BinarySearchTreeMap.has
+  50  0.38% 79.31%  554288 304122 BinarySearchTreeMap.has
+  52  0.37% 80.06%  554288 304159 BinarySearchTreeMap.get
+  53  0.37% 80.43%  554288 304160 BinarySearchTreeMap.get
+  54  0.37% 80.79%  554288 304158 BinarySearchTreeMap.findForSure
+  55  0.36% 81.15%  534946 304166 BinarySearchTreeMap.put
+  56  0.35% 81.50%  534946 304164 BinarySearchTreeMap.findForSure
+  57  0.34% 81.84%  534946 304165 BinarySearchTreeMap.put
+  62  0.29% 83.34%  303456 304154 BinarySearchTreeMap.insert
+ 229  0.03% 97.17%   38678 304258 BinarySearchTreeMap.iteratorHelper
+ 238  0.03% 97.43%   19339 304152 BinarySearchTreeMap.insert
+ 239  0.02% 97.45%   19341 304148 BinarySearchTreeMap.insert
+ 260  0.02% 97.94%   19342 304138 BinarySearchTreeMap.insert
+ 332  0.01% 99.20%   19342 304139 BinarySearchTreeMap.insert
+ 333  0.01% 99.21%   19342 304140 BinarySearchTreeMap.insert
+
+Unlike the sorted files, war.txt is random with about 570k words. The randomness is what allows this program to execute without any stack overflows (from recursion). Additionally since there were about 5 times as many words in war.txt as in either of the sorted data sets, 500 lines of war.txt corresponds to between 2.5k and 5k lines of the sorted data. This allows us to make a basic comparison between the data sets. Whith this in mind we see that the BST is much much much faster with random data sets than with sorted ones. So instead of the data points being inserted as a linked list, the performance is closer to that of a binary search O(log n) since data is being inserted in a theoretically random order, meaning that the tree is theoretically balanced or that all leafs are at roughly the same height or distance from the root. In reality this is not always the case but it is significantly better than using the BST with a sorted data set. This is all reflected in the time spent in the methods. Where in the sorted data sets, most of the time was spent in inserting and finding, here the majority of the time is spent in finding and not inserting because we there are many more repeats in the file and get and put are called to add 1 to the value of the repeated strings. This time we observe the time increase for larger data sets to be roughly O(log n) proportional to the size of the data sets.(It's certainly not linear).
+
+
+
+AVLTreeMap:
+--------------------------
+Sorted:
+dictionary1k.txt:	0.141s
+
+
+dictionary5k.txt:	0.237s
+
+
+
+
+cracklib.txt:		0.524s
+   1  4.52%  4.52%  633667 304130 AvlTreeMap.insert
+   2  4.08%  8.61%  633667 304131 AvlTreeMap.balance
+   4  2.80% 14.37% 2829286 304122 AvlTreeMap.height
+  13  1.22% 29.83% 1267334 304132 AvlTreeMap.height
+  15  1.08% 32.07%   52811 304079 AvlTreeMap.find
+  17  1.03% 34.14%   52811 304182 AvlTreeMap.find
+  56  0.39% 59.06%   49128 304121 AvlTreeMap.insert
+  59  0.37% 60.19%   49130 304096 AvlTreeMap.insert
+  61  0.37% 60.93%   49129 304108 AvlTreeMap.insert
+  69  0.32% 63.67%   49130 304098 AvlTreeMap.balance
+  70  0.32% 63.99%   49052 304137 AvlTreeMap.rotateRight
+  73  0.30% 64.89%   49129 304110 AvlTreeMap.balance
+  77  0.29% 66.05%   98254 304284 AvlTreeMap.iteratorHelper
+  78  0.28% 66.33%   49128 304123 AvlTreeMap.balance
+ 111  0.21% 74.32%  196548 304097 AvlTreeMap.height
+ 121  0.19% 76.32%  196570 304109 AvlTreeMap.height
+ 136  0.17% 79.04%   49130 304099 AvlTreeMap.insert
+ 140  0.16% 79.70%  147237 304134 AvlTreeMap.height
+ 164  0.13% 83.05%   52811 304184 AvlTreeMap.get
+ 167  0.13% 83.45%   52811 304081 AvlTreeMap.has
+ 199  0.12% 87.45%   52811 304080 AvlTreeMap.has
+ 208  0.11% 88.49%   52811 304185 AvlTreeMap.get
+ 232  0.10% 91.10%   52811 304183 AvlTreeMap.findForSure
+ 246  0.10% 92.51%   98256 304124 AvlTreeMap.height
+ 257  0.09% 93.54%    9427 304271 AvlTreeMap.rotateLeft
+ 259  0.09% 93.72%   98258 304111 AvlTreeMap.height
+ 266  0.08% 94.32%   49130 304100 AvlTreeMap.insert
+ 272  0.07% 94.75%    3681 304188 AvlTreeMap.find
+ 287  0.06% 95.67%   49128 304120 AvlTreeMap$Node.<init>
+ 363  0.03% 99.28%   28281 304269 AvlTreeMap.height
+ 378  0.01% 99.51%    3681 304191 AvlTreeMap.put
+
+
+dictionary.txt:		1.175s
+
+
+
+
+
+Unsorted:
+war500.txt:			0.130s
+
+
+war30k.txt:			0.573s
+
+
+war.txt:			0.894s
+
+
+
+TreapMap:
+--------------------------
+Sorted:
+dictionary1k.txt:	0.138s
+
+
+dictionary5k.txt:	0.236s
+
+
+
+
+cracklib.txt:		0.519s
+   3  2.39%  8.42%  444789 304148 TreapMap.insert
+  11  1.58% 23.30%   52811 304195 TreapMap.find
+  22  0.97% 35.37%   52811 304106 TreapMap.find
+  36  0.63% 46.10%  444789 304149 TreapMap.checkPriority
+  67  0.32% 60.38%   98254 304296 TreapMap.iteratorHelper
+  74  0.30% 62.54%   49129 304138 TreapMap.insert
+  79  0.29% 64.01%   49130 304127 TreapMap.insert
+  80  0.29% 64.30%   49120 304143 TreapMap.insert
+  85  0.29% 65.74%   49130 304129 TreapMap.insert
+ 148  0.15% 79.31%   52811 304198 TreapMap.get
+ 178  0.14% 83.67%   52811 304196 TreapMap.getNode
+ 190  0.14% 85.30%   52811 304108 TreapMap.has
+ 194  0.13% 85.84%   52811 304107 TreapMap.has
+ 206  0.13% 87.40%   49130 304130 TreapMap.insert
+ 232  0.12% 90.58%   52811 304197 TreapMap.get
+ 308  0.06% 96.64%    3681 304201 TreapMap.find
+ 317  0.06% 97.15%   49129 304139 TreapMap.checkPriority
+ 323  0.05% 97.48%   49120 304142 TreapMap$Node.<init>
+ 336  0.05% 98.17%   49130 304128 TreapMap.checkPriority
+ 350  0.04% 98.84%   49120 304144 TreapMap.checkPriority
+ 356  0.04% 99.10%   49028 304150 TreapMap.rotateLeft
+ 374  0.01% 99.44%   14121 304282 TreapMap.rotateRight
+ 379  0.01% 99.50%    3681 304203 TreapMap.put
+
+
+dictionary.txt:		1.170s
+
+
+   3  2.78%  9.32% 2499878 304147 TreapMap.insert
+  10  1.70% 23.47%  234885 304270 TreapMap.find
+  21  1.01% 37.07%  234885 304105 TreapMap.find
+  32  0.68% 45.93% 2499878 304148 TreapMap.checkPriority
+  65  0.32% 62.30%  469764 304242 TreapMap.iteratorHelper
+  68  0.29% 63.17%  234884 304137 TreapMap.insert
+  74  0.28% 64.88%  234885 304128 TreapMap.insert
+  83  0.27% 67.38%  234870 304142 TreapMap.insert
+  88  0.27% 68.72%  234885 304126 TreapMap.insert
+ 162  0.14% 82.71%  234885 304271 TreapMap.getNode
+ 175  0.13% 84.44%  234885 304106 TreapMap.has
+ 197  0.13% 87.30%  234885 304107 TreapMap.has
+ 204  0.13% 88.20%  234885 304273 TreapMap.get
+ 216  0.12% 89.71%  234885 304272 TreapMap.get
+ 217  0.12% 89.83%  234885 304129 TreapMap.insert
+ 266  0.06% 94.97%  234884 304138 TreapMap.checkPriority
+ 310  0.06% 97.51%  234870 304141 TreapMap$Node.<init>
+ 311  0.06% 97.57%  234870 304143 TreapMap.checkPriority
+ 321  0.05% 98.11%  234765 304151 TreapMap.rotateLeft
+ 338  0.05% 99.01%  234885 304127 TreapMap.checkPriority
+
+
+Unsorted:
+war500.txt:			0.132s
+
+
+war30k.txt:			0.600s
+
+
+war.txt:			0.970s

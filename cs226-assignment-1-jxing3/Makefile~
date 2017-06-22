@@ -1,0 +1,2 @@
+zip:
+	tar zcvf cs226-assignment-1-jxing3.tar.gz sdbm.h sdbm_sanity.c sdbm.c test_stability.c test_consistency.c README

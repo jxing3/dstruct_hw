@@ -1,0 +1,24 @@
+# $Id: Makefile 529 2006-09-09 16:43:14Z phf $
+# A really simplistic Makefile...
+all:
+	javac -Xlint:all *.java
+doc:
+	javadoc -d html *.java
+style:
+	java -jar checkstyle-5.5-all.jar -c jhu_checks.xml Array.java
+	java -jar checkstyle-5.5-all.jar -c jhu_checks.xml SimpleArray.java
+	java -jar checkstyle-5.5-all.jar -c jhu_checks.xml Statable.java
+	java -jar checkstyle-5.5-all.jar -c jhu_checks.xml InvalidIndexException.java
+	java -jar checkstyle-5.5-all.jar -c jhu_checks.xml InvalidLengthException.java
+	java -jar checkstyle-5.5-all.jar -c jhu_checks.xml SortingAlgorithm.java
+	java -jar checkstyle-5.5-all.jar -c jhu_checks.xml NullSort.java
+	java -jar checkstyle-5.5-all.jar -c jhu_checks.xml SelectionSort.java
+	java -jar checkstyle-5.5-all.jar -c jhu_checks.xml Run.java
+test:
+	java -ea Run 1000 <sorted.data
+	java -ea Run 1000 <reverse.data
+	java -ea Run 1000 <random.data
+clean:
+	rm -rf html *.class sorting.tar.gz
+archive:
+	tar zcvf sorting.tar.gz Makefile Array.java SimpleArray.java Statable.java InvalidIndexException.java InvalidLengthException.java SortingAlgorithm.java NullSort.java SelectionSort.java Run.java *.data

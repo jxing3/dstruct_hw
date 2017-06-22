@@ -1,0 +1,29 @@
+Jesse Xing
+jxing3@jhu.edu
+
+Problem 1
+
+SparseGraph.java implements the graph interface using vertex nodes that 
+store their incoming edges and outgoing edges in an arralist. Edge nodes 
+stored the vertice it was coming from and the one it was connecting to.
+The program utilized a position method of indexing using vertex and edge
+positions that are given to the client. The program with this is that they
+need to be converted back to vertex and edge node objects for processing
+when they handed back to SparseGraph. In each case, an unchecked cast was
+unavoidable possibly due to the fact that neither vertex nor edge positions
+implements both variables (v and e) that are availiable to the inner node 
+objects. Test cases were written in TestGraph.java to ensure the implementation
+operated accordingly with the interface. Overall, I thought the interface 
+was pretty good. There could be use for a few more methods to check how many
+edges and vertices are in the graph and maybe a method to return all islands.
+There could also be a method for if the graph is completely empty.
+
+Problem 2
+
+Kevin.java is a tool that helps to play the Six Degrees of Kevin
+Bacon game. Everything was implemented according to the specifications provided. 
+A BFS search algorithm was used to label all positions with the one that
+came right before it (done on enqueue). After the search is complete, 
+the program prints out the path from the actor back to kevin using their
+labels. One unchecked cast warning was necessary to convert from the object
+label back to a type vertex position to get the first actor out.

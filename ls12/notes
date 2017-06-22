@@ -1,0 +1,31 @@
+divide by zero
+get rid of both operands
+
+not enough operands, pop the one back
+
+
+why we double array- every time we insert a value we have to copy 
+everything over again
+
+amortized doubling 
+
+o(n) insertions-pay this less and less over time plus o(1) insertions
+
+becomes rarer and rarer that you have to do a full copy
+
+"amortized o(1)"- specific opertation may be o(n), averaged over many,
+they are o(1) 
+
+amortized- can sometimes by O(1)
+
+memory allocation is very expensive
+
+make array look like a loop for queue
+
+have a front and a back that gets modded to find actual place
+
+only use mods for positive numbers
+
+always add length of the array to mod
+
+size field?

@@ -1,0 +1,22 @@
+Jesse Xing
+  jxing3@jhu.edu
+
+Problem 1
+
+TreeImplementation.java implements the tree interface using nodes that 
+store their children in an arralist. Test cases were written in TestTree.java
+to ensure the implementation operated accordingly with the interface. Overall,
+I thought the interface had some redundancies in it, especially with operations
+like hasParent and isRoot. The only valid node without a parent is the root,
+so it made no sense to have both operations. Also, It might have been useful to
+have different interators that runs through the tree pre order, in order,
+and post order.
+
+Problem 2
+
+DOS.java is a simple file system simulation. Everything was implemented
+according to the specifications provided. I utilized an entry class and 
+subclasses directory and file to keep track and distinguish between 
+entries. It was somewhat difficult to modularize the code to pass
+the cyclomatic complexity, but I was ultimately able to do it by breaking
+seperate operations into different pieces of code.

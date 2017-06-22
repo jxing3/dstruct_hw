@@ -1,0 +1,34 @@
+stacks - plates in a dish dispenser
+
+evaluating proflix? expression
+
+void f (int x, int y){
+
+int a ...
+int b ...
+
+g(a, 2bx)
+
+
+
+... n(...f());
+}
+
+
+static variables- give memory location once
+
+object variable- memory location on new
+
+local variable- memory location when called
+
+
+f(1,7) - x = 1 y= 7 a, b -- creates activation record
+
+g(a, 2ax)....(a "z" z z) ---creates activation record
+
+...h(..) = 
+
+stacks of h's activation record, g's activation record
+, and then f's activation record
+
+

@@ -1,0 +1,356 @@
+import java.util.ArrayList;
+import java.util.Iterator;
+
+public class SparseGraph<V, E> implements Graph<V, E> {
+    
+    private class VertexNode implements Vertex <V> {
+        V data;
+        ArrayList<EdgeNode> incoming;
+        ArrayList<EdgeNode> outgoing;
+        Graph<V, E> color;
+        Object label;
+
+        VertexNode(V v, Graph<V, E> c) {
+            this.incoming = new ArrayList<EdgeNode>();
+            this.outgoing = new ArrayList<EdgeNode>();
+            this.data = v;
+            this.color = c;
+        }
+
+        public V get() {
+            return this.data;
+        }
+        public void put(V v) {
+            this.data = v;
+        }
+    }
+
+    private class EdgeNode implements Edge <E> {
+
+        E data;
+        VertexNode from;
+        VertexNode to;
+        Graph<V, E> color;
+        Object label;
+
+        EdgeNode(E e, Graph<V, E> c) {
+            this.data = e;
+            this.color = c;
+        }
+
+        public E get() {
+            return this.data;
+        }
+        public void put(E e) {
+            this.data = e;
+        }
+
+    }
+    
+
+    private VertexNode convertV(Vertex<V> v) {
+        VertexNode v1;
+        if (v == null || !(v instanceof SparseGraph<?,?>.VertexNode)) {
+            throw new IllegalArgumentException("Position is not a vertex");
+        }
+        v1 = (VertexNode) v;
+        if (v1.color != this) {
+            throw new IllegalArgumentException("Position not from right graph");
+        }
+        return v1;
+    }
+
+
+    private EdgeNode convertE(Edge<E> e) {
+        EdgeNode e1;
+        if (e == null || !(e instanceof SparseGraph<?,?>.EdgeNode)) {
+            throw new IllegalArgumentException("Position is not an edge");
+        }
+        e1 = (EdgeNode) e;
+        if (e1.color != this) {
+            throw new IllegalArgumentException("Position not from right graph");
+        }
+        return e1;
+    }
+
+    private boolean duplicate(VertexNode v, EdgeNode e) {
+
+        for(EdgeNode e1: v.outgoing) {
+            if (e1.to.equals(e.to)){
+                return true;
+            }
+        }
+        return false;
+
+    }
+
+    ArrayList<VertexNode> allvertices; 
+
+    ArrayList<EdgeNode> alledges;
+
+    public SparseGraph() {
+
+        allvertices = new ArrayList<VertexNode>();
+        alledges = new ArrayList<EdgeNode>();
+
+    }
+
+    /**
+        Insert new vertex.
+        @param v Element to insert.
+        @return Vertex position created to hold element.
+    */
+    public Vertex<V> insert(V v) {
+
+        VertexNode v1 = new VertexNode(v, this);
+
+        allvertices.add(v1);
+
+        return v1;
+
+
+    }
+    /**
+        Insert new edge.
+        @param from Vertex position where edge starts.
+        @param to Vertex position where edge ends.
+        @param e Element to insert.
+        @return Edge position created to hold element.
+        @throws IllegalArgumentException If vertex positions
+            are invalid or if this insertion would create a
+            duplicate edge.
+    */
+    public Edge<E> insert(Vertex<V> from, Vertex<V> to, E e)
+        throws IllegalArgumentException {
+
+        EdgeNode e1 = new EdgeNode(e, this);
+       
+        VertexNode f1 =  convertV(from);
+        VertexNode t1 = convertV(to);
+
+        if (from.equals(to)) {
+            throw new IllegalArgumentException("self loop insertion");
+        }
+        
+        e1.from = f1;
+
+        e1.to = t1;
+
+        if (duplicate(f1, e1)) {
+            throw new IllegalArgumentException("duplicate edge insertion");
+        }
+        f1.outgoing.add(e1);
+        t1.incoming.add(e1);
+
+        alledges.add(e1);
+
+        return e1;
+
+    }
+    /**
+        Remove a vertex.
+        @param v Vertex position to remove.
+        @return Element from destroyed vertex position.
+        @throws IllegalArgumentException If vertex position
+            is invalid or if vertex still has incident edges.
+    */
+    public V remove(Vertex<V> v)
+        throws IllegalArgumentException {
+        VertexNode v1 = convertV(v);
+        if(!v1.incoming.isEmpty() || !v1.outgoing.isEmpty()) {
+            throw new IllegalArgumentException("Vertex node has incident edges");
+        }
+        V d = v1.data;
+        v1.color = null;
+        v1.data = null;
+        v1.incoming = null;
+        v1.outgoing = null;
+        v1.label = null;
+        allvertices.remove(v1);
+        return d;
+    }
+    /**
+        Remove an edge.
+        @param e Edge position to remove.
+        @return Element from destroyed edge position.
+        @throws IllegalArgumentException If edge position
+            is invalid.
+    */
+    public E remove(Edge<E> e)
+        throws IllegalArgumentException {
+
+        EdgeNode e1 = convertE(e);
+        E d = e1.data;
+        e1.color = null;
+        e1.data = null;
+        e1.to = null;
+        e1.from = null;
+        e1.label = null;
+        alledges.remove(e1);
+        return d;
+    }
+
+    /**
+        Vertices of graph.
+        @return Iterable that can be used to explore the
+          vertices of the graph; the remove() method of
+          the iterator should not affect the graph.
+    */
+    public Iterable<Vertex<V>> vertices() {
+
+        ArrayList<Vertex<V>> iter = new ArrayList<Vertex<V>>();
+        iter.addAll(allvertices);
+        return iter;
+    }
+    /**
+        Edges of graph.
+        @return Iterable that can be used to explore the
+          edges of the graph; the remove() method of the
+          iterator should not affect the graph.
+    */
+    public Iterable<Edge<E>> edges() {
+
+        ArrayList<Edge<E>> iter = new ArrayList<Edge<E>>();
+        iter.addAll(alledges);
+        return iter;
+    }
+
+    /**
+        Outgoing edges of vertex.
+        @param v Vertex position to explore.
+        @return Iterable that can be used to explore the
+          outgoing edges of the given vertex; the remove()
+          method of the iterator should not affect the graph.
+        @throws IllegalArgumentException If vertex position
+            is invalid.
+    */
+    public Iterable<Edge<E>> outgoing(Vertex<V> v)
+        throws IllegalArgumentException {
+        VertexNode v1 = convertV(v);
+        ArrayList<Edge<E>> iter = new ArrayList<Edge<E>>();
+        iter.addAll(v1.outgoing);
+        return iter;
+    }
+    /**
+        Incoming edges of vertex.
+        @param v Vertex position to explore.
+        @return Iterable that can be used to explore the
+          incoming edges of the given vertex; the remove()
+          method of the iterator should not affect the graph.
+        @throws IllegalArgumentException If vertex position
+            is invalid.
+    */
+    public Iterable<Edge<E>> incoming(Vertex<V> v)
+        throws IllegalArgumentException {
+        VertexNode v1 = convertV(v);
+        ArrayList<Edge<E>> iter = new ArrayList<Edge<E>>();
+        iter.addAll(v1.incoming);
+        return iter;
+
+    }
+
+    /**
+        Start vertex of edge.
+        @param e Edge position to explore.
+        @return Vertex position edge starts from.
+        @throws IllegalArgumentException If edge position
+            is invalid.
+    */
+    public Vertex<V> from(Edge<E> e)
+        throws IllegalArgumentException {
+        EdgeNode e1 = convertE(e);
+        return e1.from;
+
+    }
+    /**
+        End vertex of edge.
+        @param e Edge position to explore.
+        @return Vertex position edge leads to.
+        @throws IllegalArgumentException If edge position
+            is invalid.
+    */
+    public Vertex<V> to(Edge<E> e)
+        throws IllegalArgumentException {
+        EdgeNode e1 = convertE(e);
+        return e1.to;
+
+    }
+
+    /**
+        Label vertex with object.
+        @param v Vertex position to label.
+        @param l Label object.
+        @throws IllegalArgumentException If vertex position
+            is invalid or label is null.
+    */
+    public void label(Vertex<V> v, Object l)
+        throws IllegalArgumentException {
+
+        VertexNode v1 = convertV(v);
+        if (l == null) {
+            throw new IllegalArgumentException("label is null");
+        }
+        v1.label = l;
+
+    }
+    /**
+        Label edge with object.
+        @param e Edge position to label.
+        @param l Label object.
+        @throws IllegalArgumentException If edge position
+            is invalid or label is null.
+    */
+    public void label(Edge<E> e, Object l)
+        throws IllegalArgumentException {
+        EdgeNode e1 = convertE(e);
+        if (l == null) {
+            throw new IllegalArgumentException("label is null");
+        }
+        e1.label = l;
+
+    }
+    /**
+        Vertex label.
+        @param v Vertex position to query.
+        @return Label object (or null if none).
+        @throws IllegalArgumentException If vertex position
+            is invalid.
+    */
+    public Object label(Vertex<V> v)
+        throws IllegalArgumentException {
+
+        VertexNode v1 = convertV(v);
+        
+        return v1.label;
+
+
+    }
+    /**
+        Edge label.
+        @param e Edge position to query.
+        @return Label object (or null if none).
+        @throws IllegalArgumentException If edge position
+            is invalid.
+    */
+    public Object label(Edge<E> e)
+        throws IllegalArgumentException {
+
+        EdgeNode e1 = convertE(e);
+
+        return e1.label;
+    }
+    /**
+        Clear all labels.
+    */
+    public void clearLabels() {
+
+        for (VertexNode v: allvertices) {
+            v.label = null;
+        }
+        for (EdgeNode e: alledges) {
+            e.label = null;
+        }
+
+
+    }
+}

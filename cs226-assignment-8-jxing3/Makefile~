@@ -1,0 +1,16 @@
+# $Id: Makefile 529 2006-09-09 16:43:14Z phf $
+# A really simplistic Makefile...
+all:
+	javac -Xlint:all *.java
+doc:
+	javadoc -d html *.java
+style:
+	java -jar checkstyle-5.6-all.jar -c jhu_checks.xml BinaryHeapPriorityQueue.java
+	java -jar checkstyle-5.6-all.jar -c jhu_checks.xml MoveToFrontSet.java
+	java -jar checkstyle-5.6-all.jar -c jhu_checks.xml OrderedArraySet.java
+	java -jar checkstyle-5.6-all.jar -c jhu_checks.xml Unique.java
+
+clean:
+	rm -rf html *.class sorting.tar.gz
+archive:
+	tar zcvf cs226-assignment-8-jxing3-sreiche2.tar.gz ArraySet.java ArrayListSet.java BinaryHeapPriorityQueue.java PriorityQueue.java EmptyQueueException.java Unique.java Set.java OrderedArraySet.java README TestPriorityQueue.java MoveToFrontSet.java ListSet.java LinkedListSet.java OrderedSet.java biased25k.txt mixed25k.txt random25k.txt

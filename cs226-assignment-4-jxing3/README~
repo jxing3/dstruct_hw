@@ -1,0 +1,22 @@
+/* Jesse Xing
+   jxing3@jhu.edu
+*/
+
+Problem 1:
+
+Calc program essentially acts as an RPN calulator. When integer inputs 
+are put in, program pushes values into a stack. When operations +, -, *, 
+/ are inputted, top two elements from the stack are pulled out, the 
+respective operation is performed, and the result is pushed back onto the 
+stack. When ! is inputted, the program exited. An input of . pops the top 
+element out of the stack and prints it. An input of ? prints the whole stack 
+out from top to bottom. ! exits the program. Error cases of invalid input or 
+operations that can't be performed due to lack of arguments in the stack 
+are handled properly and outputed in standard error.
+
+Problem 2:
+
+Dequeue implements a double ended queue in which elements can be pushed
+and pulled from the both ends of the queue (front and back). JUnit test
+cases were written to ensure that the queue operated properly for all
+operations 

@@ -1,0 +1,10 @@
+adt Variable
+  uses Any
+  defines Variable<T: Any>
+  operations:
+    new: T ---> Variable<T>
+    get: Variable<T> ---> T
+    set: Variable<T> x T ---> Variable<T>
+  axiom
+    get(new(t)) = t
+    get(set(v, t)) = t

@@ -1,0 +1,20 @@
+Will Zvagelsky   |
+wzvagel1         |
+wzvagel1@jhu.edu |
+-----------------
+
+----------------------------
+Problem 1: The Spell Program|
+----------------------------
+
+  I originally wanted to implement a Trie to do this program; however, when I realized that I would have to hack the Trie on my own I realized that I probably wouldn't make it as efficient as it should be just by user error. So then I implemented Java's built in TreeMap, which made my program run in guaranteed log(n) time. Yet, I realized that I could just implement a HashMap and get my program to run in amortized constant time. 
+
+  Once, the program was fully implemented using a HashMap, I of course had to check it with the profiler. The program was efficient, yet used too much memory for my liking. So I went back to researching what might be more memory efficient than a HashMap, and I stumbled upon a HashSet, which has a built in HashMap underneath in the implementation, but I only have to input the Key, not value. So even though the HashMap underneath fills the HashMap with a DUMMY variable for the key, that variable is probably very memory sound.
+
+  After profiling the program after implementing the HashSet, the Spell program actually ran a bit faster and used less memory. I profiled the program using cracklib.txt as my dictionary, and shakespeare.txt as my input file. So this had about 50,000 insertions into the HashSet and another 900,000 checks for valid words. The memory usage wasn't that bad actually, 1.5 MB in a char[] which is used to read the dictionary into the data structure and only 1.2 MB of memory allocated as HashMap$Entry and another 1.2 MB as Strings which are the words read in from shakespeare.txt, I think.
+
+  23% of the memory was spent in reading the dictionary into the HashSet and another 17% was used holding onto the dictionary in the HashSet. So to save a lot of memory, the reading in from a file should be made more efficient; however, I'm using a BufferedReader which is a pretty efficient reader for large files. But, there's probably a way to make it better.
+
+  I also tested the program using the LINUX builting dictionary called words, I attaching that file in my tar.gz. Words has about 100,000 words in it and when I ran it on congo (was afraid to test with shakespeare, I thought it would take too long) it only took about 7 MB of memory and most of it was spent in the same places, reading in and storing the dictionary. 
+
+  When checking the cpu=times profiler with cracklib.txt as the dictionary and shakespeare.txt as the input, I realized that most of the time spent in the program was spent matching regular expressions, which is how we split the input based on spaces and any number of non-alphabetic characters. The second most time was spent in the charAt method, which is most likely used in the HashSet.contains() method. It seems to be pretty efficient since no more than 5.67% of time was spent in any one method, it could always be made better, but it seems fairly efficient.

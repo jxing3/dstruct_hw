@@ -1,0 +1,96 @@
+/* Jesse Xing
+   jxing3@jhu.edu
+*/
+//see assignment page: Assignment 1 Prob 3 for details
+
+public class FlexibleCounter implements ResetableCounter{
+
+  private int value;
+  private int increment;
+  private int startvalue;
+
+  public FlexibleCounter(int val, int inc){
+    this.startvalue=val;
+    this.value = this.startvalue;
+    this.increment = inc;
+
+  }
+  public int value(){
+    return this.value;
+  }
+
+  public void up(){
+    this.value+=increment;
+  }
+
+  public void down(){
+    this.value-=increment;
+
+  }
+
+  public void reset(){
+    value = this.startvalue;
+
+  }
+
+  public static void main(String[] args){
+    ResetableCounter c= new FlexibleCounter(2, 6);
+
+    assert c.value()== 2;
+    c.up();
+    assert c.value()== 8;
+    c.up();
+    assert c.value()== 14;
+    c.reset();
+    assert c.value()== 2;
+    c.down();
+    assert c.value()== -4;
+    c.down();
+    assert c.value()== -10;
+    c.down();
+    assert c.value()==-16;
+    c.reset();
+    assert c.value()==2;
+ 
+    ResetableCounter c= new FlexibleCounter(4, -3);
+
+    assert c.value()== 4;
+    c.up();
+    assert c.value()== 1;
+    c.up();
+    assert c.value()== -2;
+    c.reset();
+    assert c.value()== 4;
+    c.down();
+    assert c.value()== 7;
+    c.down();
+    assert c.value()== 10;
+    c.down();
+    assert c.value()== 13;
+    c.reset();
+    assert c.value()== 4;
+
+    
+    ResetableCounter c= new FlexibleCounter(-2, 0);
+
+    assert c.value()== -2;
+    c.up();
+    assert c.value()== -2;
+    c.up();
+    assert c.value()== -2;
+    c.reset();
+    assert c.value()== -2;
+    c.down();
+    assert c.value()== -2;
+    c.down();
+    assert c.value()== -2;
+    c.down();
+    assert c.value()== -2;
+    c.reset();
+    assert c.value()== -2;
+
+
+
+  }
+
+}

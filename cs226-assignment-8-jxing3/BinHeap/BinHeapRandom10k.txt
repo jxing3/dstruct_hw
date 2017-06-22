@@ -1,0 +1,1817 @@
+JAVA PROFILE 1.0.1, created Sun Nov  3 15:07:33 2013
+
+Copyright (c) 2003, 2005, Oracle and/or its affiliates. All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met:
+
+  - Redistributions of source code must retain the above copyright
+    notice, this list of conditions and the following disclaimer.
+
+  - Redistributions in binary form must reproduce the above copyright
+    notice, this list of conditions and the following disclaimer in the
+    documentation and/or other materials provided with the distribution.
+
+  - Neither the name of Oracle nor the names of its
+    contributors may be used to endorse or promote products derived
+    from this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS
+IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
+THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+
+Header for -agentlib:hprof (or -Xrunhprof) ASCII Output (JDK 5.0 JVMTI based)
+
+WARNING!  This file format is under development, and is subject to
+change without notice.
+
+This file contains the following types of records:
+
+THREAD START
+THREAD END      mark the lifetime of Java threads
+
+TRACE           represents a Java stack trace.  Each trace consists
+                of a series of stack frames.  Other records refer to
+                TRACEs to identify (1) where object allocations have
+                taken place, (2) the frames in which GC roots were
+                found, and (3) frequently executed methods.
+
+HEAP DUMP       is a complete snapshot of all live objects in the Java
+                heap.  Following distinctions are made:
+
+                ROOT    root set as determined by GC
+                CLS     classes 
+                OBJ     instances
+                ARR     arrays
+
+SITES           is a sorted list of allocation sites.  This identifies
+                the most heavily allocated object types, and the TRACE
+                at which those allocations occurred.
+
+CPU SAMPLES     is a statistical profile of program execution.  The VM
+                periodically samples all running threads, and assigns
+                a quantum to active TRACEs in those threads.  Entries
+                in this record are TRACEs ranked by the percentage of
+                total quanta they consumed; top-ranked TRACEs are
+                typically hot spots in the program.
+
+CPU TIME        is a profile of program execution obtained by measuring
+                the time spent in individual methods (excluding the time
+                spent in callees), as well as by counting the number of
+                times each method is called. Entries in this record are
+                TRACEs ranked by the percentage of total CPU time. The
+                "count" field indicates the number of times each TRACE 
+                is invoked.
+
+MONITOR TIME    is a profile of monitor contention obtained by measuring
+                the time spent by a thread waiting to enter a monitor.
+                Entries in this record are TRACEs ranked by the percentage
+                of total monitor contention time and a brief description
+                of the monitor.  The "count" field indicates the number of 
+                times the monitor was contended at that TRACE.
+
+MONITOR DUMP    is a complete snapshot of all the monitors and threads in 
+                the System.
+
+HEAP DUMP, SITES, CPU SAMPLES|TIME and MONITOR DUMP|TIME records are generated 
+at program exit.  They can also be obtained during program execution by typing 
+Ctrl-\ (on Solaris) or by typing Ctrl-Break (on Win32).
+
+--------
+
+THREAD START (obj=5000016f, id = 200002, name="HPROF gc_finish watcher", group="system")
+THREAD START (obj=5000016f, id = 200001, name="main", group="main")
+THREAD END (id = 200001)
+THREAD START (obj=5000016f, id = 200003, name="DestroyJavaVM", group="main")
+THREAD END (id = 200003)
+TRACE 304023:
+	java.nio.CharBuffer.charAt(CharBuffer.java:Unknown line)
+	java.lang.Character.codePointAt(Character.java:Unknown line)
+	java.util.regex.Pattern$CharProperty.match(Pattern.java:Unknown line)
+	java.util.regex.Pattern$Curly.match(Pattern.java:Unknown line)
+TRACE 304022:
+	java.nio.HeapCharBuffer.get(HeapCharBuffer.java:Unknown line)
+	java.nio.CharBuffer.charAt(CharBuffer.java:Unknown line)
+	java.lang.Character.codePointAt(Character.java:Unknown line)
+	java.util.regex.Pattern$CharProperty.match(Pattern.java:Unknown line)
+TRACE 304284:
+	BinaryHeapPriorityQueue.remove(BinaryHeapPriorityQueue.java:Unknown line)
+	UniqueMod.main(UniqueMod.java:Unknown line)
+TRACE 304221:
+	sun.nio.cs.UTF_8$Encoder.encodeArrayLoop(UTF_8.java:Unknown line)
+	sun.nio.cs.UTF_8$Encoder.encodeLoop(UTF_8.java:Unknown line)
+	java.nio.charset.CharsetEncoder.encode(CharsetEncoder.java:Unknown line)
+	sun.nio.cs.StreamEncoder.implWrite(StreamEncoder.java:Unknown line)
+TRACE 304062:
+	java.nio.CharBuffer.charAt(CharBuffer.java:Unknown line)
+	java.util.regex.Pattern$BmpCharProperty.match(Pattern.java:Unknown line)
+	java.util.regex.Pattern$Branch.match(Pattern.java:Unknown line)
+	java.util.regex.Pattern$GroupHead.match(Pattern.java:Unknown line)
+TRACE 303992:
+	java.util.Scanner.getCompleteTokenInBuffer(Scanner.java:Unknown line)
+	java.util.Scanner.hasNext(Scanner.java:Unknown line)
+	java.util.Scanner.hasNextInt(Scanner.java:Unknown line)
+	java.util.Scanner.hasNextInt(Scanner.java:Unknown line)
+TRACE 304033:
+	java.util.regex.Pattern$CharProperty.match(Pattern.java:Unknown line)
+	java.util.regex.Pattern$Curly.match(Pattern.java:Unknown line)
+	java.util.regex.Pattern$Start.match(Pattern.java:Unknown line)
+	java.util.regex.Matcher.search(Matcher.java:Unknown line)
+TRACE 304029:
+	java.lang.Character.isWhitespace(Character.java:Unknown line)
+	java.util.regex.Pattern$CharPropertyNames$21.isSatisfiedBy(Pattern.java:Unknown line)
+	java.util.regex.Pattern$CharProperty.match(Pattern.java:Unknown line)
+	java.util.regex.Pattern$Curly.match(Pattern.java:Unknown line)
+TRACE 304280:
+	BinaryHeapPriorityQueue.largerChild(BinaryHeapPriorityQueue.java:Unknown line)
+	BinaryHeapPriorityQueue.remove(BinaryHeapPriorityQueue.java:Unknown line)
+	UniqueMod.main(UniqueMod.java:Unknown line)
+TRACE 304070:
+	java.util.regex.Pattern$BmpCharProperty.match(Pattern.java:Unknown line)
+	java.util.regex.Pattern$Branch.match(Pattern.java:Unknown line)
+	java.util.regex.Pattern$GroupHead.match(Pattern.java:Unknown line)
+	java.util.regex.Pattern$Curly.match2(Pattern.java:Unknown line)
+TRACE 304281:
+	java.lang.Integer.compareTo(Integer.java:Unknown line)
+	java.lang.Integer.compareTo(Integer.java:Unknown line)
+	BinaryHeapPriorityQueue.comp(BinaryHeapPriorityQueue.java:Unknown line)
+	BinaryHeapPriorityQueue.remove(BinaryHeapPriorityQueue.java:Unknown line)
+TRACE 304282:
+	java.lang.Integer.compareTo(Integer.java:Unknown line)
+	BinaryHeapPriorityQueue.comp(BinaryHeapPriorityQueue.java:Unknown line)
+	BinaryHeapPriorityQueue.remove(BinaryHeapPriorityQueue.java:Unknown line)
+	UniqueMod.main(UniqueMod.java:Unknown line)
+TRACE 304031:
+	java.lang.Character.codePointAt(Character.java:Unknown line)
+	java.util.regex.Pattern$CharProperty.match(Pattern.java:Unknown line)
+	java.util.regex.Pattern$Curly.match(Pattern.java:Unknown line)
+	java.util.regex.Pattern$Start.match(Pattern.java:Unknown line)
+TRACE 304279:
+	BinaryHeapPriorityQueue.comp(BinaryHeapPriorityQueue.java:Unknown line)
+	BinaryHeapPriorityQueue.largerChild(BinaryHeapPriorityQueue.java:Unknown line)
+	BinaryHeapPriorityQueue.remove(BinaryHeapPriorityQueue.java:Unknown line)
+	UniqueMod.main(UniqueMod.java:Unknown line)
+TRACE 304278:
+	java.lang.Integer.compareTo(Integer.java:Unknown line)
+	BinaryHeapPriorityQueue.comp(BinaryHeapPriorityQueue.java:Unknown line)
+	BinaryHeapPriorityQueue.largerChild(BinaryHeapPriorityQueue.java:Unknown line)
+	BinaryHeapPriorityQueue.remove(BinaryHeapPriorityQueue.java:Unknown line)
+TRACE 304166:
+	java.lang.Integer.compare(Integer.java:Unknown line)
+	java.lang.Integer.compareTo(Integer.java:Unknown line)
+	java.lang.Integer.compareTo(Integer.java:Unknown line)
+	BinaryHeapPriorityQueue.comp(BinaryHeapPriorityQueue.java:Unknown line)
+TRACE 304283:
+	BinaryHeapPriorityQueue.comp(BinaryHeapPriorityQueue.java:Unknown line)
+	BinaryHeapPriorityQueue.remove(BinaryHeapPriorityQueue.java:Unknown line)
+	UniqueMod.main(UniqueMod.java:Unknown line)
+TRACE 304028:
+	java.lang.CharacterDataLatin1.isWhitespace(CharacterDataLatin1.java:Unknown line)
+	java.lang.Character.isWhitespace(Character.java:Unknown line)
+	java.util.regex.Pattern$CharPropertyNames$21.isSatisfiedBy(Pattern.java:Unknown line)
+	java.util.regex.Pattern$CharProperty.match(Pattern.java:Unknown line)
+TRACE 304247:
+	sun.nio.cs.StreamEncoder.writeBytes(StreamEncoder.java:Unknown line)
+	sun.nio.cs.StreamEncoder.implFlushBuffer(StreamEncoder.java:Unknown line)
+	sun.nio.cs.StreamEncoder.flushBuffer(StreamEncoder.java:Unknown line)
+	java.io.OutputStreamWriter.flushBuffer(OutputStreamWriter.java:Unknown line)
+TRACE 304277:
+	java.lang.Integer.compareTo(Integer.java:Unknown line)
+	java.lang.Integer.compareTo(Integer.java:Unknown line)
+	BinaryHeapPriorityQueue.comp(BinaryHeapPriorityQueue.java:Unknown line)
+	BinaryHeapPriorityQueue.largerChild(BinaryHeapPriorityQueue.java:Unknown line)
+TRACE 304136:
+	java.lang.Integer.parseInt(Integer.java:Unknown line)
+	java.util.Scanner.hasNextInt(Scanner.java:Unknown line)
+	java.util.Scanner.hasNextInt(Scanner.java:Unknown line)
+	UniqueMod.main(UniqueMod.java:Unknown line)
+TRACE 304061:
+	java.nio.HeapCharBuffer.get(HeapCharBuffer.java:Unknown line)
+	java.nio.CharBuffer.charAt(CharBuffer.java:Unknown line)
+	java.util.regex.Pattern$BmpCharProperty.match(Pattern.java:Unknown line)
+	java.util.regex.Pattern$Branch.match(Pattern.java:Unknown line)
+TRACE 304134:
+	java.lang.Character.digit(Character.java:Unknown line)
+	java.lang.Character.digit(Character.java:Unknown line)
+	java.lang.Integer.parseInt(Integer.java:Unknown line)
+	java.util.Scanner.hasNextInt(Scanner.java:Unknown line)
+TRACE 304228:
+	sun.nio.cs.StreamEncoder.implWrite(StreamEncoder.java:Unknown line)
+	sun.nio.cs.StreamEncoder.write(StreamEncoder.java:Unknown line)
+	java.io.OutputStreamWriter.write(OutputStreamWriter.java:Unknown line)
+	java.io.BufferedWriter.flushBuffer(BufferedWriter.java:Unknown line)
+TRACE 304104:
+	java.nio.HeapCharBuffer.subSequence(HeapCharBuffer.java:Unknown line)
+	java.nio.HeapCharBuffer.subSequence(HeapCharBuffer.java:Unknown line)
+	java.util.regex.Matcher.getSubSequence(Matcher.java:Unknown line)
+	java.util.regex.Matcher.group(Matcher.java:Unknown line)
+TRACE 304034:
+	java.util.regex.Pattern$Curly.match(Pattern.java:Unknown line)
+	java.util.regex.Pattern$Start.match(Pattern.java:Unknown line)
+	java.util.regex.Matcher.search(Matcher.java:Unknown line)
+	java.util.regex.Matcher.find(Matcher.java:Unknown line)
+TRACE 304032:
+	java.util.regex.Pattern$CharPropertyNames$21.isSatisfiedBy(Pattern.java:Unknown line)
+	java.util.regex.Pattern$CharProperty.match(Pattern.java:Unknown line)
+	java.util.regex.Pattern$Curly.match(Pattern.java:Unknown line)
+	java.util.regex.Pattern$Start.match(Pattern.java:Unknown line)
+TRACE 304065:
+	java.util.regex.Pattern$GroupTail.match(Pattern.java:Unknown line)
+	java.util.regex.Pattern$BranchConn.match(Pattern.java:Unknown line)
+	java.util.regex.Pattern$BmpCharProperty.match(Pattern.java:Unknown line)
+	java.util.regex.Pattern$Branch.match(Pattern.java:Unknown line)
+TRACE 304389:
+	UniqueMod.main(UniqueMod.java:Unknown line)
+TRACE 303982:
+	java.nio.CharBuffer.length(CharBuffer.java:Unknown line)
+	java.util.regex.Matcher.getTextLength(Matcher.java:Unknown line)
+	java.util.regex.Matcher.region(Matcher.java:Unknown line)
+	java.util.Scanner.getCompleteTokenInBuffer(Scanner.java:Unknown line)
+TRACE 304071:
+	java.util.regex.Pattern$Branch.match(Pattern.java:Unknown line)
+	java.util.regex.Pattern$GroupHead.match(Pattern.java:Unknown line)
+	java.util.regex.Pattern$Curly.match2(Pattern.java:Unknown line)
+	java.util.regex.Pattern$Curly.match(Pattern.java:Unknown line)
+TRACE 304066:
+	java.util.regex.Pattern$BranchConn.match(Pattern.java:Unknown line)
+	java.util.regex.Pattern$BmpCharProperty.match(Pattern.java:Unknown line)
+	java.util.regex.Pattern$Branch.match(Pattern.java:Unknown line)
+	java.util.regex.Pattern$GroupHead.match(Pattern.java:Unknown line)
+TRACE 300957:
+	java.lang.CharacterDataLatin1.digit(CharacterDataLatin1.java:Unknown line)
+	java.lang.Character.digit(Character.java:Unknown line)
+	java.lang.Character.digit(Character.java:Unknown line)
+	java.lang.Integer.parseInt(Integer.java:Unknown line)
+TRACE 303983:
+	java.util.regex.Matcher.getTextLength(Matcher.java:Unknown line)
+	java.util.regex.Matcher.region(Matcher.java:Unknown line)
+	java.util.Scanner.getCompleteTokenInBuffer(Scanner.java:Unknown line)
+	java.util.Scanner.hasNext(Scanner.java:Unknown line)
+TRACE 304082:
+	java.util.regex.Pattern$Curly.match2(Pattern.java:Unknown line)
+	java.util.regex.Pattern$Curly.match(Pattern.java:Unknown line)
+	java.util.regex.Pattern$GroupHead.match(Pattern.java:Unknown line)
+	java.util.regex.Pattern$Branch.match(Pattern.java:Unknown line)
+TRACE 303987:
+	java.util.regex.Matcher.region(Matcher.java:Unknown line)
+	java.util.Scanner.getCompleteTokenInBuffer(Scanner.java:Unknown line)
+	java.util.Scanner.hasNext(Scanner.java:Unknown line)
+	java.util.Scanner.hasNextInt(Scanner.java:Unknown line)
+TRACE 304245:
+	java.io.PrintStream.write(PrintStream.java:Unknown line)
+	sun.nio.cs.StreamEncoder.writeBytes(StreamEncoder.java:Unknown line)
+	sun.nio.cs.StreamEncoder.implFlushBuffer(StreamEncoder.java:Unknown line)
+	sun.nio.cs.StreamEncoder.flushBuffer(StreamEncoder.java:Unknown line)
+TRACE 304072:
+	java.util.regex.Pattern$GroupHead.match(Pattern.java:Unknown line)
+	java.util.regex.Pattern$Curly.match2(Pattern.java:Unknown line)
+	java.util.regex.Pattern$Curly.match(Pattern.java:Unknown line)
+	java.util.regex.Pattern$GroupHead.match(Pattern.java:Unknown line)
+TRACE 304135:
+	java.lang.Character.digit(Character.java:Unknown line)
+	java.lang.Integer.parseInt(Integer.java:Unknown line)
+	java.util.Scanner.hasNextInt(Scanner.java:Unknown line)
+	java.util.Scanner.hasNextInt(Scanner.java:Unknown line)
+TRACE 304148:
+	java.util.Scanner.hasNextInt(Scanner.java:Unknown line)
+	java.util.Scanner.hasNextInt(Scanner.java:Unknown line)
+	UniqueMod.main(UniqueMod.java:Unknown line)
+TRACE 304027:
+	java.lang.CharacterDataLatin1.getProperties(CharacterDataLatin1.java:Unknown line)
+	java.lang.CharacterDataLatin1.isWhitespace(CharacterDataLatin1.java:Unknown line)
+	java.lang.Character.isWhitespace(Character.java:Unknown line)
+	java.util.regex.Pattern$CharPropertyNames$21.isSatisfiedBy(Pattern.java:Unknown line)
+TRACE 304101:
+	java.nio.Buffer.<init>(Buffer.java:Unknown line)
+	java.nio.CharBuffer.<init>(CharBuffer.java:Unknown line)
+	java.nio.HeapCharBuffer.<init>(HeapCharBuffer.java:Unknown line)
+	java.nio.HeapCharBuffer.subSequence(HeapCharBuffer.java:Unknown line)
+TRACE 304220:
+	sun.nio.cs.UTF_8.updatePositions(UTF_8.java:Unknown line)
+	sun.nio.cs.UTF_8$Encoder.encodeArrayLoop(UTF_8.java:Unknown line)
+	sun.nio.cs.UTF_8$Encoder.encodeLoop(UTF_8.java:Unknown line)
+	java.nio.charset.CharsetEncoder.encode(CharsetEncoder.java:Unknown line)
+TRACE 304018:
+	java.nio.Buffer.position(Buffer.java:Unknown line)
+	java.nio.CharBuffer.charAt(CharBuffer.java:Unknown line)
+	java.lang.Character.codePointAt(Character.java:Unknown line)
+	java.util.regex.Pattern$CharProperty.match(Pattern.java:Unknown line)
+TRACE 304159:
+	BinaryHeapPriorityQueue.insert(BinaryHeapPriorityQueue.java:Unknown line)
+	UniqueMod.main(UniqueMod.java:Unknown line)
+TRACE 304225:
+	java.nio.charset.CharsetEncoder.encode(CharsetEncoder.java:Unknown line)
+	sun.nio.cs.StreamEncoder.implWrite(StreamEncoder.java:Unknown line)
+	sun.nio.cs.StreamEncoder.write(StreamEncoder.java:Unknown line)
+	java.io.OutputStreamWriter.write(OutputStreamWriter.java:Unknown line)
+TRACE 304222:
+	sun.nio.cs.UTF_8$Encoder.encodeLoop(UTF_8.java:Unknown line)
+	java.nio.charset.CharsetEncoder.encode(CharsetEncoder.java:Unknown line)
+	sun.nio.cs.StreamEncoder.implWrite(StreamEncoder.java:Unknown line)
+	sun.nio.cs.StreamEncoder.write(StreamEncoder.java:Unknown line)
+TRACE 304019:
+	java.nio.Buffer.checkIndex(Buffer.java:Unknown line)
+	java.nio.CharBuffer.charAt(CharBuffer.java:Unknown line)
+	java.lang.Character.codePointAt(Character.java:Unknown line)
+	java.util.regex.Pattern$CharProperty.match(Pattern.java:Unknown line)
+TRACE 304020:
+	java.nio.Buffer.checkIndex(Buffer.java:Unknown line)
+	java.nio.HeapCharBuffer.get(HeapCharBuffer.java:Unknown line)
+	java.nio.CharBuffer.charAt(CharBuffer.java:Unknown line)
+	java.lang.Character.codePointAt(Character.java:Unknown line)
+TRACE 304315:
+	java.io.PrintStream.newLine(PrintStream.java:Unknown line)
+	java.io.PrintStream.println(PrintStream.java:Unknown line)
+	UniqueMod.main(UniqueMod.java:Unknown line)
+TRACE 304045:
+	java.util.regex.Pattern$Start.match(Pattern.java:Unknown line)
+	java.util.regex.Matcher.search(Matcher.java:Unknown line)
+	java.util.regex.Matcher.find(Matcher.java:Unknown line)
+	java.util.Scanner.getCompleteTokenInBuffer(Scanner.java:Unknown line)
+TRACE 304026:
+	java.lang.CharacterData.of(CharacterData.java:Unknown line)
+	java.lang.Character.isWhitespace(Character.java:Unknown line)
+	java.util.regex.Pattern$CharPropertyNames$21.isSatisfiedBy(Pattern.java:Unknown line)
+	java.util.regex.Pattern$CharProperty.match(Pattern.java:Unknown line)
+TRACE 304302:
+	java.io.PrintStream.write(PrintStream.java:Unknown line)
+	java.io.PrintStream.print(PrintStream.java:Unknown line)
+	java.io.PrintStream.println(PrintStream.java:Unknown line)
+	UniqueMod.main(UniqueMod.java:Unknown line)
+TRACE 304037:
+	java.nio.CharBuffer.charAt(CharBuffer.java:Unknown line)
+	java.lang.Character.codePointAt(Character.java:Unknown line)
+	java.util.regex.Pattern$CharProperty.match(Pattern.java:Unknown line)
+	java.util.regex.Pattern$Curly.match0(Pattern.java:Unknown line)
+TRACE 304244:
+	java.io.BufferedOutputStream.flush(BufferedOutputStream.java:Unknown line)
+	java.io.PrintStream.write(PrintStream.java:Unknown line)
+	sun.nio.cs.StreamEncoder.writeBytes(StreamEncoder.java:Unknown line)
+	sun.nio.cs.StreamEncoder.implFlushBuffer(StreamEncoder.java:Unknown line)
+TRACE 304024:
+	java.lang.Character.isHighSurrogate(Character.java:Unknown line)
+	java.lang.Character.codePointAt(Character.java:Unknown line)
+	java.util.regex.Pattern$CharProperty.match(Pattern.java:Unknown line)
+	java.util.regex.Pattern$Curly.match(Pattern.java:Unknown line)
+TRACE 304096:
+	java.nio.CharBuffer.length(CharBuffer.java:Unknown line)
+	java.nio.HeapCharBuffer.subSequence(HeapCharBuffer.java:Unknown line)
+	java.nio.HeapCharBuffer.subSequence(HeapCharBuffer.java:Unknown line)
+	java.util.regex.Matcher.getSubSequence(Matcher.java:Unknown line)
+TRACE 302572:
+	java.nio.Buffer.<init>(Buffer.java:Unknown line)
+	java.nio.CharBuffer.<init>(CharBuffer.java:Unknown line)
+	java.nio.HeapCharBuffer.<init>(HeapCharBuffer.java:Unknown line)
+	java.nio.CharBuffer.wrap(CharBuffer.java:Unknown line)
+TRACE 304039:
+	java.lang.Character.codePointAt(Character.java:Unknown line)
+	java.util.regex.Pattern$CharProperty.match(Pattern.java:Unknown line)
+	java.util.regex.Pattern$Curly.match0(Pattern.java:Unknown line)
+	java.util.regex.Pattern$Curly.match(Pattern.java:Unknown line)
+TRACE 304102:
+	java.nio.CharBuffer.<init>(CharBuffer.java:Unknown line)
+	java.nio.HeapCharBuffer.<init>(HeapCharBuffer.java:Unknown line)
+	java.nio.HeapCharBuffer.subSequence(HeapCharBuffer.java:Unknown line)
+	java.nio.HeapCharBuffer.subSequence(HeapCharBuffer.java:Unknown line)
+TRACE 304059:
+	java.nio.Buffer.position(Buffer.java:Unknown line)
+	java.nio.CharBuffer.charAt(CharBuffer.java:Unknown line)
+	java.util.regex.Pattern$BmpCharProperty.match(Pattern.java:Unknown line)
+	java.util.regex.Pattern$Branch.match(Pattern.java:Unknown line)
+TRACE 303986:
+	java.util.regex.Matcher.reset(Matcher.java:Unknown line)
+	java.util.regex.Matcher.region(Matcher.java:Unknown line)
+	java.util.Scanner.getCompleteTokenInBuffer(Scanner.java:Unknown line)
+	java.util.Scanner.hasNext(Scanner.java:Unknown line)
+TRACE 304109:
+	java.lang.String.<init>(String.java:Unknown line)
+	java.nio.HeapCharBuffer.toString(HeapCharBuffer.java:Unknown line)
+	java.nio.CharBuffer.toString(CharBuffer.java:Unknown line)
+	java.util.regex.Matcher.group(Matcher.java:Unknown line)
+TRACE 304188:
+	BinaryHeapPriorityQueue.top(BinaryHeapPriorityQueue.java:Unknown line)
+	UniqueMod.main(UniqueMod.java:Unknown line)
+TRACE 304021:
+	java.nio.HeapCharBuffer.ix(HeapCharBuffer.java:Unknown line)
+	java.nio.HeapCharBuffer.get(HeapCharBuffer.java:Unknown line)
+	java.nio.CharBuffer.charAt(CharBuffer.java:Unknown line)
+	java.lang.Character.codePointAt(Character.java:Unknown line)
+TRACE 304103:
+	java.nio.HeapCharBuffer.<init>(HeapCharBuffer.java:Unknown line)
+	java.nio.HeapCharBuffer.subSequence(HeapCharBuffer.java:Unknown line)
+	java.nio.HeapCharBuffer.subSequence(HeapCharBuffer.java:Unknown line)
+	java.util.regex.Matcher.getSubSequence(Matcher.java:Unknown line)
+TRACE 303985:
+	java.util.regex.Matcher.getTextLength(Matcher.java:Unknown line)
+	java.util.regex.Matcher.reset(Matcher.java:Unknown line)
+	java.util.regex.Matcher.region(Matcher.java:Unknown line)
+	java.util.Scanner.getCompleteTokenInBuffer(Scanner.java:Unknown line)
+TRACE 304133:
+	java.lang.String.charAt(String.java:Unknown line)
+	java.lang.Integer.parseInt(Integer.java:Unknown line)
+	java.util.Scanner.hasNextInt(Scanner.java:Unknown line)
+	java.util.Scanner.hasNextInt(Scanner.java:Unknown line)
+TRACE 304123:
+	java.util.Scanner.hasNext(Scanner.java:Unknown line)
+	java.util.Scanner.hasNextInt(Scanner.java:Unknown line)
+	java.util.Scanner.hasNextInt(Scanner.java:Unknown line)
+	UniqueMod.main(UniqueMod.java:Unknown line)
+TRACE 303984:
+	java.nio.CharBuffer.length(CharBuffer.java:Unknown line)
+	java.util.regex.Matcher.getTextLength(Matcher.java:Unknown line)
+	java.util.regex.Matcher.reset(Matcher.java:Unknown line)
+	java.util.regex.Matcher.region(Matcher.java:Unknown line)
+TRACE 304117:
+	java.util.regex.Matcher.group(Matcher.java:Unknown line)
+	java.util.regex.Matcher.group(Matcher.java:Unknown line)
+	java.util.Scanner.cacheResult(Scanner.java:Unknown line)
+	java.util.Scanner.hasNext(Scanner.java:Unknown line)
+TRACE 304053:
+	java.nio.Buffer.checkIndex(Buffer.java:Unknown line)
+	java.nio.HeapCharBuffer.get(HeapCharBuffer.java:Unknown line)
+	java.nio.CharBuffer.charAt(CharBuffer.java:Unknown line)
+	java.util.regex.Pattern$BmpCharProperty.match(Pattern.java:Unknown line)
+TRACE 304054:
+	java.nio.HeapCharBuffer.ix(HeapCharBuffer.java:Unknown line)
+	java.nio.HeapCharBuffer.get(HeapCharBuffer.java:Unknown line)
+	java.nio.CharBuffer.charAt(CharBuffer.java:Unknown line)
+	java.util.regex.Pattern$BmpCharProperty.match(Pattern.java:Unknown line)
+TRACE 300995:
+	java.util.Arrays.copyOfRange(Arrays.java:Unknown line)
+	java.lang.String.<init>(String.java:Unknown line)
+	java.nio.HeapCharBuffer.toString(HeapCharBuffer.java:Unknown line)
+	java.nio.CharBuffer.toString(CharBuffer.java:Unknown line)
+TRACE 303988:
+	java.util.regex.Pattern$CharProperty.match(Pattern.java:Unknown line)
+	java.util.regex.Pattern$Curly.match(Pattern.java:Unknown line)
+	java.util.regex.Matcher.match(Matcher.java:Unknown line)
+	java.util.regex.Matcher.lookingAt(Matcher.java:Unknown line)
+TRACE 304260:
+	java.io.BufferedWriter.write(BufferedWriter.java:Unknown line)
+	java.io.Writer.write(Writer.java:Unknown line)
+	java.io.BufferedWriter.newLine(BufferedWriter.java:Unknown line)
+	java.io.PrintStream.newLine(PrintStream.java:Unknown line)
+TRACE 304064:
+	java.util.regex.Pattern$Node.match(Pattern.java:Unknown line)
+	java.util.regex.Pattern$GroupTail.match(Pattern.java:Unknown line)
+	java.util.regex.Pattern$BranchConn.match(Pattern.java:Unknown line)
+	java.util.regex.Pattern$BmpCharProperty.match(Pattern.java:Unknown line)
+TRACE 304288:
+	java.lang.Integer.toString(Integer.java:Unknown line)
+	java.lang.Integer.toString(Integer.java:Unknown line)
+	java.lang.String.valueOf(String.java:Unknown line)
+	java.io.PrintStream.println(PrintStream.java:Unknown line)
+TRACE 304130:
+	java.nio.CharBuffer.toString(CharBuffer.java:Unknown line)
+	java.util.regex.Matcher.group(Matcher.java:Unknown line)
+	java.util.Scanner.hasNextInt(Scanner.java:Unknown line)
+	java.util.Scanner.hasNextInt(Scanner.java:Unknown line)
+TRACE 304131:
+	java.util.regex.Matcher.group(Matcher.java:Unknown line)
+	java.util.Scanner.hasNextInt(Scanner.java:Unknown line)
+	java.util.Scanner.hasNextInt(Scanner.java:Unknown line)
+	UniqueMod.main(UniqueMod.java:Unknown line)
+TRACE 304056:
+	java.nio.CharBuffer.charAt(CharBuffer.java:Unknown line)
+	java.util.regex.Pattern$BmpCharProperty.match(Pattern.java:Unknown line)
+	java.util.regex.Pattern$Ques.match(Pattern.java:Unknown line)
+	java.util.regex.Pattern$GroupHead.match(Pattern.java:Unknown line)
+TRACE 304063:
+	java.util.regex.Pattern$BitClass.isSatisfiedBy(Pattern.java:Unknown line)
+	java.util.regex.Pattern$BmpCharProperty.match(Pattern.java:Unknown line)
+	java.util.regex.Pattern$Branch.match(Pattern.java:Unknown line)
+	java.util.regex.Pattern$GroupHead.match(Pattern.java:Unknown line)
+TRACE 304242:
+	java.io.BufferedOutputStream.flushBuffer(BufferedOutputStream.java:Unknown line)
+	java.io.BufferedOutputStream.flush(BufferedOutputStream.java:Unknown line)
+	java.io.PrintStream.write(PrintStream.java:Unknown line)
+	sun.nio.cs.StreamEncoder.writeBytes(StreamEncoder.java:Unknown line)
+TRACE 304112:
+	java.util.regex.Matcher.group(Matcher.java:Unknown line)
+	java.util.regex.Matcher.group(Matcher.java:Unknown line)
+	java.util.Scanner.getCompleteTokenInBuffer(Scanner.java:Unknown line)
+	java.util.Scanner.hasNext(Scanner.java:Unknown line)
+TRACE 303981:
+	java.nio.Buffer.remaining(Buffer.java:Unknown line)
+	java.nio.CharBuffer.length(CharBuffer.java:Unknown line)
+	java.util.regex.Matcher.getTextLength(Matcher.java:Unknown line)
+	java.util.regex.Matcher.region(Matcher.java:Unknown line)
+TRACE 304121:
+	java.util.Scanner.cacheResult(Scanner.java:Unknown line)
+	java.util.Scanner.hasNext(Scanner.java:Unknown line)
+	java.util.Scanner.hasNextInt(Scanner.java:Unknown line)
+	java.util.Scanner.hasNextInt(Scanner.java:Unknown line)
+TRACE 304167:
+	java.lang.Integer.compareTo(Integer.java:Unknown line)
+	java.lang.Integer.compareTo(Integer.java:Unknown line)
+	BinaryHeapPriorityQueue.comp(BinaryHeapPriorityQueue.java:Unknown line)
+	BinaryHeapPriorityQueue.insert(BinaryHeapPriorityQueue.java:Unknown line)
+TRACE 304168:
+	java.lang.Integer.compareTo(Integer.java:Unknown line)
+	BinaryHeapPriorityQueue.comp(BinaryHeapPriorityQueue.java:Unknown line)
+	BinaryHeapPriorityQueue.insert(BinaryHeapPriorityQueue.java:Unknown line)
+	UniqueMod.main(UniqueMod.java:Unknown line)
+TRACE 304294:
+	java.io.Writer.write(Writer.java:Unknown line)
+	java.io.PrintStream.write(PrintStream.java:Unknown line)
+	java.io.PrintStream.print(PrintStream.java:Unknown line)
+	java.io.PrintStream.println(PrintStream.java:Unknown line)
+TRACE 300955:
+	java.lang.CharacterData.of(CharacterData.java:Unknown line)
+	java.lang.Character.digit(Character.java:Unknown line)
+	java.lang.Character.digit(Character.java:Unknown line)
+	java.lang.Integer.parseInt(Integer.java:Unknown line)
+TRACE 300956:
+	java.lang.CharacterDataLatin1.getProperties(CharacterDataLatin1.java:Unknown line)
+	java.lang.CharacterDataLatin1.digit(CharacterDataLatin1.java:Unknown line)
+	java.lang.Character.digit(Character.java:Unknown line)
+	java.lang.Character.digit(Character.java:Unknown line)
+TRACE 304083:
+	java.util.regex.Pattern$Curly.match(Pattern.java:Unknown line)
+	java.util.regex.Pattern$GroupHead.match(Pattern.java:Unknown line)
+	java.util.regex.Pattern$Branch.match(Pattern.java:Unknown line)
+	java.util.regex.Pattern$GroupHead.match(Pattern.java:Unknown line)
+TRACE 304169:
+	BinaryHeapPriorityQueue.comp(BinaryHeapPriorityQueue.java:Unknown line)
+	BinaryHeapPriorityQueue.insert(BinaryHeapPriorityQueue.java:Unknown line)
+	UniqueMod.main(UniqueMod.java:Unknown line)
+TRACE 304205:
+	java.nio.HeapCharBuffer.<init>(HeapCharBuffer.java:Unknown line)
+	java.nio.CharBuffer.wrap(CharBuffer.java:Unknown line)
+	sun.nio.cs.StreamEncoder.implWrite(StreamEncoder.java:Unknown line)
+	sun.nio.cs.StreamEncoder.write(StreamEncoder.java:Unknown line)
+TRACE 304041:
+	java.util.regex.Pattern$CharPropertyNames$21.isSatisfiedBy(Pattern.java:Unknown line)
+	java.util.regex.Pattern$CharProperty.match(Pattern.java:Unknown line)
+	java.util.regex.Pattern$Curly.match0(Pattern.java:Unknown line)
+	java.util.regex.Pattern$Curly.match(Pattern.java:Unknown line)
+TRACE 304060:
+	java.nio.Buffer.checkIndex(Buffer.java:Unknown line)
+	java.nio.CharBuffer.charAt(CharBuffer.java:Unknown line)
+	java.util.regex.Pattern$BmpCharProperty.match(Pattern.java:Unknown line)
+	java.util.regex.Pattern$Branch.match(Pattern.java:Unknown line)
+TRACE 304105:
+	java.nio.HeapCharBuffer.subSequence(HeapCharBuffer.java:Unknown line)
+	java.util.regex.Matcher.getSubSequence(Matcher.java:Unknown line)
+	java.util.regex.Matcher.group(Matcher.java:Unknown line)
+	java.util.regex.Matcher.group(Matcher.java:Unknown line)
+TRACE 304213:
+	java.nio.Buffer.limit(Buffer.java:Unknown line)
+	sun.nio.cs.UTF_8$Encoder.encodeArrayLoop(UTF_8.java:Unknown line)
+	sun.nio.cs.UTF_8$Encoder.encodeLoop(UTF_8.java:Unknown line)
+	java.nio.charset.CharsetEncoder.encode(CharsetEncoder.java:Unknown line)
+TRACE 304305:
+	java.io.Writer.write(Writer.java:Unknown line)
+	java.io.BufferedWriter.newLine(BufferedWriter.java:Unknown line)
+	java.io.PrintStream.newLine(PrintStream.java:Unknown line)
+	java.io.PrintStream.println(PrintStream.java:Unknown line)
+TRACE 304040:
+	java.lang.Character.isWhitespace(Character.java:Unknown line)
+	java.util.regex.Pattern$CharPropertyNames$21.isSatisfiedBy(Pattern.java:Unknown line)
+	java.util.regex.Pattern$CharProperty.match(Pattern.java:Unknown line)
+	java.util.regex.Pattern$Curly.match0(Pattern.java:Unknown line)
+TRACE 304204:
+	java.nio.CharBuffer.<init>(CharBuffer.java:Unknown line)
+	java.nio.HeapCharBuffer.<init>(HeapCharBuffer.java:Unknown line)
+	java.nio.CharBuffer.wrap(CharBuffer.java:Unknown line)
+	sun.nio.cs.StreamEncoder.implWrite(StreamEncoder.java:Unknown line)
+TRACE 304152:
+	java.util.Scanner.nextInt(Scanner.java:Unknown line)
+	java.util.Scanner.nextInt(Scanner.java:Unknown line)
+	UniqueMod.main(UniqueMod.java:Unknown line)
+TRACE 304229:
+	sun.nio.cs.StreamEncoder.write(StreamEncoder.java:Unknown line)
+	java.io.OutputStreamWriter.write(OutputStreamWriter.java:Unknown line)
+	java.io.BufferedWriter.flushBuffer(BufferedWriter.java:Unknown line)
+	java.io.PrintStream.write(PrintStream.java:Unknown line)
+TRACE 304316:
+	java.io.PrintStream.println(PrintStream.java:Unknown line)
+	UniqueMod.main(UniqueMod.java:Unknown line)
+TRACE 304293:
+	java.io.BufferedWriter.write(BufferedWriter.java:Unknown line)
+	java.io.Writer.write(Writer.java:Unknown line)
+	java.io.PrintStream.write(PrintStream.java:Unknown line)
+	java.io.PrintStream.print(PrintStream.java:Unknown line)
+TRACE 304110:
+	java.nio.HeapCharBuffer.toString(HeapCharBuffer.java:Unknown line)
+	java.nio.CharBuffer.toString(CharBuffer.java:Unknown line)
+	java.util.regex.Matcher.group(Matcher.java:Unknown line)
+	java.util.regex.Matcher.group(Matcher.java:Unknown line)
+TRACE 304164:
+	java.util.regex.Pattern$Curly.match0(Pattern.java:Unknown line)
+	java.util.regex.Pattern$Curly.match(Pattern.java:Unknown line)
+	java.util.regex.Matcher.match(Matcher.java:Unknown line)
+	java.util.regex.Matcher.lookingAt(Matcher.java:Unknown line)
+TRACE 304042:
+	java.util.regex.Pattern$CharProperty.match(Pattern.java:Unknown line)
+	java.util.regex.Pattern$Curly.match0(Pattern.java:Unknown line)
+	java.util.regex.Pattern$Curly.match(Pattern.java:Unknown line)
+	java.util.regex.Pattern$Start.match(Pattern.java:Unknown line)
+TRACE 304044:
+	java.util.regex.Pattern$Curly.match0(Pattern.java:Unknown line)
+	java.util.regex.Pattern$Curly.match(Pattern.java:Unknown line)
+	java.util.regex.Pattern$Start.match(Pattern.java:Unknown line)
+	java.util.regex.Matcher.search(Matcher.java:Unknown line)
+TRACE 304116:
+	java.nio.CharBuffer.toString(CharBuffer.java:Unknown line)
+	java.util.regex.Matcher.group(Matcher.java:Unknown line)
+	java.util.regex.Matcher.group(Matcher.java:Unknown line)
+	java.util.Scanner.cacheResult(Scanner.java:Unknown line)
+TRACE 304055:
+	java.nio.HeapCharBuffer.get(HeapCharBuffer.java:Unknown line)
+	java.nio.CharBuffer.charAt(CharBuffer.java:Unknown line)
+	java.util.regex.Pattern$BmpCharProperty.match(Pattern.java:Unknown line)
+	java.util.regex.Pattern$Ques.match(Pattern.java:Unknown line)
+TRACE 304111:
+	java.nio.CharBuffer.toString(CharBuffer.java:Unknown line)
+	java.util.regex.Matcher.group(Matcher.java:Unknown line)
+	java.util.regex.Matcher.group(Matcher.java:Unknown line)
+	java.util.Scanner.getCompleteTokenInBuffer(Scanner.java:Unknown line)
+TRACE 304212:
+	java.nio.Buffer.position(Buffer.java:Unknown line)
+	sun.nio.cs.UTF_8$Encoder.encodeArrayLoop(UTF_8.java:Unknown line)
+	sun.nio.cs.UTF_8$Encoder.encodeLoop(UTF_8.java:Unknown line)
+	java.nio.charset.CharsetEncoder.encode(CharsetEncoder.java:Unknown line)
+TRACE 304241:
+	java.io.FileOutputStream.write(FileOutputStream.java:Unknown line)
+	java.io.BufferedOutputStream.flushBuffer(BufferedOutputStream.java:Unknown line)
+	java.io.BufferedOutputStream.flush(BufferedOutputStream.java:Unknown line)
+	java.io.PrintStream.write(PrintStream.java:Unknown line)
+TRACE 303989:
+	java.util.regex.Pattern$Curly.match(Pattern.java:Unknown line)
+	java.util.regex.Matcher.match(Matcher.java:Unknown line)
+	java.util.regex.Matcher.lookingAt(Matcher.java:Unknown line)
+	java.util.Scanner.getCompleteTokenInBuffer(Scanner.java:Unknown line)
+TRACE 304218:
+	java.nio.Buffer.position(Buffer.java:Unknown line)
+	sun.nio.cs.UTF_8.updatePositions(UTF_8.java:Unknown line)
+	sun.nio.cs.UTF_8$Encoder.encodeArrayLoop(UTF_8.java:Unknown line)
+	sun.nio.cs.UTF_8$Encoder.encodeLoop(UTF_8.java:Unknown line)
+TRACE 304314:
+	java.io.BufferedOutputStream.flush(BufferedOutputStream.java:Unknown line)
+	java.io.PrintStream.newLine(PrintStream.java:Unknown line)
+	java.io.PrintStream.println(PrintStream.java:Unknown line)
+	UniqueMod.main(UniqueMod.java:Unknown line)
+TRACE 304098:
+	java.nio.Buffer.capacity(Buffer.java:Unknown line)
+	java.nio.HeapCharBuffer.subSequence(HeapCharBuffer.java:Unknown line)
+	java.nio.HeapCharBuffer.subSequence(HeapCharBuffer.java:Unknown line)
+	java.util.regex.Matcher.getSubSequence(Matcher.java:Unknown line)
+TRACE 304206:
+	java.nio.CharBuffer.wrap(CharBuffer.java:Unknown line)
+	sun.nio.cs.StreamEncoder.implWrite(StreamEncoder.java:Unknown line)
+	sun.nio.cs.StreamEncoder.write(StreamEncoder.java:Unknown line)
+	java.io.OutputStreamWriter.write(OutputStreamWriter.java:Unknown line)
+TRACE 304248:
+	sun.nio.cs.StreamEncoder.implFlushBuffer(StreamEncoder.java:Unknown line)
+	sun.nio.cs.StreamEncoder.flushBuffer(StreamEncoder.java:Unknown line)
+	java.io.OutputStreamWriter.flushBuffer(OutputStreamWriter.java:Unknown line)
+	java.io.PrintStream.write(PrintStream.java:Unknown line)
+TRACE 304067:
+	java.util.regex.Pattern$BmpCharProperty.match(Pattern.java:Unknown line)
+	java.util.regex.Pattern$Branch.match(Pattern.java:Unknown line)
+	java.util.regex.Pattern$GroupHead.match(Pattern.java:Unknown line)
+	java.util.regex.Pattern$Curly.match(Pattern.java:Unknown line)
+TRACE 304088:
+	java.util.regex.Pattern$Ques.match(Pattern.java:Unknown line)
+	java.util.regex.Pattern$GroupHead.match(Pattern.java:Unknown line)
+	java.util.regex.Pattern$GroupHead.match(Pattern.java:Unknown line)
+	java.util.regex.Pattern$Branch.match(Pattern.java:Unknown line)
+TRACE 304211:
+	java.nio.CharBuffer.arrayOffset(CharBuffer.java:Unknown line)
+	sun.nio.cs.UTF_8$Encoder.encodeArrayLoop(UTF_8.java:Unknown line)
+	sun.nio.cs.UTF_8$Encoder.encodeLoop(UTF_8.java:Unknown line)
+	java.nio.charset.CharsetEncoder.encode(CharsetEncoder.java:Unknown line)
+TRACE 304215:
+	java.nio.ByteBuffer.arrayOffset(ByteBuffer.java:Unknown line)
+	sun.nio.cs.UTF_8$Encoder.encodeArrayLoop(UTF_8.java:Unknown line)
+	sun.nio.cs.UTF_8$Encoder.encodeLoop(UTF_8.java:Unknown line)
+	java.nio.charset.CharsetEncoder.encode(CharsetEncoder.java:Unknown line)
+TRACE 304264:
+	sun.nio.cs.StreamEncoder.write(StreamEncoder.java:Unknown line)
+	java.io.OutputStreamWriter.write(OutputStreamWriter.java:Unknown line)
+	java.io.BufferedWriter.flushBuffer(BufferedWriter.java:Unknown line)
+	java.io.PrintStream.newLine(PrintStream.java:Unknown line)
+TRACE 304306:
+	java.io.BufferedWriter.newLine(BufferedWriter.java:Unknown line)
+	java.io.PrintStream.newLine(PrintStream.java:Unknown line)
+	java.io.PrintStream.println(PrintStream.java:Unknown line)
+	UniqueMod.main(UniqueMod.java:Unknown line)
+TRACE 304310:
+	sun.nio.cs.StreamEncoder.flushBuffer(StreamEncoder.java:Unknown line)
+	java.io.OutputStreamWriter.flushBuffer(OutputStreamWriter.java:Unknown line)
+	java.io.PrintStream.newLine(PrintStream.java:Unknown line)
+	java.io.PrintStream.println(PrintStream.java:Unknown line)
+TRACE 304100:
+	java.nio.Buffer.position(Buffer.java:Unknown line)
+	java.nio.Buffer.<init>(Buffer.java:Unknown line)
+	java.nio.CharBuffer.<init>(CharBuffer.java:Unknown line)
+	java.nio.HeapCharBuffer.<init>(HeapCharBuffer.java:Unknown line)
+TRACE 304156:
+	java.lang.Integer.valueOf(Integer.java:Unknown line)
+	UniqueMod.main(UniqueMod.java:Unknown line)
+TRACE 304268:
+	sun.nio.cs.StreamEncoder.implFlushBuffer(StreamEncoder.java:Unknown line)
+	sun.nio.cs.StreamEncoder.flushBuffer(StreamEncoder.java:Unknown line)
+	java.io.OutputStreamWriter.flushBuffer(OutputStreamWriter.java:Unknown line)
+	java.io.PrintStream.newLine(PrintStream.java:Unknown line)
+TRACE 304077:
+	java.util.regex.Pattern$GroupTail.match(Pattern.java:Unknown line)
+	java.util.regex.Pattern$GroupTail.match(Pattern.java:Unknown line)
+	java.util.regex.Pattern$GroupTail.match(Pattern.java:Unknown line)
+	java.util.regex.Pattern$BranchConn.match(Pattern.java:Unknown line)
+TRACE 304081:
+	java.util.regex.Pattern$GroupTail.match(Pattern.java:Unknown line)
+	java.util.regex.Pattern$Curly.match2(Pattern.java:Unknown line)
+	java.util.regex.Pattern$Curly.match(Pattern.java:Unknown line)
+	java.util.regex.Pattern$GroupHead.match(Pattern.java:Unknown line)
+TRACE 304234:
+	java.nio.Buffer.flip(Buffer.java:Unknown line)
+	sun.nio.cs.StreamEncoder.writeBytes(StreamEncoder.java:Unknown line)
+	sun.nio.cs.StreamEncoder.implFlushBuffer(StreamEncoder.java:Unknown line)
+	sun.nio.cs.StreamEncoder.flushBuffer(StreamEncoder.java:Unknown line)
+TRACE 303980:
+	java.nio.Buffer.limit(Buffer.java:Unknown line)
+	java.util.Scanner.getCompleteTokenInBuffer(Scanner.java:Unknown line)
+	java.util.Scanner.hasNext(Scanner.java:Unknown line)
+	java.util.Scanner.hasNextInt(Scanner.java:Unknown line)
+TRACE 304095:
+	java.nio.Buffer.remaining(Buffer.java:Unknown line)
+	java.nio.CharBuffer.length(CharBuffer.java:Unknown line)
+	java.nio.HeapCharBuffer.subSequence(HeapCharBuffer.java:Unknown line)
+	java.nio.HeapCharBuffer.subSequence(HeapCharBuffer.java:Unknown line)
+TRACE 304187:
+	BinaryHeapPriorityQueue.empty(BinaryHeapPriorityQueue.java:Unknown line)
+	BinaryHeapPriorityQueue.top(BinaryHeapPriorityQueue.java:Unknown line)
+	UniqueMod.main(UniqueMod.java:Unknown line)
+TRACE 304299:
+	java.io.OutputStreamWriter.flushBuffer(OutputStreamWriter.java:Unknown line)
+	java.io.PrintStream.write(PrintStream.java:Unknown line)
+	java.io.PrintStream.print(PrintStream.java:Unknown line)
+	java.io.PrintStream.println(PrintStream.java:Unknown line)
+TRACE 304303:
+	java.io.PrintStream.print(PrintStream.java:Unknown line)
+	java.io.PrintStream.println(PrintStream.java:Unknown line)
+	UniqueMod.main(UniqueMod.java:Unknown line)
+TRACE 304025:
+	java.lang.Character.codePointAt(Character.java:Unknown line)
+	java.util.regex.Pattern$CharProperty.match(Pattern.java:Unknown line)
+	java.util.regex.Pattern$Curly.match(Pattern.java:Unknown line)
+	java.util.regex.Matcher.match(Matcher.java:Unknown line)
+TRACE 304087:
+	java.util.regex.Pattern$GroupHead.match(Pattern.java:Unknown line)
+	java.util.regex.Pattern$Ques.match(Pattern.java:Unknown line)
+	java.util.regex.Pattern$GroupHead.match(Pattern.java:Unknown line)
+	java.util.regex.Pattern$GroupHead.match(Pattern.java:Unknown line)
+TRACE 304297:
+	java.io.BufferedWriter.flushBuffer(BufferedWriter.java:Unknown line)
+	java.io.PrintStream.write(PrintStream.java:Unknown line)
+	java.io.PrintStream.print(PrintStream.java:Unknown line)
+	java.io.PrintStream.println(PrintStream.java:Unknown line)
+TRACE 304309:
+	java.io.BufferedWriter.flushBuffer(BufferedWriter.java:Unknown line)
+	java.io.PrintStream.newLine(PrintStream.java:Unknown line)
+	java.io.PrintStream.println(PrintStream.java:Unknown line)
+	UniqueMod.main(UniqueMod.java:Unknown line)
+TRACE 304058:
+	java.util.regex.Pattern$BmpCharProperty.match(Pattern.java:Unknown line)
+	java.util.regex.Pattern$Ques.match(Pattern.java:Unknown line)
+	java.util.regex.Pattern$GroupHead.match(Pattern.java:Unknown line)
+	java.util.regex.Pattern$GroupHead.match(Pattern.java:Unknown line)
+TRACE 304079:
+	java.util.regex.Pattern$GroupTail.match(Pattern.java:Unknown line)
+	java.util.regex.Pattern$BranchConn.match(Pattern.java:Unknown line)
+	java.util.regex.Pattern$GroupTail.match(Pattern.java:Unknown line)
+	java.util.regex.Pattern$Curly.match2(Pattern.java:Unknown line)
+TRACE 304097:
+	java.nio.Buffer.position(Buffer.java:Unknown line)
+	java.nio.HeapCharBuffer.subSequence(HeapCharBuffer.java:Unknown line)
+	java.nio.HeapCharBuffer.subSequence(HeapCharBuffer.java:Unknown line)
+	java.util.regex.Matcher.getSubSequence(Matcher.java:Unknown line)
+TRACE 304149:
+	java.util.Scanner.hasNextInt(Scanner.java:Unknown line)
+	UniqueMod.main(UniqueMod.java:Unknown line)
+TRACE 304240:
+	java.io.BufferedOutputStream.write(BufferedOutputStream.java:Unknown line)
+	java.io.PrintStream.write(PrintStream.java:Unknown line)
+	sun.nio.cs.StreamEncoder.writeBytes(StreamEncoder.java:Unknown line)
+	sun.nio.cs.StreamEncoder.implFlushBuffer(StreamEncoder.java:Unknown line)
+TRACE 304046:
+	java.util.regex.Matcher.search(Matcher.java:Unknown line)
+	java.util.regex.Matcher.find(Matcher.java:Unknown line)
+	java.util.Scanner.getCompleteTokenInBuffer(Scanner.java:Unknown line)
+	java.util.Scanner.hasNext(Scanner.java:Unknown line)
+TRACE 304089:
+	java.util.regex.Pattern$GroupHead.match(Pattern.java:Unknown line)
+	java.util.regex.Pattern$GroupHead.match(Pattern.java:Unknown line)
+	java.util.regex.Pattern$Branch.match(Pattern.java:Unknown line)
+	java.util.regex.Matcher.match(Matcher.java:Unknown line)
+TRACE 304093:
+	java.util.regex.Matcher.matches(Matcher.java:Unknown line)
+	java.util.Scanner.getCompleteTokenInBuffer(Scanner.java:Unknown line)
+	java.util.Scanner.hasNext(Scanner.java:Unknown line)
+	java.util.Scanner.hasNextInt(Scanner.java:Unknown line)
+TRACE 304129:
+	java.nio.HeapCharBuffer.toString(HeapCharBuffer.java:Unknown line)
+	java.nio.CharBuffer.toString(CharBuffer.java:Unknown line)
+	java.util.regex.Matcher.group(Matcher.java:Unknown line)
+	java.util.Scanner.hasNextInt(Scanner.java:Unknown line)
+TRACE 304162:
+	java.util.regex.Pattern$CharProperty.match(Pattern.java:Unknown line)
+	java.util.regex.Pattern$Curly.match0(Pattern.java:Unknown line)
+	java.util.regex.Pattern$Curly.match(Pattern.java:Unknown line)
+	java.util.regex.Matcher.match(Matcher.java:Unknown line)
+TRACE 304298:
+	sun.nio.cs.StreamEncoder.flushBuffer(StreamEncoder.java:Unknown line)
+	java.io.OutputStreamWriter.flushBuffer(OutputStreamWriter.java:Unknown line)
+	java.io.PrintStream.write(PrintStream.java:Unknown line)
+	java.io.PrintStream.print(PrintStream.java:Unknown line)
+TRACE 304047:
+	java.util.regex.Matcher.find(Matcher.java:Unknown line)
+	java.util.Scanner.getCompleteTokenInBuffer(Scanner.java:Unknown line)
+	java.util.Scanner.hasNext(Scanner.java:Unknown line)
+	java.util.Scanner.hasNextInt(Scanner.java:Unknown line)
+TRACE 304048:
+	java.util.regex.Matcher.end(Matcher.java:Unknown line)
+	java.util.Scanner.getCompleteTokenInBuffer(Scanner.java:Unknown line)
+	java.util.Scanner.hasNext(Scanner.java:Unknown line)
+	java.util.Scanner.hasNextInt(Scanner.java:Unknown line)
+TRACE 304068:
+	java.util.regex.Pattern$Branch.match(Pattern.java:Unknown line)
+	java.util.regex.Pattern$GroupHead.match(Pattern.java:Unknown line)
+	java.util.regex.Pattern$Curly.match(Pattern.java:Unknown line)
+	java.util.regex.Pattern$GroupHead.match(Pattern.java:Unknown line)
+TRACE 304308:
+	java.io.OutputStreamWriter.write(OutputStreamWriter.java:Unknown line)
+	java.io.BufferedWriter.flushBuffer(BufferedWriter.java:Unknown line)
+	java.io.PrintStream.newLine(PrintStream.java:Unknown line)
+	java.io.PrintStream.println(PrintStream.java:Unknown line)
+TRACE 304311:
+	java.io.OutputStreamWriter.flushBuffer(OutputStreamWriter.java:Unknown line)
+	java.io.PrintStream.newLine(PrintStream.java:Unknown line)
+	java.io.PrintStream.println(PrintStream.java:Unknown line)
+	UniqueMod.main(UniqueMod.java:Unknown line)
+TRACE 302129:
+	java.nio.Buffer.remaining(Buffer.java:Unknown line)
+	java.nio.CharBuffer.length(CharBuffer.java:Unknown line)
+	java.util.regex.Matcher.getTextLength(Matcher.java:Unknown line)
+	java.util.regex.Matcher.reset(Matcher.java:Unknown line)
+TRACE 304126:
+	java.util.regex.Matcher.getSubSequence(Matcher.java:Unknown line)
+	java.util.regex.Matcher.group(Matcher.java:Unknown line)
+	java.util.Scanner.hasNextInt(Scanner.java:Unknown line)
+	java.util.Scanner.hasNextInt(Scanner.java:Unknown line)
+TRACE 304153:
+	java.util.Scanner.nextInt(Scanner.java:Unknown line)
+	UniqueMod.main(UniqueMod.java:Unknown line)
+TRACE 304239:
+	java.io.PrintStream.ensureOpen(PrintStream.java:Unknown line)
+	java.io.PrintStream.write(PrintStream.java:Unknown line)
+	sun.nio.cs.StreamEncoder.writeBytes(StreamEncoder.java:Unknown line)
+	sun.nio.cs.StreamEncoder.implFlushBuffer(StreamEncoder.java:Unknown line)
+TRACE 304030:
+	java.util.regex.Pattern$CharPropertyNames$21.isSatisfiedBy(Pattern.java:Unknown line)
+	java.util.regex.Pattern$CharProperty.match(Pattern.java:Unknown line)
+	java.util.regex.Pattern$Curly.match(Pattern.java:Unknown line)
+	java.util.regex.Matcher.match(Matcher.java:Unknown line)
+TRACE 304092:
+	java.util.regex.Matcher.match(Matcher.java:Unknown line)
+	java.util.regex.Matcher.matches(Matcher.java:Unknown line)
+	java.util.Scanner.getCompleteTokenInBuffer(Scanner.java:Unknown line)
+	java.util.Scanner.hasNext(Scanner.java:Unknown line)
+TRACE 304106:
+	java.util.regex.Matcher.getSubSequence(Matcher.java:Unknown line)
+	java.util.regex.Matcher.group(Matcher.java:Unknown line)
+	java.util.regex.Matcher.group(Matcher.java:Unknown line)
+	java.util.Scanner.getCompleteTokenInBuffer(Scanner.java:Unknown line)
+TRACE 304118:
+	java.util.regex.Matcher.group(Matcher.java:Unknown line)
+	java.util.Scanner.cacheResult(Scanner.java:Unknown line)
+	java.util.Scanner.hasNext(Scanner.java:Unknown line)
+	java.util.Scanner.hasNextInt(Scanner.java:Unknown line)
+TRACE 304147:
+	java.lang.Integer.valueOf(Integer.java:Unknown line)
+	java.util.Scanner.hasNextInt(Scanner.java:Unknown line)
+	java.util.Scanner.hasNextInt(Scanner.java:Unknown line)
+	UniqueMod.main(UniqueMod.java:Unknown line)
+TRACE 304217:
+	java.nio.CharBuffer.arrayOffset(CharBuffer.java:Unknown line)
+	sun.nio.cs.UTF_8.updatePositions(UTF_8.java:Unknown line)
+	sun.nio.cs.UTF_8$Encoder.encodeArrayLoop(UTF_8.java:Unknown line)
+	sun.nio.cs.UTF_8$Encoder.encodeLoop(UTF_8.java:Unknown line)
+TRACE 304290:
+	java.lang.String.valueOf(String.java:Unknown line)
+	java.io.PrintStream.println(PrintStream.java:Unknown line)
+	UniqueMod.main(UniqueMod.java:Unknown line)
+TRACE 304080:
+	java.util.regex.Pattern$BranchConn.match(Pattern.java:Unknown line)
+	java.util.regex.Pattern$GroupTail.match(Pattern.java:Unknown line)
+	java.util.regex.Pattern$Curly.match2(Pattern.java:Unknown line)
+	java.util.regex.Pattern$Curly.match(Pattern.java:Unknown line)
+TRACE 304086:
+	java.util.regex.Pattern$GroupHead.match(Pattern.java:Unknown line)
+	java.util.regex.Pattern$GroupHead.match(Pattern.java:Unknown line)
+	java.util.regex.Pattern$Ques.match(Pattern.java:Unknown line)
+	java.util.regex.Pattern$GroupHead.match(Pattern.java:Unknown line)
+TRACE 304115:
+	java.util.regex.Matcher.getSubSequence(Matcher.java:Unknown line)
+	java.util.regex.Matcher.group(Matcher.java:Unknown line)
+	java.util.regex.Matcher.group(Matcher.java:Unknown line)
+	java.util.Scanner.cacheResult(Scanner.java:Unknown line)
+TRACE 304227:
+	java.nio.Buffer.remaining(Buffer.java:Unknown line)
+	sun.nio.cs.StreamEncoder.implWrite(StreamEncoder.java:Unknown line)
+	sun.nio.cs.StreamEncoder.write(StreamEncoder.java:Unknown line)
+	java.io.OutputStreamWriter.write(OutputStreamWriter.java:Unknown line)
+TRACE 302571:
+	java.nio.Buffer.position(Buffer.java:Unknown line)
+	java.nio.Buffer.<init>(Buffer.java:Unknown line)
+	java.nio.CharBuffer.<init>(CharBuffer.java:Unknown line)
+	java.nio.HeapCharBuffer.<init>(HeapCharBuffer.java:Unknown line)
+TRACE 303991:
+	java.util.regex.Matcher.lookingAt(Matcher.java:Unknown line)
+	java.util.Scanner.getCompleteTokenInBuffer(Scanner.java:Unknown line)
+	java.util.Scanner.hasNext(Scanner.java:Unknown line)
+	java.util.Scanner.hasNextInt(Scanner.java:Unknown line)
+TRACE 304075:
+	java.util.regex.Pattern$BranchConn.match(Pattern.java:Unknown line)
+	java.util.regex.Pattern$GroupTail.match(Pattern.java:Unknown line)
+	java.util.regex.Pattern$GroupTail.match(Pattern.java:Unknown line)
+	java.util.regex.Pattern$GroupTail.match(Pattern.java:Unknown line)
+TRACE 304078:
+	java.util.regex.Pattern$GroupTail.match(Pattern.java:Unknown line)
+	java.util.regex.Pattern$GroupTail.match(Pattern.java:Unknown line)
+	java.util.regex.Pattern$BranchConn.match(Pattern.java:Unknown line)
+	java.util.regex.Pattern$GroupTail.match(Pattern.java:Unknown line)
+TRACE 304099:
+	java.nio.Buffer.limit(Buffer.java:Unknown line)
+	java.nio.Buffer.<init>(Buffer.java:Unknown line)
+	java.nio.CharBuffer.<init>(CharBuffer.java:Unknown line)
+	java.nio.HeapCharBuffer.<init>(HeapCharBuffer.java:Unknown line)
+TRACE 304108:
+	java.nio.Buffer.limit(Buffer.java:Unknown line)
+	java.nio.CharBuffer.toString(CharBuffer.java:Unknown line)
+	java.util.regex.Matcher.group(Matcher.java:Unknown line)
+	java.util.regex.Matcher.group(Matcher.java:Unknown line)
+TRACE 304219:
+	java.nio.ByteBuffer.arrayOffset(ByteBuffer.java:Unknown line)
+	sun.nio.cs.UTF_8.updatePositions(UTF_8.java:Unknown line)
+	sun.nio.cs.UTF_8$Encoder.encodeArrayLoop(UTF_8.java:Unknown line)
+	sun.nio.cs.UTF_8$Encoder.encodeLoop(UTF_8.java:Unknown line)
+TRACE 304238:
+	java.nio.ByteBuffer.arrayOffset(ByteBuffer.java:Unknown line)
+	sun.nio.cs.StreamEncoder.writeBytes(StreamEncoder.java:Unknown line)
+	sun.nio.cs.StreamEncoder.implFlushBuffer(StreamEncoder.java:Unknown line)
+	sun.nio.cs.StreamEncoder.flushBuffer(StreamEncoder.java:Unknown line)
+TRACE 304243:
+	java.io.OutputStream.flush(OutputStream.java:Unknown line)
+	java.io.BufferedOutputStream.flush(BufferedOutputStream.java:Unknown line)
+	java.io.PrintStream.write(PrintStream.java:Unknown line)
+	sun.nio.cs.StreamEncoder.writeBytes(StreamEncoder.java:Unknown line)
+TRACE 304289:
+	java.lang.Integer.toString(Integer.java:Unknown line)
+	java.lang.String.valueOf(String.java:Unknown line)
+	java.io.PrintStream.println(PrintStream.java:Unknown line)
+	UniqueMod.main(UniqueMod.java:Unknown line)
+TRACE 303990:
+	java.util.regex.Matcher.match(Matcher.java:Unknown line)
+	java.util.regex.Matcher.lookingAt(Matcher.java:Unknown line)
+	java.util.Scanner.getCompleteTokenInBuffer(Scanner.java:Unknown line)
+	java.util.Scanner.hasNext(Scanner.java:Unknown line)
+TRACE 304155:
+	java.lang.Integer.<init>(Integer.java:Unknown line)
+	java.lang.Integer.valueOf(Integer.java:Unknown line)
+	UniqueMod.main(UniqueMod.java:Unknown line)
+TRACE 304158:
+	BinaryHeapPriorityQueue.getParent(BinaryHeapPriorityQueue.java:Unknown line)
+	BinaryHeapPriorityQueue.insert(BinaryHeapPriorityQueue.java:Unknown line)
+	UniqueMod.main(UniqueMod.java:Unknown line)
+TRACE 304223:
+	java.nio.charset.CoderResult.isOverflow(CoderResult.java:Unknown line)
+	java.nio.charset.CharsetEncoder.encode(CharsetEncoder.java:Unknown line)
+	sun.nio.cs.StreamEncoder.implWrite(StreamEncoder.java:Unknown line)
+	sun.nio.cs.StreamEncoder.write(StreamEncoder.java:Unknown line)
+TRACE 304236:
+	java.nio.Buffer.position(Buffer.java:Unknown line)
+	sun.nio.cs.StreamEncoder.writeBytes(StreamEncoder.java:Unknown line)
+	sun.nio.cs.StreamEncoder.implFlushBuffer(StreamEncoder.java:Unknown line)
+	sun.nio.cs.StreamEncoder.flushBuffer(StreamEncoder.java:Unknown line)
+TRACE 302570:
+	java.nio.Buffer.limit(Buffer.java:Unknown line)
+	java.nio.Buffer.<init>(Buffer.java:Unknown line)
+	java.nio.CharBuffer.<init>(CharBuffer.java:Unknown line)
+	java.nio.HeapCharBuffer.<init>(HeapCharBuffer.java:Unknown line)
+TRACE 304085:
+	java.util.regex.Pattern$Branch.match(Pattern.java:Unknown line)
+	java.util.regex.Pattern$GroupHead.match(Pattern.java:Unknown line)
+	java.util.regex.Pattern$GroupHead.match(Pattern.java:Unknown line)
+	java.util.regex.Pattern$Ques.match(Pattern.java:Unknown line)
+TRACE 304091:
+	java.util.regex.Pattern$Branch.match(Pattern.java:Unknown line)
+	java.util.regex.Matcher.match(Matcher.java:Unknown line)
+	java.util.regex.Matcher.matches(Matcher.java:Unknown line)
+	java.util.Scanner.getCompleteTokenInBuffer(Scanner.java:Unknown line)
+TRACE 304107:
+	java.nio.Buffer.position(Buffer.java:Unknown line)
+	java.nio.CharBuffer.toString(CharBuffer.java:Unknown line)
+	java.util.regex.Matcher.group(Matcher.java:Unknown line)
+	java.util.regex.Matcher.group(Matcher.java:Unknown line)
+TRACE 304125:
+	java.nio.HeapCharBuffer.subSequence(HeapCharBuffer.java:Unknown line)
+	java.util.regex.Matcher.getSubSequence(Matcher.java:Unknown line)
+	java.util.regex.Matcher.group(Matcher.java:Unknown line)
+	java.util.Scanner.hasNextInt(Scanner.java:Unknown line)
+TRACE 304189:
+	java.lang.Integer.intValue(Integer.java:Unknown line)
+	UniqueMod.main(UniqueMod.java:Unknown line)
+TRACE 304226:
+	java.nio.charset.CoderResult.isUnderflow(CoderResult.java:Unknown line)
+	sun.nio.cs.StreamEncoder.implWrite(StreamEncoder.java:Unknown line)
+	sun.nio.cs.StreamEncoder.write(StreamEncoder.java:Unknown line)
+	java.io.OutputStreamWriter.write(OutputStreamWriter.java:Unknown line)
+TRACE 304235:
+	java.nio.Buffer.limit(Buffer.java:Unknown line)
+	sun.nio.cs.StreamEncoder.writeBytes(StreamEncoder.java:Unknown line)
+	sun.nio.cs.StreamEncoder.implFlushBuffer(StreamEncoder.java:Unknown line)
+	sun.nio.cs.StreamEncoder.flushBuffer(StreamEncoder.java:Unknown line)
+TRACE 304076:
+	java.util.regex.Pattern$GroupTail.match(Pattern.java:Unknown line)
+	java.util.regex.Pattern$GroupTail.match(Pattern.java:Unknown line)
+	java.util.regex.Pattern$GroupTail.match(Pattern.java:Unknown line)
+	java.util.regex.Pattern$GroupTail.match(Pattern.java:Unknown line)
+TRACE 304209:
+	java.nio.ByteBuffer.hasArray(ByteBuffer.java:Unknown line)
+	sun.nio.cs.UTF_8$Encoder.encodeLoop(UTF_8.java:Unknown line)
+	java.nio.charset.CharsetEncoder.encode(CharsetEncoder.java:Unknown line)
+	sun.nio.cs.StreamEncoder.implWrite(StreamEncoder.java:Unknown line)
+TRACE 304210:
+	java.nio.CharBuffer.array(CharBuffer.java:Unknown line)
+	sun.nio.cs.UTF_8$Encoder.encodeArrayLoop(UTF_8.java:Unknown line)
+	sun.nio.cs.UTF_8$Encoder.encodeLoop(UTF_8.java:Unknown line)
+	java.nio.charset.CharsetEncoder.encode(CharsetEncoder.java:Unknown line)
+TRACE 304246:
+	java.nio.Buffer.clear(Buffer.java:Unknown line)
+	sun.nio.cs.StreamEncoder.writeBytes(StreamEncoder.java:Unknown line)
+	sun.nio.cs.StreamEncoder.implFlushBuffer(StreamEncoder.java:Unknown line)
+	sun.nio.cs.StreamEncoder.flushBuffer(StreamEncoder.java:Unknown line)
+TRACE 304300:
+	java.lang.String.indexOf(String.java:Unknown line)
+	java.lang.String.indexOf(String.java:Unknown line)
+	java.io.PrintStream.write(PrintStream.java:Unknown line)
+	java.io.PrintStream.print(PrintStream.java:Unknown line)
+TRACE 304301:
+	java.lang.String.indexOf(String.java:Unknown line)
+	java.io.PrintStream.write(PrintStream.java:Unknown line)
+	java.io.PrintStream.print(PrintStream.java:Unknown line)
+	java.io.PrintStream.println(PrintStream.java:Unknown line)
+TRACE 304069:
+	java.util.regex.Pattern$GroupHead.match(Pattern.java:Unknown line)
+	java.util.regex.Pattern$Curly.match(Pattern.java:Unknown line)
+	java.util.regex.Pattern$GroupHead.match(Pattern.java:Unknown line)
+	java.util.regex.Pattern$Branch.match(Pattern.java:Unknown line)
+TRACE 304084:
+	java.util.regex.Pattern$GroupHead.match(Pattern.java:Unknown line)
+	java.util.regex.Pattern$Branch.match(Pattern.java:Unknown line)
+	java.util.regex.Pattern$GroupHead.match(Pattern.java:Unknown line)
+	java.util.regex.Pattern$GroupHead.match(Pattern.java:Unknown line)
+TRACE 304113:
+	java.util.regex.Matcher.group(Matcher.java:Unknown line)
+	java.util.Scanner.getCompleteTokenInBuffer(Scanner.java:Unknown line)
+	java.util.Scanner.hasNext(Scanner.java:Unknown line)
+	java.util.Scanner.hasNextInt(Scanner.java:Unknown line)
+TRACE 304224:
+	java.nio.charset.CoderResult.isUnderflow(CoderResult.java:Unknown line)
+	java.nio.charset.CharsetEncoder.encode(CharsetEncoder.java:Unknown line)
+	sun.nio.cs.StreamEncoder.implWrite(StreamEncoder.java:Unknown line)
+	sun.nio.cs.StreamEncoder.write(StreamEncoder.java:Unknown line)
+TRACE 303979:
+	java.util.regex.Matcher.usePattern(Matcher.java:Unknown line)
+	java.util.Scanner.getCompleteTokenInBuffer(Scanner.java:Unknown line)
+	java.util.Scanner.hasNext(Scanner.java:Unknown line)
+	java.util.Scanner.hasNextInt(Scanner.java:Unknown line)
+TRACE 304207:
+	java.nio.Buffer.hasRemaining(Buffer.java:Unknown line)
+	sun.nio.cs.StreamEncoder.implWrite(StreamEncoder.java:Unknown line)
+	sun.nio.cs.StreamEncoder.write(StreamEncoder.java:Unknown line)
+	java.io.OutputStreamWriter.write(OutputStreamWriter.java:Unknown line)
+TRACE 303975:
+	java.util.Scanner.integerPattern(Scanner.java:Unknown line)
+	java.util.Scanner.hasNextInt(Scanner.java:Unknown line)
+	java.util.Scanner.hasNextInt(Scanner.java:Unknown line)
+	UniqueMod.main(UniqueMod.java:Unknown line)
+TRACE 304050:
+	java.util.regex.Matcher.start(Matcher.java:Unknown line)
+	java.util.Scanner.getCompleteTokenInBuffer(Scanner.java:Unknown line)
+	java.util.Scanner.hasNext(Scanner.java:Unknown line)
+	java.util.Scanner.hasNextInt(Scanner.java:Unknown line)
+TRACE 304090:
+	java.util.regex.Pattern$GroupHead.match(Pattern.java:Unknown line)
+	java.util.regex.Pattern$Branch.match(Pattern.java:Unknown line)
+	java.util.regex.Matcher.match(Matcher.java:Unknown line)
+	java.util.regex.Matcher.matches(Matcher.java:Unknown line)
+TRACE 304198:
+	java.io.BufferedWriter.min(BufferedWriter.java:Unknown line)
+	java.io.BufferedWriter.write(BufferedWriter.java:Unknown line)
+	java.io.Writer.write(Writer.java:Unknown line)
+	java.io.PrintStream.write(PrintStream.java:Unknown line)
+TRACE 304203:
+	sun.nio.cs.StreamEncoder.ensureOpen(StreamEncoder.java:Unknown line)
+	sun.nio.cs.StreamEncoder.write(StreamEncoder.java:Unknown line)
+	java.io.OutputStreamWriter.write(OutputStreamWriter.java:Unknown line)
+	java.io.BufferedWriter.flushBuffer(BufferedWriter.java:Unknown line)
+TRACE 304214:
+	java.nio.ByteBuffer.array(ByteBuffer.java:Unknown line)
+	sun.nio.cs.UTF_8$Encoder.encodeArrayLoop(UTF_8.java:Unknown line)
+	sun.nio.cs.UTF_8$Encoder.encodeLoop(UTF_8.java:Unknown line)
+	java.nio.charset.CharsetEncoder.encode(CharsetEncoder.java:Unknown line)
+TRACE 304237:
+	java.nio.ByteBuffer.array(ByteBuffer.java:Unknown line)
+	sun.nio.cs.StreamEncoder.writeBytes(StreamEncoder.java:Unknown line)
+	sun.nio.cs.StreamEncoder.implFlushBuffer(StreamEncoder.java:Unknown line)
+	sun.nio.cs.StreamEncoder.flushBuffer(StreamEncoder.java:Unknown line)
+TRACE 304259:
+	java.lang.String.getChars(String.java:Unknown line)
+	java.io.BufferedWriter.write(BufferedWriter.java:Unknown line)
+	java.io.Writer.write(Writer.java:Unknown line)
+	java.io.BufferedWriter.newLine(BufferedWriter.java:Unknown line)
+TRACE 304296:
+	java.io.OutputStreamWriter.write(OutputStreamWriter.java:Unknown line)
+	java.io.BufferedWriter.flushBuffer(BufferedWriter.java:Unknown line)
+	java.io.PrintStream.write(PrintStream.java:Unknown line)
+	java.io.PrintStream.print(PrintStream.java:Unknown line)
+TRACE 303976:
+	java.util.Scanner.ensureOpen(Scanner.java:Unknown line)
+	java.util.Scanner.hasNext(Scanner.java:Unknown line)
+	java.util.Scanner.hasNextInt(Scanner.java:Unknown line)
+	java.util.Scanner.hasNextInt(Scanner.java:Unknown line)
+TRACE 304038:
+	java.lang.Character.isHighSurrogate(Character.java:Unknown line)
+	java.lang.Character.codePointAt(Character.java:Unknown line)
+	java.util.regex.Pattern$CharProperty.match(Pattern.java:Unknown line)
+	java.util.regex.Pattern$Curly.match0(Pattern.java:Unknown line)
+TRACE 304122:
+	java.util.Scanner.revertState(Scanner.java:Unknown line)
+	java.util.Scanner.hasNext(Scanner.java:Unknown line)
+	java.util.Scanner.hasNextInt(Scanner.java:Unknown line)
+	java.util.Scanner.hasNextInt(Scanner.java:Unknown line)
+TRACE 304208:
+	java.nio.CharBuffer.hasArray(CharBuffer.java:Unknown line)
+	sun.nio.cs.UTF_8$Encoder.encodeLoop(UTF_8.java:Unknown line)
+	java.nio.charset.CharsetEncoder.encode(CharsetEncoder.java:Unknown line)
+	sun.nio.cs.StreamEncoder.implWrite(StreamEncoder.java:Unknown line)
+TRACE 304256:
+	java.lang.String.length(String.java:Unknown line)
+	java.io.Writer.write(Writer.java:Unknown line)
+	java.io.BufferedWriter.newLine(BufferedWriter.java:Unknown line)
+	java.io.PrintStream.newLine(PrintStream.java:Unknown line)
+TRACE 300994:
+	java.lang.Math.min(Math.java:Unknown line)
+	java.util.Arrays.copyOfRange(Arrays.java:Unknown line)
+	java.lang.String.<init>(String.java:Unknown line)
+	java.nio.HeapCharBuffer.toString(HeapCharBuffer.java:Unknown line)
+TRACE 304052:
+	java.nio.Buffer.checkIndex(Buffer.java:Unknown line)
+	java.nio.CharBuffer.charAt(CharBuffer.java:Unknown line)
+	java.util.regex.Pattern$BmpCharProperty.match(Pattern.java:Unknown line)
+	java.util.regex.Pattern$Ques.match(Pattern.java:Unknown line)
+TRACE 304120:
+	java.util.regex.Matcher.pattern(Matcher.java:Unknown line)
+	java.util.Scanner.cacheResult(Scanner.java:Unknown line)
+	java.util.Scanner.hasNext(Scanner.java:Unknown line)
+	java.util.Scanner.hasNextInt(Scanner.java:Unknown line)
+TRACE 304124:
+	java.util.regex.Matcher.groupCount(Matcher.java:Unknown line)
+	java.util.regex.Matcher.group(Matcher.java:Unknown line)
+	java.util.Scanner.hasNextInt(Scanner.java:Unknown line)
+	java.util.Scanner.hasNextInt(Scanner.java:Unknown line)
+TRACE 304145:
+	java.lang.Number.<init>(Number.java:Unknown line)
+	java.lang.Integer.<init>(Integer.java:Unknown line)
+	java.lang.Integer.valueOf(Integer.java:Unknown line)
+	java.util.Scanner.hasNextInt(Scanner.java:Unknown line)
+TRACE 304146:
+	java.lang.Integer.<init>(Integer.java:Unknown line)
+	java.lang.Integer.valueOf(Integer.java:Unknown line)
+	java.util.Scanner.hasNextInt(Scanner.java:Unknown line)
+	java.util.Scanner.hasNextInt(Scanner.java:Unknown line)
+TRACE 304150:
+	java.lang.Integer.intValue(Integer.java:Unknown line)
+	java.util.Scanner.nextInt(Scanner.java:Unknown line)
+	java.util.Scanner.nextInt(Scanner.java:Unknown line)
+	UniqueMod.main(UniqueMod.java:Unknown line)
+TRACE 304151:
+	java.util.Scanner.useTypeCache(Scanner.java:Unknown line)
+	java.util.Scanner.nextInt(Scanner.java:Unknown line)
+	java.util.Scanner.nextInt(Scanner.java:Unknown line)
+	UniqueMod.main(UniqueMod.java:Unknown line)
+TRACE 304163:
+	java.util.regex.Pattern$LastNode.match(Pattern.java:Unknown line)
+	java.util.regex.Pattern$Curly.match0(Pattern.java:Unknown line)
+	java.util.regex.Pattern$Curly.match(Pattern.java:Unknown line)
+	java.util.regex.Matcher.match(Matcher.java:Unknown line)
+TRACE 304233:
+	java.nio.Buffer.position(Buffer.java:Unknown line)
+	sun.nio.cs.StreamEncoder.implFlushBuffer(StreamEncoder.java:Unknown line)
+	sun.nio.cs.StreamEncoder.flushBuffer(StreamEncoder.java:Unknown line)
+	java.io.OutputStreamWriter.flushBuffer(OutputStreamWriter.java:Unknown line)
+TRACE 304313:
+	java.io.OutputStream.flush(OutputStream.java:Unknown line)
+	java.io.BufferedOutputStream.flush(BufferedOutputStream.java:Unknown line)
+	java.io.PrintStream.newLine(PrintStream.java:Unknown line)
+	java.io.PrintStream.println(PrintStream.java:Unknown line)
+TRACE 303506:
+	java.io.BufferedInputStream.read(BufferedInputStream.java:Unknown line)
+	java.io.DataInputStream.readInt(DataInputStream.java:Unknown line)
+	java.util.Currency.readIntArray(Currency.java:Unknown line)
+	java.util.Currency.access$000(Currency.java:Unknown line)
+TRACE 304057:
+	java.util.regex.Pattern$BitClass.isSatisfiedBy(Pattern.java:Unknown line)
+	java.util.regex.Pattern$BmpCharProperty.match(Pattern.java:Unknown line)
+	java.util.regex.Pattern$Ques.match(Pattern.java:Unknown line)
+	java.util.regex.Pattern$GroupHead.match(Pattern.java:Unknown line)
+TRACE 304154:
+	java.lang.Number.<init>(Number.java:Unknown line)
+	java.lang.Integer.<init>(Integer.java:Unknown line)
+	java.lang.Integer.valueOf(Integer.java:Unknown line)
+	UniqueMod.main(UniqueMod.java:Unknown line)
+TRACE 304257:
+	java.io.BufferedWriter.ensureOpen(BufferedWriter.java:Unknown line)
+	java.io.BufferedWriter.write(BufferedWriter.java:Unknown line)
+	java.io.Writer.write(Writer.java:Unknown line)
+	java.io.BufferedWriter.newLine(BufferedWriter.java:Unknown line)
+TRACE 304267:
+	sun.nio.cs.StreamEncoder.isOpen(StreamEncoder.java:Unknown line)
+	sun.nio.cs.StreamEncoder.flushBuffer(StreamEncoder.java:Unknown line)
+	java.io.OutputStreamWriter.flushBuffer(OutputStreamWriter.java:Unknown line)
+	java.io.PrintStream.newLine(PrintStream.java:Unknown line)
+TRACE 304286:
+	java.lang.Integer.getChars(Integer.java:Unknown line)
+	java.lang.Integer.toString(Integer.java:Unknown line)
+	java.lang.Integer.toString(Integer.java:Unknown line)
+	java.lang.String.valueOf(String.java:Unknown line)
+TRACE 303789:
+	java.util.Scanner.setRadix(Scanner.java:Unknown line)
+	java.util.Scanner.hasNextInt(Scanner.java:Unknown line)
+	java.util.Scanner.hasNextInt(Scanner.java:Unknown line)
+	UniqueMod.main(UniqueMod.java:Unknown line)
+TRACE 304074:
+	java.util.regex.Pattern$LastNode.match(Pattern.java:Unknown line)
+	java.util.regex.Pattern$BranchConn.match(Pattern.java:Unknown line)
+	java.util.regex.Pattern$GroupTail.match(Pattern.java:Unknown line)
+	java.util.regex.Pattern$GroupTail.match(Pattern.java:Unknown line)
+TRACE 304119:
+	java.util.regex.Matcher.end(Matcher.java:Unknown line)
+	java.util.Scanner.cacheResult(Scanner.java:Unknown line)
+	java.util.Scanner.hasNext(Scanner.java:Unknown line)
+	java.util.Scanner.hasNextInt(Scanner.java:Unknown line)
+TRACE 304128:
+	java.nio.Buffer.limit(Buffer.java:Unknown line)
+	java.nio.CharBuffer.toString(CharBuffer.java:Unknown line)
+	java.util.regex.Matcher.group(Matcher.java:Unknown line)
+	java.util.Scanner.hasNextInt(Scanner.java:Unknown line)
+TRACE 304186:
+	BinaryHeapPriorityQueue.empty(BinaryHeapPriorityQueue.java:Unknown line)
+	UniqueMod.main(UniqueMod.java:Unknown line)
+TRACE 304199:
+	java.lang.String.getChars(String.java:Unknown line)
+	java.io.BufferedWriter.write(BufferedWriter.java:Unknown line)
+	java.io.Writer.write(Writer.java:Unknown line)
+	java.io.PrintStream.write(PrintStream.java:Unknown line)
+TRACE 304276:
+	BinaryHeapPriorityQueue.empty(BinaryHeapPriorityQueue.java:Unknown line)
+	BinaryHeapPriorityQueue.remove(BinaryHeapPriorityQueue.java:Unknown line)
+	UniqueMod.main(UniqueMod.java:Unknown line)
+TRACE 304036:
+	java.util.regex.Pattern$Node.match(Pattern.java:Unknown line)
+	java.util.regex.Pattern$CharProperty.match(Pattern.java:Unknown line)
+	java.util.regex.Pattern$Curly.match(Pattern.java:Unknown line)
+	java.util.regex.Pattern$Start.match(Pattern.java:Unknown line)
+TRACE 304043:
+	java.util.regex.Pattern$LastNode.match(Pattern.java:Unknown line)
+	java.util.regex.Pattern$Curly.match0(Pattern.java:Unknown line)
+	java.util.regex.Pattern$Curly.match(Pattern.java:Unknown line)
+	java.util.regex.Pattern$Start.match(Pattern.java:Unknown line)
+TRACE 304094:
+	java.util.regex.Matcher.groupCount(Matcher.java:Unknown line)
+	java.util.regex.Matcher.group(Matcher.java:Unknown line)
+	java.util.regex.Matcher.group(Matcher.java:Unknown line)
+	java.util.Scanner.getCompleteTokenInBuffer(Scanner.java:Unknown line)
+TRACE 304165:
+	java.util.regex.Matcher.hitEnd(Matcher.java:Unknown line)
+	java.util.Scanner.getCompleteTokenInBuffer(Scanner.java:Unknown line)
+	java.util.Scanner.hasNext(Scanner.java:Unknown line)
+	java.util.Scanner.hasNextInt(Scanner.java:Unknown line)
+TRACE 304197:
+	java.io.BufferedWriter.ensureOpen(BufferedWriter.java:Unknown line)
+	java.io.BufferedWriter.write(BufferedWriter.java:Unknown line)
+	java.io.Writer.write(Writer.java:Unknown line)
+	java.io.PrintStream.write(PrintStream.java:Unknown line)
+TRACE 304258:
+	java.io.BufferedWriter.min(BufferedWriter.java:Unknown line)
+	java.io.BufferedWriter.write(BufferedWriter.java:Unknown line)
+	java.io.Writer.write(Writer.java:Unknown line)
+	java.io.BufferedWriter.newLine(BufferedWriter.java:Unknown line)
+TRACE 304312:
+	java.io.BufferedOutputStream.flushBuffer(BufferedOutputStream.java:Unknown line)
+	java.io.BufferedOutputStream.flush(BufferedOutputStream.java:Unknown line)
+	java.io.PrintStream.newLine(PrintStream.java:Unknown line)
+	java.io.PrintStream.println(PrintStream.java:Unknown line)
+TRACE 304073:
+	java.util.regex.Pattern$CharProperty.match(Pattern.java:Unknown line)
+	java.util.regex.Pattern$Branch.match(Pattern.java:Unknown line)
+	java.util.regex.Pattern$GroupHead.match(Pattern.java:Unknown line)
+	java.util.regex.Pattern$Curly.match2(Pattern.java:Unknown line)
+TRACE 304132:
+	java.lang.String.length(String.java:Unknown line)
+	java.lang.Integer.parseInt(Integer.java:Unknown line)
+	java.util.Scanner.hasNextInt(Scanner.java:Unknown line)
+	java.util.Scanner.hasNextInt(Scanner.java:Unknown line)
+TRACE 304157:
+	BinaryHeapPriorityQueue.ensureNotNull(BinaryHeapPriorityQueue.java:Unknown line)
+	BinaryHeapPriorityQueue.insert(BinaryHeapPriorityQueue.java:Unknown line)
+	UniqueMod.main(UniqueMod.java:Unknown line)
+TRACE 304161:
+	java.util.regex.Pattern$Node.match(Pattern.java:Unknown line)
+	java.util.regex.Pattern$CharProperty.match(Pattern.java:Unknown line)
+	java.util.regex.Pattern$Curly.match(Pattern.java:Unknown line)
+	java.util.regex.Matcher.match(Matcher.java:Unknown line)
+TRACE 304232:
+	sun.nio.cs.StreamEncoder.isOpen(StreamEncoder.java:Unknown line)
+	sun.nio.cs.StreamEncoder.flushBuffer(StreamEncoder.java:Unknown line)
+	java.io.OutputStreamWriter.flushBuffer(OutputStreamWriter.java:Unknown line)
+	java.io.PrintStream.write(PrintStream.java:Unknown line)
+TRACE 304291:
+	java.io.PrintStream.ensureOpen(PrintStream.java:Unknown line)
+	java.io.PrintStream.write(PrintStream.java:Unknown line)
+	java.io.PrintStream.print(PrintStream.java:Unknown line)
+	java.io.PrintStream.println(PrintStream.java:Unknown line)
+TRACE 304304:
+	java.io.PrintStream.ensureOpen(PrintStream.java:Unknown line)
+	java.io.PrintStream.newLine(PrintStream.java:Unknown line)
+	java.io.PrintStream.println(PrintStream.java:Unknown line)
+	UniqueMod.main(UniqueMod.java:Unknown line)
+TRACE 303977:
+	java.util.Scanner.saveState(Scanner.java:Unknown line)
+	java.util.Scanner.hasNext(Scanner.java:Unknown line)
+	java.util.Scanner.hasNextInt(Scanner.java:Unknown line)
+	java.util.Scanner.hasNextInt(Scanner.java:Unknown line)
+TRACE 304114:
+	java.util.regex.Matcher.groupCount(Matcher.java:Unknown line)
+	java.util.regex.Matcher.group(Matcher.java:Unknown line)
+	java.util.regex.Matcher.group(Matcher.java:Unknown line)
+	java.util.Scanner.cacheResult(Scanner.java:Unknown line)
+TRACE 304127:
+	java.nio.Buffer.position(Buffer.java:Unknown line)
+	java.nio.CharBuffer.toString(CharBuffer.java:Unknown line)
+	java.util.regex.Matcher.group(Matcher.java:Unknown line)
+	java.util.Scanner.hasNextInt(Scanner.java:Unknown line)
+TRACE 304160:
+	java.lang.Character.charCount(Character.java:Unknown line)
+	java.util.regex.Pattern$CharProperty.match(Pattern.java:Unknown line)
+	java.util.regex.Pattern$Curly.match(Pattern.java:Unknown line)
+	java.util.regex.Matcher.match(Matcher.java:Unknown line)
+TRACE 304285:
+	java.lang.Integer.stringSize(Integer.java:Unknown line)
+	java.lang.Integer.toString(Integer.java:Unknown line)
+	java.lang.Integer.toString(Integer.java:Unknown line)
+	java.lang.String.valueOf(String.java:Unknown line)
+TRACE 304307:
+	java.io.BufferedWriter.ensureOpen(BufferedWriter.java:Unknown line)
+	java.io.BufferedWriter.flushBuffer(BufferedWriter.java:Unknown line)
+	java.io.PrintStream.newLine(PrintStream.java:Unknown line)
+	java.io.PrintStream.println(PrintStream.java:Unknown line)
+TRACE 304035:
+	java.lang.Character.charCount(Character.java:Unknown line)
+	java.util.regex.Pattern$CharProperty.match(Pattern.java:Unknown line)
+	java.util.regex.Pattern$Curly.match(Pattern.java:Unknown line)
+	java.util.regex.Pattern$Start.match(Pattern.java:Unknown line)
+TRACE 304051:
+	java.nio.Buffer.position(Buffer.java:Unknown line)
+	java.nio.CharBuffer.charAt(CharBuffer.java:Unknown line)
+	java.util.regex.Pattern$BmpCharProperty.match(Pattern.java:Unknown line)
+	java.util.regex.Pattern$Ques.match(Pattern.java:Unknown line)
+TRACE 304287:
+	java.lang.String.<init>(String.java:Unknown line)
+	java.lang.Integer.toString(Integer.java:Unknown line)
+	java.lang.Integer.toString(Integer.java:Unknown line)
+	java.lang.String.valueOf(String.java:Unknown line)
+TRACE 302579:
+	sun.nio.cs.UTF_8$Decoder.decodeArrayLoop(UTF_8.java:Unknown line)
+	sun.nio.cs.UTF_8$Decoder.decodeLoop(UTF_8.java:Unknown line)
+	java.nio.charset.CharsetDecoder.decode(CharsetDecoder.java:Unknown line)
+	sun.nio.cs.StreamDecoder.implRead(StreamDecoder.java:Unknown line)
+TRACE 303507:
+	java.io.DataInputStream.readInt(DataInputStream.java:Unknown line)
+	java.util.Currency.readIntArray(Currency.java:Unknown line)
+	java.util.Currency.access$000(Currency.java:Unknown line)
+	java.util.Currency$1.run(Currency.java:Unknown line)
+TRACE 304049:
+	java.util.regex.Matcher.requireEnd(Matcher.java:Unknown line)
+	java.util.Scanner.getCompleteTokenInBuffer(Scanner.java:Unknown line)
+	java.util.Scanner.hasNext(Scanner.java:Unknown line)
+	java.util.Scanner.hasNextInt(Scanner.java:Unknown line)
+TRACE 304292:
+	java.lang.String.length(String.java:Unknown line)
+	java.io.Writer.write(Writer.java:Unknown line)
+	java.io.PrintStream.write(PrintStream.java:Unknown line)
+	java.io.PrintStream.print(PrintStream.java:Unknown line)
+TRACE 304295:
+	java.io.BufferedWriter.ensureOpen(BufferedWriter.java:Unknown line)
+	java.io.BufferedWriter.flushBuffer(BufferedWriter.java:Unknown line)
+	java.io.PrintStream.write(PrintStream.java:Unknown line)
+	java.io.PrintStream.print(PrintStream.java:Unknown line)
+TRACE 300616:
+	sun.misc.URLClassPath$JarLoader$1.run(URLClassPath.java:Unknown line)
+	sun.misc.URLClassPath$JarLoader$1.run(URLClassPath.java:Unknown line)
+	sun.misc.URLClassPath$JarLoader.ensureOpen(URLClassPath.java:Unknown line)
+	sun.misc.URLClassPath$JarLoader.<init>(URLClassPath.java:Unknown line)
+TRACE 301769:
+	java.lang.Character.codePointAtImpl(Character.java:Unknown line)
+	java.lang.String.codePointAt(String.java:Unknown line)
+	java.util.regex.Pattern.compile(Pattern.java:Unknown line)
+	java.util.regex.Pattern.<init>(Pattern.java:Unknown line)
+TRACE 303753:
+	java.text.NumberFormat.getInstance(NumberFormat.java:Unknown line)
+	java.text.NumberFormat.getNumberInstance(NumberFormat.java:Unknown line)
+	java.util.Scanner.useLocale(Scanner.java:Unknown line)
+	java.util.Scanner.<init>(Scanner.java:Unknown line)
+TRACE 304017:
+	java.util.Scanner.readInput(Scanner.java:Unknown line)
+	java.util.Scanner.hasNext(Scanner.java:Unknown line)
+	java.util.Scanner.hasNextInt(Scanner.java:Unknown line)
+	java.util.Scanner.hasNextInt(Scanner.java:Unknown line)
+TRACE 300128:
+	java.lang.ClassLoader.findBootstrapClassOrNull(ClassLoader.java:Unknown line)
+	java.lang.ClassLoader.loadClass(ClassLoader.java:Unknown line)
+	java.lang.ClassLoader.loadClass(ClassLoader.java:Unknown line)
+	sun.misc.Launcher$AppClassLoader.loadClass(Launcher.java:Unknown line)
+TRACE 300161:
+	java.lang.Character.toLowerCase(Character.java:Unknown line)
+	java.lang.Character.toLowerCase(Character.java:Unknown line)
+	java.lang.String.toLowerCase(String.java:Unknown line)
+	java.lang.String.toLowerCase(String.java:Unknown line)
+TRACE 300321:
+	java.io.UnixFileSystem.normalize(UnixFileSystem.java:Unknown line)
+	java.io.File.<init>(File.java:Unknown line)
+	sun.misc.FileURLMapper.exists(FileURLMapper.java:Unknown line)
+	sun.misc.URLClassPath$JarLoader.getJarFile(URLClassPath.java:Unknown line)
+TRACE 300561:
+	java.util.zip.ZipFile.<init>(ZipFile.java:Unknown line)
+	java.util.zip.ZipFile.<init>(ZipFile.java:Unknown line)
+	java.util.jar.JarFile.<init>(JarFile.java:Unknown line)
+	java.util.jar.JarFile.<init>(JarFile.java:Unknown line)
+TRACE 300620:
+	sun.misc.URLClassPath$3.run(URLClassPath.java:Unknown line)
+	sun.misc.URLClassPath$3.run(URLClassPath.java:Unknown line)
+	sun.misc.URLClassPath.getLoader(URLClassPath.java:Unknown line)
+	sun.misc.URLClassPath.getLoader(URLClassPath.java:Unknown line)
+TRACE 301223:
+	java.io.FileInputStream.<init>(FileInputStream.java:Unknown line)
+	sun.misc.URLClassPath$FileLoader$1.getInputStream(URLClassPath.java:Unknown line)
+	sun.misc.Resource.cachedInputStream(Resource.java:Unknown line)
+	sun.misc.Resource.getByteBuffer(Resource.java:Unknown line)
+TRACE 302062:
+	java.util.regex.Pattern.has(Pattern.java:Unknown line)
+	java.util.regex.Pattern.next(Pattern.java:Unknown line)
+	java.util.regex.Pattern.single(Pattern.java:Unknown line)
+	java.util.regex.Pattern.range(Pattern.java:Unknown line)
+TRACE 302063:
+	java.util.regex.Pattern.next(Pattern.java:Unknown line)
+	java.util.regex.Pattern.single(Pattern.java:Unknown line)
+	java.util.regex.Pattern.range(Pattern.java:Unknown line)
+	java.util.regex.Pattern.clazz(Pattern.java:Unknown line)
+TRACE 302583:
+	java.nio.charset.CharsetDecoder.decode(CharsetDecoder.java:Unknown line)
+	sun.nio.cs.StreamDecoder.implRead(StreamDecoder.java:Unknown line)
+	sun.nio.cs.StreamDecoder.read(StreamDecoder.java:Unknown line)
+	java.io.InputStreamReader.read(InputStreamReader.java:Unknown line)
+TRACE 302611:
+	java.io.BufferedReader.readLine(BufferedReader.java:Unknown line)
+	java.io.BufferedReader.readLine(BufferedReader.java:Unknown line)
+	sun.misc.MetaIndex.registerDirectory(MetaIndex.java:Unknown line)
+	sun.misc.Launcher$BootClassPathHolder$1.run(Launcher.java:Unknown line)
+TRACE 303505:
+	java.io.BufferedInputStream.getBufIfOpen(BufferedInputStream.java:Unknown line)
+	java.io.BufferedInputStream.read(BufferedInputStream.java:Unknown line)
+	java.io.DataInputStream.readInt(DataInputStream.java:Unknown line)
+	java.util.Currency.readIntArray(Currency.java:Unknown line)
+TRACE 303968:
+	java.util.regex.Pattern.compile(Pattern.java:Unknown line)
+	java.util.regex.Pattern.<init>(Pattern.java:Unknown line)
+	java.util.regex.Pattern.compile(Pattern.java:Unknown line)
+	java.util.Scanner$1.create(Scanner.java:Unknown line)
+TRACE 304003:
+	java.io.FileInputStream.read(FileInputStream.java:Unknown line)
+	java.io.BufferedInputStream.read1(BufferedInputStream.java:Unknown line)
+	java.io.BufferedInputStream.read(BufferedInputStream.java:Unknown line)
+	sun.nio.cs.StreamDecoder.readBytes(StreamDecoder.java:Unknown line)
+TRACE 304015:
+	java.nio.HeapCharBuffer.put(HeapCharBuffer.java:Unknown line)
+	java.io.Reader.read(Reader.java:Unknown line)
+	java.util.Scanner.readInput(Scanner.java:Unknown line)
+	java.util.Scanner.hasNext(Scanner.java:Unknown line)
+CPU TIME (ms) BEGIN (total = 14719) Sun Nov  3 15:07:48 2013
+rank   self  accum   count trace method
+   1  2.34%  2.34%   79023 304023 java.nio.CharBuffer.charAt
+   2  2.29%  4.63%   99010 304022 java.nio.HeapCharBuffer.get
+   3  2.09%  6.72%   10000 304284 BinaryHeapPriorityQueue.remove
+   4  2.09%  8.80%   20002 304221 sun.nio.cs.UTF_8$Encoder.encodeArrayLoop
+   5  1.89% 10.69%   58829 304062 java.nio.CharBuffer.charAt
+   6  1.82% 12.51%   10070 303992 java.util.Scanner.getCompleteTokenInBuffer
+   7  1.78% 14.29%   69010 304033 java.util.regex.Pattern$CharProperty.match
+   8  1.62% 15.92%   79023 304029 java.lang.Character.isWhitespace
+   9  1.57% 17.49%  116755 304280 BinaryHeapPriorityQueue.largerChild
+  10  1.56% 19.05%   58829 304070 java.util.regex.Pattern$BmpCharProperty.match
+  11  1.50% 20.55%  108264 304281 java.lang.Integer.compareTo
+  12  1.49% 22.05%  108264 304282 java.lang.Integer.compareTo
+  13  1.47% 23.52%   69010 304031 java.lang.Character.codePointAt
+  14  1.47% 24.99%  108248 304279 BinaryHeapPriorityQueue.comp
+  15  1.45% 26.44%  108248 304278 java.lang.Integer.compareTo
+  16  1.43% 27.88%  239042 304166 java.lang.Integer.compare
+  17  1.41% 29.29%  108264 304283 BinaryHeapPriorityQueue.comp
+  18  1.35% 30.64%   99010 304028 java.lang.CharacterDataLatin1.isWhitespace
+  19  1.33% 31.97%   20002 304247 sun.nio.cs.StreamEncoder.writeBytes
+  20  1.32% 33.30%  108248 304277 java.lang.Integer.compareTo
+  21  1.32% 34.62%   10000 304136 java.lang.Integer.parseInt
+  22  1.28% 35.90%   58829 304061 java.nio.HeapCharBuffer.get
+  23  1.28% 37.18%   58829 304134 java.lang.Character.digit
+  24  1.06% 38.24%   20002 304228 sun.nio.cs.StreamEncoder.implWrite
+  25  1.04% 39.28%   30000 304104 java.nio.HeapCharBuffer.subSequence
+  26  1.01% 40.29%   69010 304034 java.util.regex.Pattern$Curly.match
+  27  1.01% 41.30%   69010 304032 java.util.regex.Pattern$CharPropertyNames$21.isSatisfiedBy
+  28  0.90% 42.20%   58829 304065 java.util.regex.Pattern$GroupTail.match
+  29  0.90% 43.11%       1 304389 UniqueMod.main
+  30  0.88% 43.99%   60140 303982 java.nio.CharBuffer.length
+  31  0.84% 44.83%   58829 304071 java.util.regex.Pattern$Branch.match
+  32  0.83% 45.66%   58829 304066 java.util.regex.Pattern$BranchConn.match
+  33  0.81% 46.46%   58841 300957 java.lang.CharacterDataLatin1.digit
+  34  0.79% 47.25%   60140 303983 java.util.regex.Matcher.getTextLength
+  35  0.75% 48.00%   10000 304082 java.util.regex.Pattern$Curly.match2
+  36  0.74% 48.74%   30070 303987 java.util.regex.Matcher.region
+  37  0.73% 49.47%   20002 304245 java.io.PrintStream.write
+  38  0.70% 50.17%   58829 304072 java.util.regex.Pattern$GroupHead.match
+  39  0.70% 50.87%   58829 304135 java.lang.Character.digit
+  40  0.68% 51.55%   10001 304148 java.util.Scanner.hasNextInt
+  41  0.64% 52.18%   99010 304027 java.lang.CharacterDataLatin1.getProperties
+  42  0.64% 52.82%   30000 304101 java.nio.Buffer.<init>
+  43  0.64% 53.46%   20002 304220 sun.nio.cs.UTF_8.updatePositions
+  44  0.60% 54.07%   99010 304018 java.nio.Buffer.position
+  45  0.60% 54.67%   10000 304159 BinaryHeapPriorityQueue.insert
+  46  0.60% 55.28%   20002 304225 java.nio.charset.CharsetEncoder.encode
+  47  0.58% 55.86%   20002 304222 sun.nio.cs.UTF_8$Encoder.encodeLoop
+  48  0.58% 56.44%   99010 304019 java.nio.Buffer.checkIndex
+  49  0.58% 57.01%   99010 304020 java.nio.Buffer.checkIndex
+  50  0.56% 57.57%    9999 304315 java.io.PrintStream.newLine
+  51  0.55% 58.12%   10056 304045 java.util.regex.Pattern$Start.match
+  52  0.54% 58.67%   99010 304026 java.lang.CharacterData.of
+  53  0.54% 59.21%    9999 304302 java.io.PrintStream.write
+  54  0.52% 59.73%   19987 304037 java.nio.CharBuffer.charAt
+  55  0.51% 60.24%   20002 304244 java.io.BufferedOutputStream.flush
+  56  0.50% 60.74%   79023 304024 java.lang.Character.isHighSurrogate
+  57  0.49% 61.23%   30000 304096 java.nio.CharBuffer.length
+  58  0.46% 61.68%   20073 302572 java.nio.Buffer.<init>
+  59  0.46% 62.14%   19987 304039 java.lang.Character.codePointAt
+  60  0.44% 62.58%   30000 304102 java.nio.CharBuffer.<init>
+  61  0.43% 63.01%   58829 304059 java.nio.Buffer.position
+  62  0.42% 63.44%   30070 303986 java.util.regex.Matcher.reset
+  63  0.42% 63.86%   30000 304109 java.lang.String.<init>
+  64  0.42% 64.28%   29998 304188 BinaryHeapPriorityQueue.top
+  65  0.41% 64.69%   99010 304021 java.nio.HeapCharBuffer.ix
+  66  0.41% 65.11%   30000 304103 java.nio.HeapCharBuffer.<init>
+  67  0.40% 65.51%   30070 303985 java.util.regex.Matcher.getTextLength
+  68  0.40% 65.91%   68829 304133 java.lang.String.charAt
+  69  0.39% 66.30%   10001 304123 java.util.Scanner.hasNext
+  70  0.39% 66.69%   30070 303984 java.nio.CharBuffer.length
+  71  0.38% 67.07%   10000 304117 java.util.regex.Matcher.group
+  72  0.37% 67.44%   68829 304053 java.nio.Buffer.checkIndex
+  73  0.37% 67.81%   68829 304054 java.nio.HeapCharBuffer.ix
+  74  0.35% 68.16%   30006 300995 java.util.Arrays.copyOfRange
+  75  0.34% 68.50%   10014 303988 java.util.regex.Pattern$CharProperty.match
+  76  0.34% 68.84%   10001 304260 java.io.BufferedWriter.write
+  77  0.33% 69.17%   58829 304064 java.util.regex.Pattern$Node.match
+  78  0.33% 69.50%    9999 304288 java.lang.Integer.toString
+  79  0.33% 69.83%   10000 304130 java.nio.CharBuffer.toString
+  80  0.33% 70.15%   10000 304131 java.util.regex.Matcher.group
+  81  0.32% 70.47%   10000 304056 java.nio.CharBuffer.charAt
+  82  0.32% 70.79%   58829 304063 java.util.regex.Pattern$BitClass.isSatisfiedBy
+  83  0.32% 71.11%   20002 304242 java.io.BufferedOutputStream.flushBuffer
+  84  0.31% 71.42%   10000 304112 java.util.regex.Matcher.group
+  85  0.31% 71.73%   60140 303981 java.nio.Buffer.remaining
+  86  0.31% 72.04%   10000 304121 java.util.Scanner.cacheResult
+  87  0.31% 72.34%   22530 304167 java.lang.Integer.compareTo
+  88  0.31% 72.65%   22530 304168 java.lang.Integer.compareTo
+  89  0.31% 72.95%    9999 304294 java.io.Writer.write
+  90  0.30% 73.25%   58841 300955 java.lang.CharacterData.of
+  91  0.30% 73.55%   58841 300956 java.lang.CharacterDataLatin1.getProperties
+  92  0.30% 73.85%   10000 304083 java.util.regex.Pattern$Curly.match
+  93  0.29% 74.14%   22530 304169 BinaryHeapPriorityQueue.comp
+  94  0.29% 74.43%   20002 304205 java.nio.HeapCharBuffer.<init>
+  95  0.29% 74.72%   19987 304041 java.util.regex.Pattern$CharPropertyNames$21.isSatisfiedBy
+  96  0.29% 75.01%   58829 304060 java.nio.Buffer.checkIndex
+  97  0.29% 75.29%   20000 304105 java.nio.HeapCharBuffer.subSequence
+  98  0.29% 75.58%   40004 304213 java.nio.Buffer.limit
+  99  0.29% 75.86%    9999 304305 java.io.Writer.write
+ 100  0.28% 76.14%   19987 304040 java.lang.Character.isWhitespace
+ 101  0.28% 76.42%   20002 304204 java.nio.CharBuffer.<init>
+ 102  0.27% 76.69%   10000 304152 java.util.Scanner.nextInt
+ 103  0.27% 76.96%   10001 304229 sun.nio.cs.StreamEncoder.write
+ 104  0.27% 77.23%    9999 304316 java.io.PrintStream.println
+ 105  0.26% 77.50%    9999 304293 java.io.BufferedWriter.write
+ 106  0.26% 77.76%   20000 304110 java.nio.HeapCharBuffer.toString
+ 107  0.26% 78.01%   10012 304164 java.util.regex.Pattern$Curly.match0
+ 108  0.25% 78.27%   10000 304042 java.util.regex.Pattern$CharProperty.match
+ 109  0.25% 78.52%   10000 304044 java.util.regex.Pattern$Curly.match0
+ 110  0.25% 78.77%   10000 304116 java.nio.CharBuffer.toString
+ 111  0.24% 79.01%   10000 304055 java.nio.HeapCharBuffer.get
+ 112  0.24% 79.26%   10000 304111 java.nio.CharBuffer.toString
+ 113  0.24% 79.50%   40004 304212 java.nio.Buffer.position
+ 114  0.24% 79.75%   20002 304241 java.io.FileOutputStream.write
+ 115  0.24% 79.99%   10014 303989 java.util.regex.Pattern$Curly.match
+ 116  0.24% 80.22%   40004 304218 java.nio.Buffer.position
+ 117  0.24% 80.46%    9999 304314 java.io.BufferedOutputStream.flush
+ 118  0.23% 80.69%   30000 304098 java.nio.Buffer.capacity
+ 119  0.23% 80.92%   20002 304206 java.nio.CharBuffer.wrap
+ 120  0.22% 81.15%   10001 304248 sun.nio.cs.StreamEncoder.implFlushBuffer
+ 121  0.22% 81.36%   10000 304067 java.util.regex.Pattern$BmpCharProperty.match
+ 122  0.22% 81.58%   10000 304088 java.util.regex.Pattern$Ques.match
+ 123  0.22% 81.80%   40004 304211 java.nio.CharBuffer.arrayOffset
+ 124  0.22% 82.02%   40004 304215 java.nio.ByteBuffer.arrayOffset
+ 125  0.21% 82.23%   10001 304264 sun.nio.cs.StreamEncoder.write
+ 126  0.21% 82.44%    9999 304306 java.io.BufferedWriter.newLine
+ 127  0.21% 82.65%    9999 304310 sun.nio.cs.StreamEncoder.flushBuffer
+ 128  0.20% 82.85%   30000 304100 java.nio.Buffer.position
+ 129  0.20% 83.06%   10000 304156 java.lang.Integer.valueOf
+ 130  0.20% 83.26%   10001 304268 sun.nio.cs.StreamEncoder.implFlushBuffer
+ 131  0.20% 83.46%   10000 304077 java.util.regex.Pattern$GroupTail.match
+ 132  0.20% 83.65%   10000 304081 java.util.regex.Pattern$GroupTail.match
+ 133  0.20% 83.85%   20002 304234 java.nio.Buffer.flip
+ 134  0.19% 84.04%   30128 303980 java.nio.Buffer.limit
+ 135  0.19% 84.23%   30000 304095 java.nio.Buffer.remaining
+ 136  0.19% 84.42%   29998 304187 BinaryHeapPriorityQueue.empty
+ 137  0.19% 84.61%    9999 304299 java.io.OutputStreamWriter.flushBuffer
+ 138  0.19% 84.80%    9999 304303 java.io.PrintStream.print
+ 139  0.18% 84.99%   10013 304025 java.lang.Character.codePointAt
+ 140  0.18% 85.17%   10000 304087 java.util.regex.Pattern$GroupHead.match
+ 141  0.18% 85.35%    9999 304297 java.io.BufferedWriter.flushBuffer
+ 142  0.18% 85.54%    9999 304309 java.io.BufferedWriter.flushBuffer
+ 143  0.18% 85.71%   10000 304058 java.util.regex.Pattern$BmpCharProperty.match
+ 144  0.18% 85.89%   10000 304079 java.util.regex.Pattern$GroupTail.match
+ 145  0.18% 86.07%   30000 304097 java.nio.Buffer.position
+ 146  0.18% 86.24%   10001 304149 java.util.Scanner.hasNextInt
+ 147  0.18% 86.42%   20002 304240 java.io.BufferedOutputStream.write
+ 148  0.17% 86.59%   10056 304046 java.util.regex.Matcher.search
+ 149  0.17% 86.76%   10000 304089 java.util.regex.Pattern$GroupHead.match
+ 150  0.17% 86.93%   10000 304093 java.util.regex.Matcher.matches
+ 151  0.17% 87.10%   10000 304129 java.nio.HeapCharBuffer.toString
+ 152  0.17% 87.27%   10012 304162 java.util.regex.Pattern$CharProperty.match
+ 153  0.17% 87.44%    9999 304298 sun.nio.cs.StreamEncoder.flushBuffer
+ 154  0.16% 87.60%   10056 304047 java.util.regex.Matcher.find
+ 155  0.16% 87.76%   30000 304048 java.util.regex.Matcher.end
+ 156  0.16% 87.93%   10000 304068 java.util.regex.Pattern$Branch.match
+ 157  0.16% 88.09%    9999 304308 java.io.OutputStreamWriter.write
+ 158  0.16% 88.25%    9999 304311 java.io.OutputStreamWriter.flushBuffer
+ 159  0.16% 88.41%   30071 302129 java.nio.Buffer.remaining
+ 160  0.16% 88.57%   10000 304126 java.util.regex.Matcher.getSubSequence
+ 161  0.16% 88.72%   10000 304153 java.util.Scanner.nextInt
+ 162  0.16% 88.88%   20002 304239 java.io.PrintStream.ensureOpen
+ 163  0.15% 89.03%   10013 304030 java.util.regex.Pattern$CharPropertyNames$21.isSatisfiedBy
+ 164  0.15% 89.18%   10000 304092 java.util.regex.Matcher.match
+ 165  0.15% 89.33%   10000 304106 java.util.regex.Matcher.getSubSequence
+ 166  0.15% 89.48%   10000 304118 java.util.regex.Matcher.group
+ 167  0.15% 89.63%   10000 304147 java.lang.Integer.valueOf
+ 168  0.15% 89.78%   20002 304217 java.nio.CharBuffer.arrayOffset
+ 169  0.15% 89.92%    9999 304290 java.lang.String.valueOf
+ 170  0.14% 90.07%   10000 304080 java.util.regex.Pattern$BranchConn.match
+ 171  0.14% 90.21%   10000 304086 java.util.regex.Pattern$GroupHead.match
+ 172  0.14% 90.35%   10000 304115 java.util.regex.Matcher.getSubSequence
+ 173  0.14% 90.50%   20002 304227 java.nio.Buffer.remaining
+ 174  0.14% 90.63%   20073 302571 java.nio.Buffer.position
+ 175  0.14% 90.77%   10014 303991 java.util.regex.Matcher.lookingAt
+ 176  0.14% 90.90%   10000 304075 java.util.regex.Pattern$BranchConn.match
+ 177  0.14% 91.04%   10000 304078 java.util.regex.Pattern$GroupTail.match
+ 178  0.14% 91.17%   30000 304099 java.nio.Buffer.limit
+ 179  0.14% 91.31%   20000 304108 java.nio.Buffer.limit
+ 180  0.14% 91.45%   20002 304219 java.nio.ByteBuffer.arrayOffset
+ 181  0.14% 91.58%   20002 304238 java.nio.ByteBuffer.arrayOffset
+ 182  0.14% 91.72%   20002 304243 java.io.OutputStream.flush
+ 183  0.14% 91.85%    9999 304289 java.lang.Integer.toString
+ 184  0.13% 91.98%   10014 303990 java.util.regex.Matcher.match
+ 185  0.13% 92.11%    9998 304155 java.lang.Integer.<init>
+ 186  0.13% 92.24%   22540 304158 BinaryHeapPriorityQueue.getParent
+ 187  0.13% 92.37%   20002 304223 java.nio.charset.CoderResult.isOverflow
+ 188  0.13% 92.50%   20002 304236 java.nio.Buffer.position
+ 189  0.12% 92.62%   20073 302570 java.nio.Buffer.limit
+ 190  0.12% 92.74%   10000 304085 java.util.regex.Pattern$Branch.match
+ 191  0.12% 92.87%   10000 304091 java.util.regex.Pattern$Branch.match
+ 192  0.12% 92.99%   20000 304107 java.nio.Buffer.position
+ 193  0.12% 93.11%   10000 304125 java.nio.HeapCharBuffer.subSequence
+ 194  0.12% 93.23%   19999 304189 java.lang.Integer.intValue
+ 195  0.12% 93.36%   20002 304226 java.nio.charset.CoderResult.isUnderflow
+ 196  0.12% 93.48%   20002 304235 java.nio.Buffer.limit
+ 197  0.12% 93.59%   10000 304076 java.util.regex.Pattern$GroupTail.match
+ 198  0.12% 93.71%   20002 304209 java.nio.ByteBuffer.hasArray
+ 199  0.12% 93.82%   20002 304210 java.nio.CharBuffer.array
+ 200  0.12% 93.94%   20002 304246 java.nio.Buffer.clear
+ 201  0.12% 94.06%    9999 304300 java.lang.String.indexOf
+ 202  0.12% 94.17%    9999 304301 java.lang.String.indexOf
+ 203  0.11% 94.28%   10000 304069 java.util.regex.Pattern$GroupHead.match
+ 204  0.11% 94.39%   10000 304084 java.util.regex.Pattern$GroupHead.match
+ 205  0.11% 94.50%   10000 304113 java.util.regex.Matcher.group
+ 206  0.11% 94.61%   20002 304224 java.nio.charset.CoderResult.isUnderflow
+ 207  0.10% 94.70%   20070 303979 java.util.regex.Matcher.usePattern
+ 208  0.10% 94.80%   20002 304207 java.nio.Buffer.hasRemaining
+ 209  0.09% 94.88%   10001 303975 java.util.Scanner.integerPattern
+ 210  0.09% 94.97%   10000 304050 java.util.regex.Matcher.start
+ 211  0.09% 95.06%   10000 304090 java.util.regex.Pattern$GroupHead.match
+ 212  0.09% 95.15%   10001 304198 java.io.BufferedWriter.min
+ 213  0.09% 95.24%   20002 304203 sun.nio.cs.StreamEncoder.ensureOpen
+ 214  0.09% 95.33%   20002 304214 java.nio.ByteBuffer.array
+ 215  0.09% 95.41%   20002 304237 java.nio.ByteBuffer.array
+ 216  0.09% 95.50%   10001 304259 java.lang.String.getChars
+ 217  0.09% 95.59%    9999 304296 java.io.OutputStreamWriter.write
+ 218  0.08% 95.67%   10001 303976 java.util.Scanner.ensureOpen
+ 219  0.08% 95.75%   19987 304038 java.lang.Character.isHighSurrogate
+ 220  0.08% 95.84%   10001 304122 java.util.Scanner.revertState
+ 221  0.08% 95.92%   20002 304208 java.nio.CharBuffer.hasArray
+ 222  0.08% 96.00%   10001 304256 java.lang.String.length
+ 223  0.07% 96.07%    9444 300994 java.lang.Math.min
+ 224  0.07% 96.15%   10000 304052 java.nio.Buffer.checkIndex
+ 225  0.07% 96.22%   10000 304120 java.util.regex.Matcher.pattern
+ 226  0.07% 96.30%   10000 304124 java.util.regex.Matcher.groupCount
+ 227  0.07% 96.37%    9998 304145 java.lang.Number.<init>
+ 228  0.07% 96.45%    9998 304146 java.lang.Integer.<init>
+ 229  0.07% 96.52%   10000 304150 java.lang.Integer.intValue
+ 230  0.07% 96.60%   10000 304151 java.util.Scanner.useTypeCache
+ 231  0.07% 96.67%   10012 304163 java.util.regex.Pattern$LastNode.match
+ 232  0.07% 96.75%   20002 304233 java.nio.Buffer.position
+ 233  0.07% 96.82%    9999 304313 java.io.OutputStream.flush
+ 234  0.07% 96.89%    3584 303506 java.io.BufferedInputStream.read
+ 235  0.07% 96.96%   10000 304057 java.util.regex.Pattern$BitClass.isSatisfiedBy
+ 236  0.07% 97.02%    9998 304154 java.lang.Number.<init>
+ 237  0.07% 97.09%   10001 304257 java.io.BufferedWriter.ensureOpen
+ 238  0.07% 97.16%   10001 304267 sun.nio.cs.StreamEncoder.isOpen
+ 239  0.07% 97.23%    9999 304286 java.lang.Integer.getChars
+ 240  0.06% 97.29%   10001 303789 java.util.Scanner.setRadix
+ 241  0.06% 97.35%   10000 304074 java.util.regex.Pattern$LastNode.match
+ 242  0.06% 97.41%   10000 304119 java.util.regex.Matcher.end
+ 243  0.06% 97.47%   10000 304128 java.nio.Buffer.limit
+ 244  0.06% 97.53%   10001 304186 BinaryHeapPriorityQueue.empty
+ 245  0.06% 97.59%   10001 304199 java.lang.String.getChars
+ 246  0.06% 97.66%   10000 304276 BinaryHeapPriorityQueue.empty
+ 247  0.05% 97.71%   10000 304036 java.util.regex.Pattern$Node.match
+ 248  0.05% 97.76%   10000 304043 java.util.regex.Pattern$LastNode.match
+ 249  0.05% 97.82%   10000 304094 java.util.regex.Matcher.groupCount
+ 250  0.05% 97.87%   10012 304165 java.util.regex.Matcher.hitEnd
+ 251  0.05% 97.93%   10001 304197 java.io.BufferedWriter.ensureOpen
+ 252  0.05% 97.98%   10001 304258 java.io.BufferedWriter.min
+ 253  0.05% 98.04%    9999 304312 java.io.BufferedOutputStream.flushBuffer
+ 254  0.05% 98.08%   10000 304073 java.util.regex.Pattern$CharProperty.match
+ 255  0.05% 98.13%   10000 304132 java.lang.String.length
+ 256  0.05% 98.18%   10000 304157 BinaryHeapPriorityQueue.ensureNotNull
+ 257  0.05% 98.23%   10012 304161 java.util.regex.Pattern$Node.match
+ 258  0.05% 98.27%   10001 304232 sun.nio.cs.StreamEncoder.isOpen
+ 259  0.05% 98.32%    9999 304291 java.io.PrintStream.ensureOpen
+ 260  0.05% 98.37%    9999 304304 java.io.PrintStream.ensureOpen
+ 261  0.04% 98.41%   10001 303977 java.util.Scanner.saveState
+ 262  0.04% 98.45%   10000 304114 java.util.regex.Matcher.groupCount
+ 263  0.04% 98.49%   10000 304127 java.nio.Buffer.position
+ 264  0.04% 98.53%   10012 304160 java.lang.Character.charCount
+ 265  0.04% 98.57%    9999 304285 java.lang.Integer.stringSize
+ 266  0.04% 98.61%    9999 304307 java.io.BufferedWriter.ensureOpen
+ 267  0.03% 98.65%   10000 304035 java.lang.Character.charCount
+ 268  0.03% 98.68%   10000 304051 java.nio.Buffer.position
+ 269  0.03% 98.72%    9999 304287 java.lang.String.<init>
+ 270  0.03% 98.74%      81 302579 sun.nio.cs.UTF_8$Decoder.decodeArrayLoop
+ 271  0.03% 98.77%     896 303507 java.io.DataInputStream.readInt
+ 272  0.03% 98.80%   10000 304049 java.util.regex.Matcher.requireEnd
+ 273  0.03% 98.82%    9999 304292 java.lang.String.length
+ 274  0.03% 98.85%    9999 304295 java.io.BufferedWriter.ensureOpen
+ 275  0.02% 98.87%      14 300616 sun.misc.URLClassPath$JarLoader$1.run
+ 276  0.02% 98.89%     757 301769 java.lang.Character.codePointAtImpl
+ 277  0.02% 98.91%       1 303753 java.text.NumberFormat.getInstance
+ 278  0.02% 98.93%      69 304017 java.util.Scanner.readInput
+ 279  0.01% 98.95%      20 300128 java.lang.ClassLoader.findBootstrapClassOrNull
+ 280  0.01% 98.96%     181 300161 java.lang.Character.toLowerCase
+ 281  0.01% 98.97%      14 300321 java.io.UnixFileSystem.normalize
+ 282  0.01% 98.99%       9 300561 java.util.zip.ZipFile.<init>
+ 283  0.01% 99.00%      20 300620 sun.misc.URLClassPath$3.run
+ 284  0.01% 99.01%       4 301223 java.io.FileInputStream.<init>
+ 285  0.01% 99.03%     187 302062 java.util.regex.Pattern.has
+ 286  0.01% 99.04%     187 302063 java.util.regex.Pattern.next
+ 287  0.01% 99.06%      81 302583 java.nio.charset.CharsetDecoder.decode
+ 288  0.01% 99.07%      91 302611 java.io.BufferedReader.readLine
+ 289  0.01% 99.08%    3584 303505 java.io.BufferedInputStream.getBufIfOpen
+ 290  0.01% 99.10%       1 303968 java.util.regex.Pattern.compile
+ 291  0.01% 99.11%      10 304003 java.io.FileInputStream.read
+ 292  0.01% 99.12%      68 304015 java.nio.HeapCharBuffer.put
+CPU TIME (ms) END

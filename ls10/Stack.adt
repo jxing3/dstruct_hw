@@ -1,0 +1,26 @@
+adt Stack
+  uses Any, Boolean
+  defines Stack<T:Any>
+  operations
+
+new: ---> Stack<T>
+push: Stack<T> x T --->Stack<T>  //unbounded stack
+pop Stack<T> -/-> Stack<T>
+top: Stack<T> -/-> T 
+empty: Stack<T> --->Boolean
+
+preconditions
+
+pop(s): not empty(s) 
+
+top(s): not empty(s)
+
+axiom
+
+empty(new())
+
+not empty(push(s,t))
+
+pop(push(s,t))=s //can stacks be compared for equality??
+
+top(push(s,t,))=t 

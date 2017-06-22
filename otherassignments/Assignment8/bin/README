@@ -1,0 +1,102 @@
+Will Zvagelsky   |
+wzvagel1         |
+wzvagel1@jhu.edu |
+-----------------
+
+-------------------------------
+Problem 1: Baseline Experiments|
+-------------------------------
+
+  When running the Words program on the data provided to us these were my results based on an average of AT LEAST 5 runs of the program with each data set:
+
+TIMES:
+-----
+
+tiny:
+  ~ 0.007 secs
+  This makes sense since there are only 26 words in this data set so the program runs incredible fast on small data.
+
+manifesto:
+  ~ 0.17 secs
+  This file has 17612 words in it according to the linux wc shell command. So the fact that the program runs in only 0.17 secs means the program is efficient using the BinarySearchTreeMap.
+
+wealth:
+  ~ 1.06 secs
+  This file has 424055 words in it. This program runs in only 1 second when checking nearly half a million items; again, it's clear how efficient a BinarySearchTreeMap truly is.
+
+cracklib:
+  HOWEVER, this file will cause a StackOverFlowError since it's already sorted...the next value is always greater than the previous value for 52848 words in this file. This means that 52848 recursive calls are done and each one of them allocates memory, which ultimately leads to the StackOverFlowError because we're out of memory so it crashes. A BinarySearchTreeMap doesn't work particularly well for data that is already sorted because it just creates a list of nodes all with a right child in this case.
+  I ran this program with a shorter cracklib.txt with only 5000 elements and it ran in 0.813 secs.
+
+
+PROFILER:
+--------
+
+Times:
+  tiny:
+    Most of the time was spent reading the values using FILE I/O, 4.56%. However, it only spends 0.79% in our insert function - there are only 26 elements so there aren't many insertions.
+
+  manifesto:
+    Most of the time was spent in some java match function and in the compareTo adding up to 9.66%. However, for our functions, most of the time was spent in our find method, 1.69%.
+
+  wealth:
+    Most of the time was spent in the same match and compareTo functions mentioned in the manifesto profiler description, except now they add up to 11.84% since there are a lot more elements in this file. Again, our function that runs for the longest time is the find method, adding up to about 6%, it was mentioned in 3 seperate lines in the profiler.
+
+  cracklib:
+    Most of the time here was spent in our insert method, followed by the java compareTo method. Since this file causes an error, that means something went wrong, clearly, in this case it's that we ran out of memory because for every insert, we recursively traverse through the tree in the same direction allocating memory each time. In each step of the recursive traversal, we must compare the methods. Which is why insert and compareTo take up the majority of the time, adding up to 69.61% together - 19.15% spent in only the insert and the rest spent in the compareTo.
+
+    I ran this program with a smaller version of cracklib, with 5000 elements. It ran with mainly the same time spent in each method as described in the case where it errored when I tried to run it with the full cracklib file.
+
+---------------------------------------
+Problem 2: Balanced Binary Search Trees|
+---------------------------------------
+
+  This problem started out really difficult trying to figure out how to get the rotations to work. Then, after a couple hours of banging my head against the wall and trying to figure out how to actually implement the rotation I finally figured it out. There are 4 types of rotations that we discussed: rotateLeft, rotateRight, doubleLeftRotation, doubleRightRotation. Now, rotateLeft and rotateRight are pretty straightforward - they're opposites of each other and it's just a matter of changing the left and right pointers of the 2 nodes out of place in a similar manner that we do swapping values in arrays. However, after that the height must be adjusted again which I used a height function to do this, it simply returns the parameter's height field.
+
+  Now, the height is adjusted using Java's built in Math.max() operator - this operation returns the greatest value of the 2 parameters passed into the function. So, the new height of the Node becomes the max height between it's left & right pointer (or a pointer and itself if only 1 pointer exists) plus 1.
+
+  Since height is always positive if that node exists, if it doesn't than my height function will return -1. If you check balance by subtracting the height of Node.right from the height of Node.left and it equals 2 if some type of left rotation needs to be made. If you do the same check but subtract the height of Node.left from the height of Node.right and it equals 2, then some type of a right rotation needs to be made.
+
+  Eventually I got it figured out, and then I realized I had an error because the insertion of "1, 2, 3, 5, 4" didn't work properly. It was because I was returning the wrong Node in one of my rotations, eventually I got it fixed after running through the debugger over and over again for about an hour.
+
+TIMES:
+-----
+
+tiny:
+  ~ 0.014 secs
+  This ran slower than the BinarySearchTreeMap, but not by much. I guess it's because of the number of rotations that need to be made. However, it keeps the data O(log n) all the time so it's more efficent in the long run.
+
+manifesto:
+  ~ 0.22 secs
+  Again, this ran a bit slower than the implementation from Problem 1. Again, not much slower - I blame it on the rotations that need to be made after almost every insertion. When a BinarySearchTreeMap doesn't require any rotations, it just takes longer to find things in the BinarySearchTreeMap since it doesn't always have O(log n) levels like the AvlTree.
+
+wealth:
+  ~ 1.30 secs
+  Again, ran slower, same reasons as above...but there's a glimmer of hope in the next test!
+
+cracklib:
+  ~ 0.85 secs
+  This file has 52848 items, and it's ordered. Because of this fact, the recursive calls made during the BinarySearchTreeMap errored out. However, my implementation of an AvlTree did not error! 
+  
+PROFILER:
+--------
+
+Times:
+  tiny:
+    Most of the time was spent reading the values using FILE I/O, 5.66%. However, it only spends 0.79% in our insert function - there are only 26 elements so there aren't many insertions. Yet, the function that we wrote that the most time was spent in was the find method that I wrote, 0.54%.
+
+  manifesto:
+    Most of the time was spent in Java's compareTo function, adding up to 13.73%. However, the function that had the second most time spent in it was my find method again, 6.26%.
+
+  wealth:
+    This took FOREVER to finish the profiling using cpu=times. There were almost 500,000 insertions done here. Most of the time was spent in the built in compareTo method adding up to 20.07%. A not-so-close second was my find method, 9.34%.
+
+  cracklib:
+    Most of the time was once again spent in the compareTo method adding up to 9.46% of the time. However, the next 3 methods that the most time was spent in were my find, insert, and checkBalance methods: each took 4.58%, 4.10%, 3.16% respectively.
+
+
+---------------------------------
+Problem 3: Deletion From AVL Tree|
+---------------------------------
+
+  I was able to get the remove function to work properly with proper rotations after hours of getting only certain parts of it to work. The best way that I saw to get this done was with a Level-Order Traversal throughout the tree whenever a remove is called and at each level it'll check whether or not a rotation needs to be done. It may not be the most efficient way to remove, but it's still O(log n) since it only has to traverse down O(log n) levels.

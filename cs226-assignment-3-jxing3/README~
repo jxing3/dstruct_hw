@@ -1,0 +1,123 @@
+Problem 2:
+
+First off it's crucial to note that the reverse.data and sorted.data files are a bit 
+misleading. Where the numbers are converted to String and a compareTo method is 
+called between Strings, it compares the characters from left to right. So a 2 is acually
+larger than 12 because the first character 2 is on ascii higher than the 1 in 12. 
+I have included actual reverse and sorted data aptly titled RealReverse.data and 
+RealSorted.data respectively. 
+
+Tests using the Run program were conducted on all three sort methods, selection sort,
+Bubble sort, and  insertion sort using the data files RealReverse.data, RealSorted.data
+, and random.data. Two sample sizes on the data were chosen, 1000 and 10000 to see
+how the performances varied.
+
+When 1000 samples of RealSorted.data were run on the three sort methods, it was clear
+that selectionSort took the longest. This is due to the nature of the program. Even
+though the list came to the selection sort method as sorted, the program treated it 
+as completely unsorted and went through the whole list looking for the min value. The only
+thing positive about it is that it never had to swap since the minimum was always at the 
+same location as where the next sorted element is supposed to be stored. At 1000 samples
+SelectionSort took .029 seconds to complete with 999000 set operations and 501499 
+length operations. On the other hand, bubble sort and insertion sort took the same number
+of get and set operations to complete. The bubble sort looked through the entire array once
+at every element and swapped elements when the one on the left was higher than the one on 
+the right. However this was never the case, so bubble sort only looked through the array once
+and ended. (I made it so that the program ended if there weren't any swaps). On the other
+hand, my insertion sort looked through the sorted portion of the array (just 1st element at 
+first) and found the place where the next unsorted element should be. Since the next unsorted 
+element was always in the right place, no elements had to move out of the way and no elements had
+to be reallocated. In this way, it only made one "full pass" through the array since it 
+never had to look past the first element in the sorted portion of the array and every element.
+
+
+The total number of get and length operations for the programs were the same at 1999 and 1998.
+The amount of time it took bubble sort to run was a lot less than the time it took insertion 
+sort to run however, probably because it was a straight pass through a for loop to find out
+that the array was already sorted. On the other hand, for the insertion sort, the program 
+went into a for loop for each element to find where it is supposed to be only to have it
+end after the first element in the sorted portion of the array, so it had more calls to initiate
+different for loops. The time it took bubblesort and insertion sort were .22 ms and .29 ms 
+respectively for a sample size of 1000. For a sample size of 10,000, the time if took for 
+selection sort, bubble sort, and insertion sort to run on RealSorted was .57s , .0021s, and
+.0034s and the number of operations went up proportionally.
+
+When 1000 and 10000 samples were run on all three sort methods, it was immediately seen
+that it was data that would take the longest to sort. For 1000 samples, selection sort,
+bubble sort, and insertion sort took .039, .026, and .036 seconds respectively to run.
+We see that bubble sort was faster than insertion sort for 1000 samples. Interestingly,
+when 10,000 samples were run, the times for the three sorts(selection, bubble, insertion)
+were .98, 1.19, and .678 which meant all the times changed. The difference between bubble
+and insertion sort can be explained by the fact that it takes time to call two for loops
+for insertion sort, one in the method and one ouside the method. This takes more time,
+but it doesn't mean that insertion sort does more operations. So in the short run, that time
+matters, but in the long run the number of operations each loop conducts start to matter 
+more. The same thing occurs with selection sort because it only performs as many operations
+as it needs to find the minimum at the end and swap once. It doesn't need to bubble everything
+i time (i in the index of the element in the array) to the front. Likewise insertion sort only
+needs to find the where the element needs to be in the array, which is quick in the beginning
+but starts to take more time by the end. A reverse sorted list takes the longest for each
+of these algorthms to sort because everything necessarily needs to "viewed" and swapped in 
+their correct locations. 
+
+The amount of time to sort random data took was in between the sorted and reversed lists 
+.030, .029, .033 (actually bubblesort took a little longer than reversed but it had much
+fewer operations). This is to be expected since at some point, no more operations need to be
+conducted since all the lists have been sorted before the program went through swapping every
+element like in reverse lists. This trend was the same with 10000 random data points. It took .90,
+1.6, and .4 seconds for each to complete. Again bubble sort took longer. It's possible that
+since bubble sort had to make decisions on whether or not to swap with the random data,
+instead of just always swapping, it took the longest time with the random data (though that is
+odd). 
+ 
+
+In general it seems the insertion sort is generally the fastest with larger sets of data. 
+Bubblesort comes second only for sorted data(since it would make only one pass), but it's 
+slower than selection sort for random and reverse data. The running time does correspond to
+the asymptotic complexity of n^2. All of them are in the same general area and no program
+ran a huge factor over the other. Likewise, with larger sample sizes (10000) we see around
+a 10-50x difference compared with the smaller sample size of 1000. We don't see the full
+100x difference likely because just starting the program and the loops take a certain period
+of time. The practical differences can be explained by the way they operate. For sorted data,
+insertion sort and bubble sort take the least time since they only go through one pass if
+the data is sorted. Insertion sort generally takes the least time since it finds the best 
+place to insert the next element in the sorted stack instead of randomly bubbling elements to
+their right position or going through the whole unsorted array each time to find the 
+minimum element and swapping. Bubble sort is generally the slowest (only not for really sorted data)
+because it bubbles elements fairly randomly to the top and does many comparisons and sets
+to make it happen. Insertion sort should come in between since it may take a while to find the 
+minimum (always the same time), but only has to do a simple swap instead of moving all the 
+elements around it. 
+
+
+
+When 
+
+Problem 3:
+
+public static void selectionSort(int[] a) {
+ 2        for (int i = 0 //1 time; i < a.length-1 //n; i++ //n-1) { 
+ 3            int min = i; //n-1
+ 4            for (int j = i+1 //n-1; j < a.length //((n*(n+1))/2) ; j++ //((n-1)*n)/2) {
+ 5                if (a[j] < a[min] //((n-1)*n)/2) {
+ 6                    min = j //((n-1)*n)/2);
+ 7                }
+ 8            }
+ 9            int t = a[i] //n-1; a[i] = a[min] //n-1; a[min] = t //n-1;
+10        }
+11    }
+
+C(n) = n +  (n*(n+1))/2 +((n-1)*n)/2) = (n^2 +n)
+
+A(n) = 1 + (n-1) +(n-1)+ (n-1) + ((n-1)*n)/2) +((n-1)*n)/2) +(n-1) +(n-1) +(n-1) = (n^2+5n-5)
+
+All members in the outer loop is done n-1 times in the worst case
+
+(for loop comparison is done one extra time at end of loop)
+
+All members in the inner loop is done (n-1 + n-2 +....3+2+1) times which is ((n-1)*(n))/2)
+
+(inner for loop comparison is done one extra time at end of loop n-1 times so its 
+n+n-1+n-2+...3+2+1) which is ((n)*(n+1)/2)
+
+Note: number of comparisons for each operation is indicated at right of operations above.

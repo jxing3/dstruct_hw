@@ -1,0 +1,22 @@
+java -agentlib:hprof Unique <random1k.txt >/dev/null
+java -agentlib:hprof=help
+
+java -agentlib:hprof=depth=10 Unique <random1k.txt >/dev/null
+
+total allocations number is allocated
+
+live is what's left - after everything is cleaned up
+
+ java -agentlib:hprof=cpu=samples Unique <random100k.txt >/dev/null
+
+-takes snapshots of method
+- need long run time to be meaningful- roughly where program spends most of it's time
+- tiny methods don't show up - even though it runs more
+-big plus, almost no overhead
+- tells where to focus attention to improve speed
+
+ java -agentlib:hprof=cpu=times Unique <random100k.txt >/dev/null
+
+counts when the code has entered and when it's left- sticks code into every function
+- slow down- huge
+- + complete accuracy

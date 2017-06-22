@@ -1,0 +1,10 @@
+vertices point to edges (arraylist)
+edges point to vertices (arraylist)
+
+sparsegraph<V,E> VertexNode
+Vertex<V> - need unchecked cast warning - help phf- need to write something
+in readme about this
+
+private class VertexNode implements Vertex <V>
+
+color???

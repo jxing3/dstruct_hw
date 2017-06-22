@@ -1,0 +1,20 @@
+unbounded can extend bounded
+
+bounded can't extend unbounded because you can't replace 
+any element that's unbounded with something that's bounded
+
+may be registrictions
+
+
+queues
+
+->-------
+  ------ ->
+
+empty queue
+
+queue-FIFO First in First out
+
+stack-LIFO Last in First out
+
+

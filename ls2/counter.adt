@@ -1,0 +1,12 @@
+adt Counter
+  defines Counter
+  uses Integer
+
+  operations
+    new: ---> Counter
+    value: Counter ---> Integer
+    increment: Counter ---> Counter
+  
+  axioms
+    value(new()) = 0
+    value(increment(c)) > value(c)

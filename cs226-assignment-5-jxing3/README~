@@ -1,0 +1,44 @@
+  Jesse Xing
+  jxing3@jhu.edu
+
+Problem 1
+
+SentinelList.java implements the list interface with sentinel nodes to 
+reduce the number of error cases. Test cases were written in TestList.java
+to ensure the implementation operated accordingly with the interface.
+
+Problem 2
+
+I think that in general our list interface does define operations that
+we need to make for a useful list database. We have the key operations
+to add to the list, remove from it, get the number of elements in it, whether
+its empty, and a method of traversing it. However, I still find it somewhat 
+confusing why we necessarily need to use position rather than just a simple
+integer index. In our implementation, there certainly are benefits since we're
+using double linked nodes as our data structure. If we used an index, operations
+would take o(n) for inserting, removing, or getting in the middle of the list.
+By using positions, which really are the nodes of our data structure, we can
+perform these actions much quicker. However, I've never really been a big
+fan of implementing the list with double linked nodes. I think it'd be much
+more efficient if we had used arrays to implement the list. In that case,
+it wouldn't be so much of a problem if we had utilized integer indexes to
+refer to positions like the java ArrayList does. I do kind of like the idea 
+of having methods removeback and removefront and insertback and insertfront.
+I think that makes the user experience much easier, since if I want to just 
+keep inserting at the front of the list or in the back of the list, I wouldn't
+have to keep track of where I am. I'm not entirely sure if the insertback 
+and insertfront would have been necessarily. If we just made a single insert at
+a certain index (or position), and just shifted everything else down a position,
+that would have been fine too (however it'd probably be much easily implemented
+using array and indexes than with nodes). Also, some of the operations, like 
+checking if element is the front or back, may not be necessary if we used indexes
+instead of positions. I think the client is capable of tracking with index is the
+front and back on their own. There are also several other methods in the java
+list interface that deal with removing all or adding all elements in a certain 
+collection that might be useful (if we knew how to implement them). Likewise
+operation contains may be useful, to check if the list actually contained a 
+certain element. Otherwise, I think the that interface described in class
+and the implementation that we created was pretty good. I think that ultimately,
+it's the application of these data structures that really decides which is
+better.
+ 

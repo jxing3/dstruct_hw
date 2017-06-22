@@ -1,0 +1,55 @@
+/**
+
+   A basic InsertionSort: sorts by finding where in the sorted
+   part of the array the next unsorted element should be and
+   putting it there.
+
+    @param <T> element type
+*/
+
+public final class InsertionSort<T extends Comparable<T>>
+    implements SortingAlgorithm<T> {
+   //finds where teh element should be
+    private int find(Array<T> array, T value, int at) {
+        for (int i = at - 1; i >= 0; i -= 1) {
+            if (array.get(i).compareTo(value) <= 0) {
+                return i + 1;
+            }
+        }
+        return 0;
+
+    }
+
+
+    /**
+        Sort an array.
+
+        @param array array to sort
+    */
+
+    public void sort(Array<T> array) {
+        int x = array.length();
+
+        for (int i = 1; i < x; i++) {
+            T value = array.get(i);
+            int pos = this.find(array, value, i);
+            for (int j = i - 1; j >= pos; j--) {
+                array.set(j + 1, array.get(j));
+            }
+            if (pos != i) {
+                array.set(pos, value);
+            }
+        }
+    }
+
+/**
+        Name of algorithm.
+
+        @return name of algorithm
+    */
+
+    public String name() {
+        return "Insertion Sort";
+    }
+
+}

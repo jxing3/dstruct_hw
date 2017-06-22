@@ -1,0 +1,6 @@
+
+//Defines ResetableCounter Interface as an extension of the Counter Interface
+public interface ResetableCounter extends Counter{
+
+  void reset();
+}

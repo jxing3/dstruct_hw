@@ -1,0 +1,10 @@
+adt specification- separates a certain class from the other world-limits what 
+it can possibly do
+
+Variable- holds a value of a type
+value: something of a certain type
+
+assign a value
+make one
+read the value
+

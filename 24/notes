@@ -1,0 +1,54 @@
+priority queue
+
+queue cares about values in the queue
+
+makes it so smallest values come out first
+
+same for max - but different implementation
+
+not a set- it's a queue
+
+queue semantics 
+
+interface
+
+insert
+remove- removes highest priority item
+empty
+top - return highest priority item
+
+implementing priority queue
+
+sorted, linked list?
+
+insert O(n) - can't do random accesss
+
+top - O(1)
+
+remove - O(1)
+
+sorted array
+
+O(n) - become have to move elements out of the way
+
+top - O(1)
+
+remove - O(n) ???
+
+binary heap
+
+o(log(n))
+
+o(1)
+
+o(log(n))
+
+binary heap is a binary tree
+
+shape property
+
+heap needs to be full eexcept for last level
+
+ordering property
+
+children are greater parents are smaller

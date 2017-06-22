@@ -1,0 +1,762 @@
+Stefan Reichenstein - sreiche2@jhu.edu
+Jesse Xing - jxing3@jhu.edu
+
+Note: All data sets for 1k, 10k, (and if present), 25k were done 
+with timing profile. Unless otherwise specified, all 100k data
+sets were done with cpu sampling profile (which is much less accurate
+and may not catch all operations)
+
+1)
+
+LinkedListSet
+ ------------------
+|Biased:
+|------------------
+|1K: 0.112s
+  69  0.40% 68.82%    1000 304173 LinkedListSet.insert
+ 277  0.08% 97.93%    1000 304167 LinkedListSet.ensureNotNull
+
+|10k: 0.187s
+  81  0.16% 90.43%   10000 304170 LinkedListSet.insert
+ 152  0.05% 97.15%   10000 304164 LinkedListSet.ensureNotNull
+ 
+|25k: 0.370s
+  85  0.08% 95.31%   25000 304170 LinkedListSet.insert
+ 148  0.03% 98.58%   25000 304164 LinkedListSet.ensureNotNull
+
+|100k: 1.956s
+ Did not appear in the samples
+ 
+|------------------
+|Mixed:
+|------------------
+|1K: 0.119s
+ 172  0.10% 90.70%    1000 304169 LinkedListSet.insert
+
+|10k: 0.398s
+  87  0.04% 96.61%   10000 304170 LinkedListSet.insert
+ 209  0.01% 99.34%   10000 304164 LinkedListSet.ensureNotNull
+
+|100k: 10.075s
+ Did not appear in the samples
+
+|------------------
+|Random:
+|------------------
+|1K: 0.105s
+  33  0.34% 74.76%    1000 304174 LinkedListSet.insert
+
+|10k: 0.712s
+  65  0.03% 97.77%   10000 304174 LinkedListSet.insert
+
+|100k: 25.183s
+ Did not appear in the samples
+
+ ------------------
+
+The amount of time (less than a percentage point) makes sense for the biased
+data sets. ensureNotNull should take a MUCH smaller amount of time than the
+actual insert method, and it does. In each data set, the data is loaded
+linearly, and in the LinkedListSet, the data is inserted linearly. This means
+that in order for any values to be inserted, the entire list needs to be
+checked, and then the value is inserted at the end. This insertion is O(1) and
+each check is O(n). So in order to insert n data points using a linked list the
+complexity becomes O(n^2).
+
+With the biased data set, because data points are repeated, the time it takes to
+search for any other given data point will not be the total number or data
+points, but instead the number of unique data points already processed, which is
+significantly less than random data points. The mixed data set is a combination
+of the two data sets (biased and random).
+
+This explains why insert uses so much more time than ensureNotNull. The latter
+is essentially O(1) whereas the former is O(n), where n is the number of
+unique items (established in the above paragraph).
+
+There aren't any real hotspots for the LinkedList Set because it utilized the
+linked list implementation included with the java libraries, meaning that this
+use of it does not need to write many of its own methods. 
+
+Because, for the mixed and random sets, the data was checked so much more
+frequently, there were that many more calls to methods outside of our data
+structure. This made the percentage of time spent in our data structure's
+methods less than the efficient (biased) set. This explains why the percentages
+for the less organized sets are lower than the biased one. 
+
+Additionally, in comparison to the rest of the function calls made by the
+underlying data structure, the methods we implemented were near negligible
+(under 1%) in terms of time spent in them. This would explain why for the more
+inefficient data sets (mixed and random), the ensureNotNull method was not even
+listed by the profiler. 
+
+Note that in all of these cases, even 25k took too long (except for biased), so
+we took the cpu=samples data for the 100k sets. We very rarely got any
+information about time spent in our data type's methods.
+
+
+
+ArrayListSet
+ ------------------
+|Biased:
+|------------------
+|1K: 0.102s
+|
+  52  0.55% 61.64%    1000 304173 ArrayListSet.insert
+ 288  0.08% 98.58%    1000 304168 ArrayListSet.ensureNotNull
+ 
+|10k: 0.158s
+
+  70  0.20% 88.21%   10000 304170 ArrayListSet.insert
+ 139  0.06% 96.54%   10000 304165 ArrayListSet.ensureNotNull
+
+|25k: 0.257s
+  77  0.10% 94.46%   25000 304169 ArrayListSet.insert
+ 173  0.02% 99.15%   25000 304164 ArrayListSet.ensureNotNull
+
+|100k: 0.769s
+no data
+
+|------------------
+|Mixed:
+|------------------
+|1K: 0.107s
+  41  0.39% 67.25%    1000 304169 ArrayListSet.insert
+ 340  0.05% 98.92%    1000 304164 ArrayListSet.ensureNotNull
+
+|10k: 0.235s
+  73  0.05% 95.99%   10000 304170 ArrayListSet.insert
+ 202  0.01% 99.30%   10000 304165 ArrayListSet.ensureNotNull
+
+|100k: 3.349s
+no data
+
+|------------------
+|Random:
+|------------------
+|1K: 0.103s
+ 109  0.11% 89.18%    1000 304173 ArrayListSet.insert
+ 177  0.06% 94.08%    1000 304168 ArrayListSet.ensureNotNull
+
+|10k: 0.324s
+  61  0.03% 97.56%   10000 304174 ArrayListSet.insert
+
+|100k: 6.53s
+no data
+
+ ------------------
+
+
+ArrayList works by maintaining a dynamically resized array. Indexing through the 
+entire array using indicies is still O(n). However Performance wise arraylist is clearly better than
+the Linked list and this is demonstrated by the small discrepancy in percentages and rank
+spent in the Array List's methods. For instance in the Random10k, the array
+list's insert is .03% with a rank of 61 whereas the Linked List's insert was
+.03% with a rank of 65. This means that the Array List spent more time in its
+own methods (insert) than in the system/java methods compared to the Linked
+List. Since the System/Java methods utilize the vast majority of the time spent
+in the overall program, this ranking is significant enough to explain the
+discrepancy. Checking to see if an element is in the list is O(n) and then
+adding is O(1), unless the array needs to be resized then it is O(n) but this is
+infrequent. The insertion still takes O(n^2) amount of time. So this huge discrepancy
+is somewhat odd. It might have to do with the amount of time it takes to move from
+one node to another in the linked list vs. indexing from one array position
+to another which is a lot faster.
+
+The reason why biased takes less time than mixed which takes less time than
+random is the same as in linked list.
+
+The explanation for the decreasing amount of time in our structure's method's,
+along with why ensureNotNull was sometimes not recorded, is the same as for the
+Linked List.
+
+The explanation for the 100k data sets are the same as for the Linked List's.
+
+
+ArraySet
+ ------------------
+|Biased:
+|------------------
+|1K: 0.104s
+   3  2.56% 10.56%    1000 304157 ArraySet.find
+ 133  0.16% 84.08%    1000 304158 ArraySet.has
+ 134  0.16% 84.24%    1000 304159 ArraySet.insert
+
+|10k: 0.153s
+   2 15.26% 42.68%   10000 304153 ArraySet.find
+ 119  0.10% 94.84%   10000 304154 ArraySet.has
+ 143  0.06% 96.75%   10000 304155 ArraySet.insert
+ 179  0.02% 98.27%     976 304197 ArraySet$SetIterator.next
+
+|25k: 0.269s
+   2 21.58% 58.68%   25000 304153 ArraySet.find
+ 107  0.06% 96.87%   25000 304154 ArraySet.has
+ 140  0.03% 98.48%   25000 304155 ArraySet.insert
+
+|100k: 0.779s
+  10  1.41% 90.14%       1 300148 ArraySet.insert
+
+|------------------
+|Mixed:
+|------------------
+|1K: 0.108s
+   2 10.77% 28.04%    1000 304153 ArraySet.find
+ 170  0.10% 90.59%    1000 304154 ArraySet.has
+ 171  0.10% 90.68%    1000 304155 ArraySet.insert
+ 321  0.05% 98.64%     490 304197 ArraySet$SetIterator.next
+
+|10k: 0.237s
+   2 25.79% 69.27%   10000 304153 ArraySet.find
+ 106  0.03% 97.45%   10000 304154 ArraySet.has
+ 107  0.03% 97.48%   10000 304155 ArraySet.insert
+
+|100k: 2.798s
+   2  2.41% 87.95%       8 300149 ArraySet.has
+  17  0.30% 98.80%       1 300151 ArraySet.has
+
+|------------------
+|Random:
+|------------------
+|1K: 0.103s
+   2 15.64% 45.74%    1000 304157 ArraySet.find
+ 109  0.11% 88.68%    1000 304158 ArraySet.has
+ 141  0.08% 91.64%    1000 304159 ArraySet.insert
+
+|10k: 0.317s
+   2 27.26% 74.47%   10000 304156 ArraySet.find
+ 120  0.01% 98.89%   10000 304157 ArraySet.has
+ 151  0.01% 99.26%   10000 304158 ArraySet.insert
+
+|100k: 6.731s
+   3  2.05% 94.72%      14 300150 ArraySet.has
+
+ ------------------
+
+The times for ArraySet should be very similar to ArrayListSet, and they are. The
+discrepancies can be explained by the fact that we had to implement a
+dynamically resizing array using plain old arrays, which is what Array list
+does, but clearly a little more efficiently. This explains the time data. As for
+hotspots, the ArraySet implementation no longer uses the provided methods
+associated with array list and because of this, replaces the hotspots of the array 
+list with its own hotspots, namely with the find function. 
+
+The profiler data can be explained by the face that dynamically resizing and the
+find had to be implemented. The percentages for all the methods other than find
+can be explained with the same explanation as with the Linked List. The
+increasing percentages with find from Biased to Mixed to Random are explained by
+the fact that as the arrays get larger, the find had to work with a larger and
+larger n for the O(n) search. The find method makes all the call to other method
+that actually do the comparisons, so that is why instead of decreasing like the
+other of the structure's method calls, it actually increases as the data set
+increases. 
+
+The same explanation for the 100k can be used here as in the other data
+structures. The sampling is basically garbage here since we're only
+running for at most 6 seconds and we're probably catching other methods
+being called by find in the java library.
+
+
+ListSet
+ ------------------
+|Biased:
+|------------------
+|1K: 0.115s
+   3  2.42%  9.91%    1000 304156 ListSet.find
+ 149  0.16% 87.35%    1000 304164 ListSet.insert
+ 287  0.08% 98.36%      92 304163 ListSet$Node.<init>
+
+|10k: 0.189s
+   2 15.45% 42.01%   10000 304152 ListSet.find
+  90  0.14% 91.72%   10000 304153 ListSet.has
+  99  0.12% 92.88%   10000 304160 ListSet.insert
+ 201  0.01% 98.70%     976 304159 ListSet$Node.<init>
+
+|25k: 0.347s
+   2 21.58% 58.77%   25000 304152 ListSet.find
+  93  0.07% 95.79%   25000 304153 ListSet.has
+  94  0.07% 95.86%   25000 304160 ListSet.insert
+
+|100k: 2.762s
+   1 84.13% 84.13%     228 300153 ListSet.find
+   2  2.58% 86.72%       7 300161 ListSet$Node.<init>
+  19  0.37% 97.42%       1 300154 ListSet.has
+
+|------------------
+|Mixed:
+|------------------
+|1K: 0.119s
+   2 11.24% 28.55%    1000 304152 ListSet.find
+  47  0.38% 68.34%    1000 304160 ListSet.insert
+  94  0.19% 80.58%    1000 304153 ListSet.has
+ 333  0.05% 98.13%     490 304158 ListSet$Node.<init>
+ 334  0.05% 98.18%     490 304159 ListSet$Node.<init>
+ 340  0.05% 98.47%     490 304200 ListSet$SetIterator.next
+
+|10k: 0.401s
+   2 25.18% 68.68%   10000 304153 ListSet.find
+ 103  0.03% 97.31%   10000 304154 ListSet.has
+ 104  0.03% 97.34%   10000 304161 ListSet.insert
+
+|100k: 12.274s
+   1 94.04% 94.04%     962 300150 ListSet.find
+   5  0.39% 95.99%       4 300151 ListSet.has
+   6  0.39% 96.38%       4 300157 ListSet$Node.<init>
+  27  0.10% 99.61%       1 300169 ListSet.insert
+
+|------------------
+|Random:
+|------------------
+|1K: 0.115s
+   2 16.49% 45.46%    1000 304157 ListSet.find
+  44  0.25% 76.66%    1000 304165 ListSet.insert
+ 145  0.08% 91.34%    1000 304163 ListSet$Node.<init>
+ 193  0.06% 94.43%    1000 304164 ListSet$Node.<init>
+ 195  0.06% 94.54%    1000 304201 ListSet$SetIterator.next
+ 350  0.03% 99.46%    1000 304158 ListSet.has
+
+|10k: 0.735s
+   2 27.57% 74.35%   10000 304156 ListSet.find
+  72  0.02% 98.00%   10000 304164 ListSet.insert
+ 114  0.01% 98.77%   10000 304157 ListSet.has
+ 131  0.01% 99.00%   10000 304163 ListSet$Node.<init>
+
+|100k: 23.314s
+   1 97.27% 97.27%    2356 300148 ListSet.find
+   4  0.25% 98.27%       6 300149 ListSet.has
+  20  0.04% 99.46%       1 300155 ListSet.insert
+
+ ------------------
+
+The performance for List set should be very similar to List Array and it it. It
+is off by at worst 10%. This can be attributed to implementing a double linked
+list, and our implementation being less efficient than the provided Java ones.
+This explains the time/performance data. The implementation of this double
+linked list moves hotspots that were previously associated with the provided
+linked list to be associated with this implementation of the linked list.
+
+The same explanation for the increasing percentages of the find method can be
+attribute to the same reason as for the find in the Array Set explanation. The
+decreasing percentages for the remaining method can be attributed to the same
+reason as in the Linked List.
+
+The 100k sampling sample may be more representative in this case because sampling
+took a larger percentage of the time. However, find is still largely overbiased 
+which suggests it may have just been a bad luck of the draw.
+
+
+
+2.)
+
+MoveToFront
+ ------------------
+|Biased:
+|------------------
+|1K: 0.105s
+|   3  3.09% 10.63%    1000 304156 MoveToFrontSet.find
+ 293  0.08% 97.94%    1000 304157 MoveToFrontSet.has
+ 294  0.08% 98.02%      92 304163 MoveToFrontSet$Node.<init>
+ 295  0.08% 98.10%    1000 304164 MoveToFrontSet.insert
+
+|10k: 0.170s
+|
+   2 15.65% 42.79%   10000 304152 MoveToFrontSet.find
+ 112  0.11% 94.30%   10000 304160 MoveToFrontSet.insert
+ 120  0.09% 95.09%   10000 304153 MoveToFrontSet.has
+
+|25k: .344s
+|
+   2 21.59% 58.68%   25000 304153 MoveToFrontSet.find
+  95  0.07% 96.00%   25000 304161 MoveToFrontSet.insert
+ 127  0.05% 97.89%   25000 304154 MoveToFrontSet.has
+
+|100k: 2.933s
+|
+    1 86.84% 86.84%     198 300152 MoveToFrontSet.find
+   3  1.75% 90.79%       4 300153 MoveToFrontSet$Node.<init>
+  12  0.44% 96.05%       1 300151 MoveToFrontSet.has
+  18  0.44% 98.68%       1 300161 MoveToFrontSet$Node.<init>
+|------------------
+|Mixed:
+|------------------
+|1K: 0.111s
+   2  9.82% 26.98%    1000 304153 MoveToFrontSet.find
+  55  0.34% 71.31%    1000 304161 MoveToFrontSet.insert
+ 163  0.10% 89.44%    1000 304154 MoveToFrontSet.has
+|
+|10k: 0.388s
+
+   2 25.44% 68.64%   10000 304153 MoveToFrontSet.find
+ 116  0.03% 97.80%   10000 304154 MoveToFrontSet.has
+ 151  0.02% 98.62%   10000 304161 MoveToFrontSet.insert
+|
+|100k: 13.3835s
+|   1 95.59% 95.59%    1257 300152 MoveToFrontSet.find
+   2  0.61% 96.20%       8 300150 MoveToFrontSet.has
+  28  0.08% 99.70%       1 300169 MoveToFrontSet.insert
+
+|------------------
+|Random:
+|------------------
+|1K: 0.137s
+|
+   2 15.90% 45.21%    1000 304156 MoveToFrontSet.find
+ 131  0.09% 90.61%    1000 304157 MoveToFrontSet.has
+ 189  0.06% 94.31%    1000 304164 MoveToFrontSet.insert
+ 348  0.03% 99.46%       1 304198 MoveToFrontSet.iterator
+
+|10k: 0.765s
+|
+   2 27.60% 74.44%   10000 304156 MoveToFrontSet.find
+  97  0.02% 98.47%   10000 304164 MoveToFrontSet.insert
+ 115  0.01% 98.76%   10000 304157 MoveToFrontSet.has
+
+|100k: 22.894
+ ------------------
+   1 97.63% 97.63%    2344 300150 MoveToFrontSet.find
+   4  0.25% 98.63%       6 300148 MoveToFrontSet.has
+
+The MoveToFrontSet is basically the same as our Listset except
+it moves an element to the front whenever find on that element is called 
+(which is in basically every method). 
+
+Oddly enough, the MoveToFrontSet does not actually perform any better
+or worse than our listset. The similarity in times can be attributed to
+the fact that they function in largely the same way. The only difference
+is that the MoveToFrontSet takes the element on insert and moves it immediately
+to the front of the list. This happens even if the element is a repeat. The set
+will simply take the element that was there and move it to the front of the list.
+I think the lack of increased performance can be attributed to the fact that our
+data sets and Unique program don't need this feature to work any faster. Consider
+our biased set where many elements are repeated in a row. In this case, with the
+linked list set, the element will be put into the front of the list and every
+search for that element will be o(1) if it is repeated many times in the data set.
+If the item isn't repeated like in our random data set, moving it to the front
+helps little as well because there's no guarantee when the next call for that element
+will occur. Perhaps the only case where it might be faster is if a stretch of a number
+is called many times, followed by a stretch of different numbers, followed by the
+call for that number again many times. In that case, the element for list set
+would simply be pushed to the back, while MoveToFrontSet will bring it back to the front
+to be found in O(1). I don't think this occurs in any of our data sets.
+
+Like ListSet, the percentage of time spent in the operation find still takes the most
+time and increases with larger sets. This suggests that moving the element to the front
+of the list isn't helping make the search any faster. It could also suggest 
+that the overhead for the pointer manipulation may be offsetting any benefits 
+it may reap from moving the element to the front of the list (which as noted above
+ shouldn't be huge).
+
+
+3.)
+Typical binary search. Split in half using parameters start and end, then then
+if the value is less than the value at the mid point (start + end) / 2, call a
+binary search from start to mid - 1. If it is larger call binary search from mid
++ 1 to the end. If the end < start, return the mid, and if you somehow get past
+all of these without finding a value, return an invalid number; either -1 or the
+number of used elements (max index is used - 1). Even if a value is not found,
+the mid value should always be the position where a value SHOULD go. 
+
+Also, I needed to add a few lines of code for when the inserted value would f go
+into a pivot (even or odd index). All that is needed is to check whether the new
+value is greater than the present value in an index and increase or leave the
+value of the position accordingly. 
+
+OrderedArraySet
+ ------------------
+|Biased:
+|------------------
+|1K: 0.116s
+  43  0.58% 54.24%    1806 304180 OrderedArraySet.binSearch
+  91  0.33% 73.09%     876 304178 OrderedArraySet.binSearch
+ 116  0.25% 79.34%    1000 304156 OrderedArraySet.binSearch
+ 158  0.16% 86.50%    1000 304157 OrderedArraySet.find
+ 298  0.08% 98.52%    1000 304158 OrderedArraySet.found
+ 299  0.08% 98.60%    1000 304159 OrderedArraySet.insert
+ 302  0.08% 98.85%     954 304175 OrderedArraySet.binSearch
+binsearch = 1.24%
+
+|10k: 0.169s
+  16  1.37% 33.44%   47970 304180 OrderedArraySet.binSearch
+  66  0.48% 72.35%   10000 304155 OrderedArraySet.insert
+  79  0.37% 77.73%    9843 304178 OrderedArraySet.binSearch
+  81  0.37% 78.46%    9946 304175 OrderedArraySet.binSearch
+  89  0.30% 81.01%   10000 304152 OrderedArraySet.binSearch
+ 103  0.24% 84.65%   10000 304153 OrderedArraySet.find
+ 120  0.21% 88.39%   10000 304154 OrderedArraySet.found
+ 240  0.02% 98.22%     976 304209 OrderedArraySet.access$000
+ 241  0.02% 98.24%     976 304210 OrderedArraySet$Iter.next
+binsearch = 2.41%
+
+|100k: 0.426s
+   6  2.33% 16.13%  800119 304179 OrderedArraySet.binSearch
+  74  0.38% 77.43%  100000 304154 OrderedArraySet.insert
+  77  0.34% 78.48%  100000 304151 OrderedArraySet.binSearch
+  86  0.30% 81.36%   99774 304177 OrderedArraySet.binSearch
+  88  0.30% 81.96%   99902 304174 OrderedArraySet.binSearch
+ 100  0.23% 85.13%  100000 304153 OrderedArraySet.found
+ 113  0.22% 88.02%  100000 304152 OrderedArraySet.find
+ 211  0.03% 98.72%    9770 304256 OrderedArraySet$Iter.next
+ 214  0.03% 98.80%    9771 304254 OrderedArraySet$Iter.hasNext
+ 231  0.02% 99.18%    9770 304257 OrderedArraySet$Iter.next
+binsearch = 3.27%
+
+|------------------
+|Mixed:
+|------------------
+|1K: 0.118s
+  22  1.02% 33.96%    4194 304179 OrderedArraySet.binSearch
+  75  0.36% 65.09%    1000 304153 OrderedArraySet.found
+  76  0.36% 65.46%    1000 304154 OrderedArraySet.insert
+  96  0.29% 71.41%     491 304207 OrderedArraySet$Iter.hasNext
+ 126  0.22% 78.23%     994 304174 OrderedArraySet.binSearch
+ 127  0.22% 78.45%     490 304210 OrderedArraySet$Iter.next
+ 165  0.15% 84.40%    1000 304151 OrderedArraySet.binSearch
+ 167  0.15% 84.69%     490 304209 OrderedArraySet$Iter.next
+ 323  0.07% 97.53%    1000 304152 OrderedArraySet.find
+ 330  0.07% 98.04%     491 304206 OrderedArraySet.access$100
+binsearch = 1.39%
+
+|10k: 0.218s
+   9  1.82% 19.64%   74290 304179 OrderedArraySet.binSearch
+  43  0.68% 54.70%   10000 304154 OrderedArraySet.insert
+  81  0.33% 72.44%    9990 304174 OrderedArraySet.binSearch
+  82  0.32% 72.77%    9972 304177 OrderedArraySet.binSearch
+ 114  0.21% 81.10%   10000 304151 OrderedArraySet.binSearch
+ 134  0.19% 85.06%   10000 304152 OrderedArraySet.find
+ 160  0.15% 89.32%   10000 304153 OrderedArraySet.found
+ 169  0.14% 90.60%    4910 304209 OrderedArraySet$Iter.next
+ 170  0.14% 90.74%    4910 304210 OrderedArraySet$Iter.next
+ 208  0.09% 94.76%    4911 304207 OrderedArraySet$Iter.hasNext
+ 209  0.09% 94.85%    4910 304208 OrderedArraySet.access$000
+ 249  0.05% 97.57%    4911 304206 OrderedArraySet.access$100
+binsearch = 2.68%
+
+|100k: 1.746s
+   4  1.04% 64.98% 1077762 304179 OrderedArraySet.binSearch
+  15  0.59% 73.23%  100000 304158 OrderedArraySet.insert
+  94  0.10% 91.73%   99988 304174 OrderedArraySet.binSearch
+ 100  0.10% 92.31%  100000 304155 OrderedArraySet.binSearch
+ 101  0.10% 92.41%   99972 304177 OrderedArraySet.binSearch
+ 122  0.07% 94.04%  100000 304157 OrderedArraySet.found
+ 132  0.07% 94.71%  100000 304156 OrderedArraySet.find
+ 187  0.04% 97.78%   48658 304254 OrderedArraySet$Iter.hasNext
+ 188  0.03% 97.81%   48657 304256 OrderedArraySet$Iter.next
+ 235  0.03% 99.16%   48657 304257 OrderedArraySet$Iter.next
+ 254  0.02% 99.60%   48658 304253 OrderedArraySet.access$100
+ 273  0.01% 99.87%   48657 304255 OrderedArraySet.access$000
+binsearch = 1.34%
+
+|------------------
+|Random:
+|------------------
+|1K: 0.120s
+  23  1.00% 32.90%    5762 304179 OrderedArraySet.binSearch
+  83  0.31% 64.68%     998 304174 OrderedArraySet.binSearch
+ 110  0.25% 71.77%    1000 304157 OrderedArraySet.found
+ 111  0.25% 72.01%    1000 304158 OrderedArraySet.insert
+ 151  0.19% 79.98%     995 304177 OrderedArraySet.binSearch
+ 197  0.12% 86.57%    1000 304155 OrderedArraySet.binSearch
+ 198  0.12% 86.69%    1000 304156 OrderedArraySet.find
+ 203  0.12% 87.31%    1001 304207 OrderedArraySet$Iter.hasNext
+ 204  0.12% 87.44%    1000 304208 OrderedArraySet.access$000
+ 363  0.06% 98.20%    1001 304206 OrderedArraySet.access$100
+ 364  0.06% 98.26%    1000 304209 OrderedArraySet$Iter.next
+ 365  0.06% 98.32%    1000 304210 OrderedArraySet$Iter.next
+binsearch = 1.62%
+
+|10k: 0.341s
+  10  1.68% 19.76%   90575 304179 OrderedArraySet.binSearch
+  11  1.67% 21.43%   10000 304158 OrderedArraySet.insert
+ 120  0.22% 80.10%   10000 304155 OrderedArraySet.binSearch
+ 126  0.21% 81.38%   10000 304210 OrderedArraySet$Iter.next
+ 130  0.20% 82.18%   10000 304156 OrderedArraySet.find
+ 132  0.20% 82.58%    9996 304177 OrderedArraySet.binSearch
+ 139  0.19% 83.92%    9998 304174 OrderedArraySet.binSearch
+ 161  0.16% 87.59%   10000 304157 OrderedArraySet.found
+ 163  0.16% 87.90%   10001 304207 OrderedArraySet$Iter.hasNext
+ 175  0.15% 89.69%   10000 304209 OrderedArraySet$Iter.next
+ 232  0.08% 96.28%   10001 304206 OrderedArraySet.access$100
+ 263  0.04% 98.26%   10000 304208 OrderedArraySet.access$000
+binsearch = 2.29%
+
+|100k: 6.327s
+   3  1.76% 61.60%  100000 304158 OrderedArraySet.insert
+   4  1.07% 62.67% 1240682 304179 OrderedArraySet.binSearch
+  99  0.10% 90.42%  100000 304155 OrderedArraySet.binSearch
+ 108  0.10% 91.31%   99998 304174 OrderedArraySet.binSearch
+ 127  0.08% 93.03%   99995 304177 OrderedArraySet.binSearch
+ 157  0.06% 95.07%  100000 304156 OrderedArraySet.find
+ 158  0.06% 95.13%  100001 304254 OrderedArraySet$Iter.hasNext
+ 173  0.06% 96.03%  100000 304257 OrderedArraySet$Iter.next
+ 193  0.06% 97.18%  100000 304256 OrderedArraySet$Iter.next
+ 194  0.05% 97.23%  100000 304157 OrderedArraySet.found
+ 227  0.03% 98.73%  100000 304255 OrderedArraySet.access$000
+ 247  0.03% 99.26%  100001 304253 OrderedArraySet.access$100
+binsearch = 1.35%
+
+ ------------------
+
+Every time this data structure inserts, it checks using a binary search and
+inserts into the correct position, maintaining an ordered list. The percentage
+of time spent in binSearch makes sense. As the number of data point increases so
+should the number of calls and the number of data points that are needed to be
+checked, increasing the time. The non-intuitive part is that as we get to a less
+ordered (more random) data set, the time spent in binSearch decreases. This is
+due to the larger data sets more quickly determining that the value is valid
+(unique) as a percentage of the total time spent in other functions. (The other
+libarary calls, possibly for comparison may be taking a larger percentage of the 
+time).
+
+The times of this also makes sense since the search is O(log(n)), and if the data
+point is valid, the insertion (using a normal array) has amortized time O(1).
+This is significantly better than any of the other data structures' O(n)
+searches. However the overall insertion is still O(n) since we have to move
+all the other data out of the way to insert it in the right spot.
+The times of very similar with array set likely due to this fact. 
+
+I would expect insert to have a larger percentge of all the data sets, but it is possible
+that we are calling the java library to do comparisons and shift indexes. (not sure though)
+
+4)
+
+Binary Heap
+ ------------------
+|Biased:
+|------------------
+|1K: 0.107s
+|  12  1.48% 22.16%    1000 304283 BinaryHeapPriorityQueue.remove
+  31  0.96% 44.77%    8095 304279 BinaryHeapPriorityQueue.largerChild
+  80  0.37% 70.64%    1000 304158 BinaryHeapPriorityQueue.insert
+  81  0.37% 71.02%    2090 304187 BinaryHeapPriorityQueue.top
+ 126  0.22% 82.88%    1001 304185 BinaryHeapPriorityQueue.empty
+ 297  0.07% 97.92%    1000 304156 BinaryHeapPriorityQueue.ensureNotNull
+ 298  0.07% 98.00%    2100 304157 BinaryHeapPriorityQueue.getParent
+ 
+|10k: 0.163s
+|
+   4  2.23% 10.37%   10000 304283 BinaryHeapPriorityQueue.remove
+  14  1.73% 29.01%  116537 304279 BinaryHeapPriorityQueue.largerChild
+  42  0.70% 60.70%   10000 304154 BinaryHeapPriorityQueue.insert
+  72  0.39% 76.34%   20974 304187 BinaryHeapPriorityQueue.top
+ 101  0.25% 85.39%   22954 304153 BinaryHeapPriorityQueue.getParent
+ 137  0.14% 92.05%   20974 304186 BinaryHeapPriorityQueue.empty
+147  0.12% 93.38%   10000 304152 BinaryHeapPriorityQueue.ensureNotNull
+ 172  0.08% 95.66%   10000 304275 BinaryHeapPriorityQueue.empty
+ 191  0.05% 96.82%   10001 304185 BinaryHeapPriorityQueue.empty
+
+
+|100k: 0.345s - used timing profile!
+|  1  3.08%  3.08%  100000 304331 BinaryHeapPriorityQueue.remove
+   6  2.38% 15.67% 1500361 304327 BinaryHeapPriorityQueue.largerChild
+  45  0.64% 66.34%  100000 304155 BinaryHeapPriorityQueue.insert
+  78  0.35% 81.04%  209768 304235 BinaryHeapPriorityQueue.top
+ 115  0.18% 89.88%  232058 304154 BinaryHeapPriorityQueue.getParent
+ 140  0.15% 93.97%  209768 304234 BinaryHeapPriorityQueue.empty
+ 164  0.07% 96.55%  100000 304323 BinaryHeapPriorityQueue.empty
+ 170  0.07% 96.98%  100001 304233 BinaryHeapPriorityQueue.empty
+ 177  0.07% 97.46%  100000 304153 BinaryHeapPriorityQueue.ensureNotNull
+|------------------
+|Mixed:
+|------------------
+|1K: 0.108s
+|  12  1.49% 23.01%    1000 304283 BinaryHeapPriorityQueue.remove
+  31  0.88% 43.99%    8357 304279 BinaryHeapPriorityQueue.largerChild
+  56  0.48% 58.66%    1000 304154 BinaryHeapPriorityQueue.insert
+  65  0.41% 62.46%    2488 304187 BinaryHeapPriorityQueue.top
+ 104  0.27% 74.68%    2307 304153 BinaryHeapPriorityQueue.getParent
+ 174  0.14% 86.90%    2488 304186 BinaryHeapPriorityQueue.empty
+ 182  0.14% 87.98%    1000 304275 BinaryHeapPriorityQueue.empty
+
+|10k: 0.176s
+|
+   3  2.18%  6.77%   10000 304283 BinaryHeapPriorityQueue.remove
+  10  1.79% 20.23%  116866 304279 BinaryHeapPriorityQueue.largerChild
+  49  0.58% 60.66%   10000 304154 BinaryHeapPriorityQueue.insert
+  72  0.38% 71.16%   24908 304187 BinaryHeapPriorityQueue.top
+ 115  0.20% 83.18%   23087 304153 BinaryHeapPriorityQueue.getParent
+ 157  0.15% 90.23%   24908 304186 BinaryHeapPriorityQueue.empty
+ 235  0.05% 97.28%   10000 304275 BinaryHeapPriorityQueue.empty
+ 241  0.05% 97.56%   10000 304152 BinaryHeapPriorityQueue.ensureNotNull
+ 243  0.05% 97.66%   10001 304185 BinaryHeapPriorityQueue.empty
+|100k: 0.402s -used timing profile
+|
+   1  2.78%  2.78%  100000 304330 BinaryHeapPriorityQueue.remove
+   5  2.17% 12.07% 1500840 304326 BinaryHeapPriorityQueue.largerChild
+  48  0.56% 62.68%  100000 304158 BinaryHeapPriorityQueue.insert
+  73  0.37% 73.64%  248655 304234 BinaryHeapPriorityQueue.top
+ 123  0.17% 86.35%  248655 304233 BinaryHeapPriorityQueue.empty
+ 125  0.16% 86.68%  230017 304157 BinaryHeapPriorityQueue.getParent
+ 204  0.07% 96.32%  100001 304232 BinaryHeapPriorityQueue.empty
+ 224  0.06% 97.62%  100000 304322 BinaryHeapPriorityQueue.empty
+ 226  0.06% 97.74%  100000 304156 BinaryHeapPriorityQueue.ensureNotNull
+|------------------
+|Random:
+|------------------
+|1K: 0.102s
+  28  0.84% 35.71%    8358 304280 BinaryHeapPriorityQueue.largerChild
+  34  0.78% 40.46%    1000 304284 BinaryHeapPriorityQueue.remove
+  72  0.42% 60.20%    2998 304188 BinaryHeapPriorityQueue.top
+  94  0.30% 67.59%    2998 304187 BinaryHeapPriorityQueue.empty
+ 124  0.24% 75.33%    1000 304159 BinaryHeapPriorityQueue.insert
+ 153  0.18% 80.91%    1000 304157 BinaryHeapPriorityQueue.ensureNotNull
+|
+|10k: 0.208s
+   3  2.09%  6.72%   10000 304284 BinaryHeapPriorityQueue.remove
+   9  1.57% 17.49%  116755 304280 BinaryHeapPriorityQueue.largerChild
+  45  0.60% 54.67%   10000 304159 BinaryHeapPriorityQueue.insert
+  64  0.42% 64.28%   29998 304188 BinaryHeapPriorityQueue.top
+ 136  0.19% 84.42%   29998 304187 BinaryHeapPriorityQueue.empty
+ 186  0.13% 92.24%   22540 304158 BinaryHeapPriorityQueue.getParent
+ 244  0.06% 97.53%   10001 304186 BinaryHeapPriorityQueue.empty
+ 246  0.06% 97.66%   10000 304276 BinaryHeapPriorityQueue.empty
+ 256  0.05% 98.18%   10000 304157 BinaryHeapPriorityQueue.ensureNotNull
+|
+|100k: 0.425s - used timing profile!
+ ------------------
+   1  2.37%  2.37%  100000 304331 BinaryHeapPriorityQueue.remove
+   4  2.00%  8.89% 1500857 304327 BinaryHeapPriorityQueue.largerChild
+  53  0.50% 61.24%  100000 304159 BinaryHeapPriorityQueue.insert
+  64  0.43% 66.11%  299998 304235 BinaryHeapPriorityQueue.top
+ 138  0.17% 86.19%  299998 304234 BinaryHeapPriorityQueue.empty
+ 183  0.13% 92.69%  227628 304158 BinaryHeapPriorityQueue.getParent
+ 221  0.07% 96.96%  100000 304323 BinaryHeapPriorityQueue.empty
+ 254  0.06% 98.98%  100001 304233 BinaryHeapPriorityQueue.empty
+ 257  0.05% 99.15%  100000 304157 BinaryHeapPriorityQueue.ensureNotNull
+
+The binaryheap that was implemented uses simple java arrays. I decided
+that I wanted to use the Java array for this implementation to bypass dealing
+with the java libraries in our profiling, so there are three
+unavoidable casts that casts an array of comparable to an array of type T.
+One is to grow the array, the other two are for each of the constructors 
+(one being the default and the other taking a comparable). 
+
+This data structure is very different from all the other sets that we have tested.
+The unique program had to be modified so that it would insert all the elements
+into the data structure and remove it one by one to get the elements in order.
+It prints all elements that were not the same as the one before which works 
+because all elements inserted are coming out in order. 
+
+This data structure cares fairly little about the data coming in. It doesn't
+care if there are any repeats which can be attributed to the close similarity
+in performance of all the data sets. The priority queue simply just keeps
+piling elements in. The biased data set may be a little faster because
+it doesn't need to change the order to elements around in the queue as much.
+
+The binaryheap operates on insertions and orders them with log(n) efficiency.
+Removal also takes log(n) time, while top() takes o(1) amount of time. The
+total time it takes for unique to work is therefore O(nlog(n)) for all the insertions
+and o(nlog(n)) for all the removes all 2*O(nlog(n)) which is much faster than
+any of other other data structures which are all o(n^2). As observed,
+the time for all the data sets took much faster than any other data 
+structure we observed previously.
+
+Remove was our primary bottleneck since it probably took a lot of time to "bubble"
+an element to its right position in the tree after a removal replaces the top element
+with essentially bottom element. This took more time with larger data sets
+because of the increased number of swaps. Insert took less time possibly
+because it was always in roughly its right position (the end of the tree) (though I'm
+not too positive). However overall, because of the nature of our data structure,
+none of these operations took too much time. A lot of it may have been hidden
+by calls to the java library however.
+
+Generally, the larger the data set, the more insert and remove took because
+we needed to swap more elements to put everything in the right order.
+

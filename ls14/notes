@@ -1,0 +1,47 @@
+special cases- depending where nulls are...are we in beginning or end of the list
+node list
+
+sentinel nodes - 
+ empty list has 2 nodes- sentinels that are just there pointing at each other
+
+has null in front and in back
+
+sentinel, then actual nodes, last node goes to last sentinel, always an 
+insertion between two nodes
+
+no special case for null
+
+all insertions are between two nodes
+
+all removals are between two nodes
+
+-> no special cases
+
+iterators general abstraction for enumerating the a content of a data 
+structure
+
+all data structure should have an iterator so client can run through it
+without knowing details
+
+all clients can run through data structures teh same way
+
+
+how do we implement an iterator for an array
+
+c- one pointer two directions??
+
+xor- need two pointers next door to xor
+
+java- can't take pointer and turn it into an int
+
+
+unrolled linked list
+
+linked list- with many storage bins - saves memory allocation- and memory- 
+
+takes a cache line- access things in the same cache line faster
+
+cache conscious data structure
+
+insertions - split node so your node is never more than half empty
+

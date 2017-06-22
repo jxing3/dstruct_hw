@@ -1,0 +1,616 @@
+/* Jesse Xing
+   jxing3@jhu.edu
+*/
+
+import static org.junit.Assert.*;
+ 
+import org.junit.Test;
+ 
+import org.junit.experimental.theories.DataPoint;
+import org.junit.experimental.theories.Theories;
+import org.junit.experimental.theories.Theory;
+import org.junit.runner.RunWith;
+ 
+@RunWith(Theories.class)
+public class TestList {
+ 
+    private interface Fixture {
+        List<String> init();
+    }
+
+    private static class preOr<T> extends Operation<T> {
+
+        String s = "";
+
+        public void pre(Position<T> p) {
+            s+= p.get();
+
+        }
+
+    }
+    private static class inOr<T> extends Operation<T> {
+
+        String s = "";
+
+        public void in(Position<T> p) {
+            s+= p.get();
+
+        }
+
+    }
+    private static class inOr<T> extends Operation<T> {
+
+        String s = "";
+
+        public void post(Position<T> p) {
+            s+= p.get();
+
+        }
+
+    }
+ 
+    @DataPoint
+    public static final Fixture nodeList = new Fixture() {
+        public List<String> init() {
+            return new SentinelList<>();
+        }
+    };
+ 
+    @Theory
+    public void newListIsEmpty(Fixture fix) {
+        List<String> list = fix.init();
+        assertTrue(list.empty());
+        assertEquals(0, list.length());
+    }
+    @Theory
+    public void insertedListIsNotEmpty(Fixture f) {
+        List<String> s = f.init();
+        Position<String> x = s.insertBack("Paul");
+        boolean t = s.empty();
+        assertFalse(t);
+        assertEquals(1, s.length());
+    }
+    @Theory
+    public void newListHasEmptyIterator(Fixture fix) {
+        List<String> list = fix.init();
+        Iterator<String> iter = list.forward();
+        int size = 0;
+        while (iter.valid()) {
+            size += 1;
+            iter.next();
+        }
+        assertEquals(0, size);
+    }
+
+    @Theory @Test(expected=InvalidPositionException.class)
+    public void removedPositionisInvalid(Fixture f) {
+        List<String> l = f.init();
+        Position<String> p = l.insertFront("Peter");
+        String s = l.removeFront();
+        assertEquals("Peter", s);
+        l.first(p);      
+    }
+
+    @Theory @Test(expected=InvalidPositionException.class)
+    public void otherListPositionisInvalid(Fixture f) {
+        List<String> l = f.init();
+        List<String> s = f.init();
+        Position<String> p = l.insertFront("Peter");
+        Position<String> p2 = s.insertFront("Peter");
+        l.removeAt(p2);
+    }
+    @Theory @Test(expected=InvalidPositionException.class)
+    public void nullPositionisInvalid(Fixture f) {
+        List<String> l = f.init();
+        Position<String> p = l.insertFront("Peter");
+        Position<String> p2 = null;
+        l.removeAt(p2);
+    }
+
+    @Theory @Test(expected=InvalidPositionException.class)
+    public void insertBeforeThrowsInvalidPosition(Fixture f) {
+        List<String> l = f.init();
+        Position<String> p = l.insertFront("Peter");
+        Position<String> p2 = null;
+        l.insertBefore(p2, "hi");
+    }
+
+    @Theory @Test(expected=InvalidPositionException.class)
+    public void insertAfterThrowsInvalidPosition(Fixture f) {
+        List<String> l = f.init();
+        Position<String> p = l.insertFront("Peter");
+        Position<String> p2 = null;
+        l.insertAfter(p2, "hi");
+    }
+
+    @Theory @Test(expected=InvalidPositionException.class)
+    public void firstThrowsInvalidPosition(Fixture f) {
+        List<String> l = f.init();
+        Position<String> p = l.insertFront("Peter");
+        Position<String> p2 = null;
+        boolean t = l.first(p2);
+    }
+
+    @Theory @Test(expected=InvalidPositionException.class)
+    public void lastThrowsInvalidPosition(Fixture f) {
+        List<String> l = f.init();
+        Position<String> p = l.insertFront("Peter");
+        Position<String> p2 = null;
+        boolean t = l.last(p2);
+    }
+
+    @Theory @Test(expected=InvalidPositionException.class)
+    public void nextThrowsInvalidPosition(Fixture f) {
+        List<String> l = f.init();
+        Position<String> p = l.insertFront("Peter");
+        Position<String> p2 = null;
+        Position<String> t = l.next(p2);
+    }
+
+    @Theory @Test(expected=InvalidPositionException.class)
+    public void previousThrowsInvalidPosition(Fixture f) {
+        List<String> l = f.init();
+        Position<String> p = l.insertFront("Peter");
+        Position<String> p2 = null;
+        Position<String> t = l.previous(p2);
+    }
+
+    @Theory @Test(expected=InvalidPositionException.class)
+    public void nextLastThrowsInvalidPosition(Fixture f) {
+        List<String> l = f.init();
+        Position<String> p = l.insertFront("Peter");
+        Position<String> p1 = l.insertFront("Peter");
+        Position<String> p2 = l.back();
+        Position<String> t = l.next(p2);
+    }
+
+    @Theory @Test(expected=InvalidPositionException.class)
+    public void previousFirstThrowsInvalidPosition(Fixture f) {
+        List<String> l = f.init();
+        Position<String> p = l.insertFront("Peter");
+        Position<String> p1 = l.insertFront("Peter");
+        Position<String> p2 = l.front();
+        Position<String> t = l.previous(p2);
+    }
+
+    @Theory @Test(expected=EmptyListException.class)
+    public void removeBackThrowsEmptyList(Fixture f) {
+        List<String> l = f.init();
+        l.removeBack();
+    }
+
+    @Theory @Test(expected=EmptyListException.class)
+    public void removeFrontThrowsEmptyList(Fixture f) {
+        List<String> l = f.init();
+        l.removeFront();
+    }
+
+    @Theory @Test(expected=EmptyListException.class)
+    public void FrontThrowsEmptyList(Fixture f) {
+        List<String> l = f.init();
+        l.front();
+    }
+
+    @Theory @Test(expected=EmptyListException.class)
+    public void BackThrowsEmptyList(Fixture f) {
+        List<String> l = f.init();
+        l.back();
+    }
+
+    @Theory @Test(expected=InvalidIteratorException.class)
+    public void getThrowsInvalidIterator(Fixture f) {
+        List<String> s = f.init();
+        Iterator<String> iter = s.forward();
+        iter.get();
+    }
+
+    @Theory @Test(expected=InvalidIteratorException.class)
+    public void nextThrowsInvalidIterator(Fixture f) {
+        List<String> s = f.init();
+        Iterator<String> iter = s.forward();
+        iter.next();
+    }
+
+
+    @Theory
+    public void insertFrontIsFirst(Fixture f) {
+        List<String> s = f.init();
+        s.insertFront("Paul");
+        Position<String> p = s.insertFront("Peter");
+        Position<String> q = s.front();
+        assertEquals(p, q);
+        assertEquals("Peter", q.get());
+    }
+
+    @Theory
+    public void insertBackNotEffectFront(Fixture f) {
+        List<String> s = f.init();
+        Position<String> r = s.insertFront("Paul");
+        Position<String> p = s.insertBack("Peter");
+        Position<String> q = s.front();
+        assertEquals(r, q);
+        assertEquals("Paul", q.get());
+    }
+ 
+    @Theory
+    public void insertBackIsLast(Fixture f) {
+        List<String> s = f.init();
+        s.insertFront("Paul");
+        Position<String> p = s.insertBack("Peter");
+        Position<String> q = s.back();
+        assertEquals(p, q);
+        assertEquals("Peter", q.get());
+    }
+
+    @Theory
+    public void insertFrontnotEffectBack(Fixture f) {
+        List<String> s = f.init();
+        Position<String> r = s.insertFront("Paul");
+        Position<String> p = s.insertFront("Peter");
+        Position<String> q = s.back();
+        assertEquals(r, q);
+        assertEquals("Paul", q.get());
+    }
+ 
+    @Theory
+    public void insertBeforeFirstWorks(Fixture f) {
+        List<String> s = f.init();
+        Position<String> x = s.insertFront("Paul");
+        Position<String> p = s.insertBefore(x, "Peter");
+        Position<String> q = s.front();
+        assertEquals(p, q);
+        assertEquals("Peter", q.get());
+    }
+ 
+    @Theory
+    public void insertBeforeMiddleWorks(Fixture f) {
+        List<String> s = f.init();
+        Position<String> x = s.insertFront("Paul");
+        Position<String> y = s.insertFront("Mary");
+        Position<String> p = s.insertBefore(x, "Peter");
+        assertEquals(y, s.previous(p));
+        assertEquals(x, s.next(p));
+        assertEquals("Peter", p.get());
+    }
+
+    @Theory
+    public void insertAfterMiddleWorks(Fixture f) {
+        List<String> s = f.init();
+        Position<String> x = s.insertBack("Paul");
+        Position<String> y = s.insertBack("Mary");
+        Position<String> z = s.insertBack("Happy");
+        Position<String> p = s.insertAfter(y, "Peter");
+        assertEquals(y, s.previous(p));
+        assertEquals(z, s.next(p));
+        assertEquals("Peter", p.get());
+    }
+
+    @Theory
+    public void insertAfterLastWorks(Fixture f) {
+        List<String> s = f.init();
+        Position<String> x = s.insertBack("Paul");
+        Position<String> y = s.insertBack("Mary");
+        Position<String> z = s.insertBack("Happy");
+        Position<String> p = s.insertAfter(z, "Peter");
+        assertEquals(z, s.previous(p));
+        assertEquals("Peter", p.get());
+    }
+
+    @Theory
+    public void removeFrontWorks(Fixture f) {
+        List<String> s = f.init();
+        Position<String> x = s.insertBack("Paul");
+        Position<String> y = s.insertBack("Mary");
+        Position<String> z = s.insertBack("Happy");
+        String t = s.removeFront();
+        assertEquals("Paul", t);
+        assertEquals(y, s.front());
+        assertEquals(z, s.back());
+        assertEquals(z, s.next(y));
+    }
+
+    @Theory
+    public void removeBackWorks(Fixture f) {
+        List<String> s = f.init();
+        Position<String> x = s.insertBack("Paul");
+        Position<String> y = s.insertBack("Mary");
+        Position<String> z = s.insertBack("Happy");
+        String t = s.removeBack();
+        assertEquals("Happy", t);
+        assertEquals(x, s.front());
+        assertEquals(y, s.back());
+        assertEquals(y, s.next(x));
+    }
+
+
+    @Theory
+    public void removeAtMiddleWorks(Fixture f) {
+        List<String> s = f.init();
+        Position<String> x = s.insertBack("Paul");
+        Position<String> y = s.insertBack("Mary");
+        Position<String> z = s.insertBack("Happy");
+        String t = s.removeAt(y);
+        assertEquals("Mary", t);
+        assertEquals(x, s.front());
+        assertEquals(z, s.back());
+        assertEquals(z, s.next(x));
+    }
+
+    @Theory
+    public void firstReturnsTrueCorrectly(Fixture f) {
+        List<String> s = f.init();
+        Position<String> x = s.insertBack("Paul");
+        Position<String> y = s.insertBack("Mary");
+        Position<String> z = s.insertBack("Happy");
+        boolean t = s.first(x);
+        assertEquals(true, t);
+    }
+
+    @Theory
+    public void lastReturnsTrueCorrectly(Fixture f) {
+        List<String> s = f.init();
+        Position<String> x = s.insertBack("Paul");
+        Position<String> y = s.insertBack("Mary");
+        Position<String> z = s.insertBack("Happy");
+        boolean t = s.last(z);
+        assertEquals(true, t);
+    }
+    @Theory
+    public void firstReturnsFalseCorrectly(Fixture f) {
+        List<String> s = f.init();
+        Position<String> x = s.insertBack("Paul");
+        Position<String> y = s.insertBack("Mary");
+        Position<String> z = s.insertBack("Happy");
+        boolean t = s.first(z);
+        assertEquals(false, t);
+    }
+
+    @Theory
+    public void lastReturnsFalseCorrectly(Fixture f) {
+        List<String> s = f.init();
+        Position<String> x = s.insertBack("Paul");
+        Position<String> y = s.insertBack("Mary");
+        Position<String> z = s.insertBack("Happy");
+        boolean t = s.last(x);
+        assertEquals(false, t);
+    }
+
+    @Theory
+    public void EmptyReturnsFalseCorrectly(Fixture f) {
+        List<String> s = f.init();
+        Position<String> x = s.insertBack("Paul");
+        Position<String> y = s.insertBack("Mary");
+        Position<String> z = s.insertBack("Happy");
+        boolean t = s.empty();
+        assertEquals(false, t);
+    }
+
+    @Theory
+    public void EmptyReturnsTrueCorrectly(Fixture f) {
+        List<String> s = f.init();
+        Position<String> x = s.insertBack("Paul");
+        Position<String> y = s.insertBack("Mary");
+        Position<String> z = s.insertBack("Happy");
+        s.removeFront();
+        s.removeFront();
+        s.removeFront();
+        boolean t = s.empty();
+        assertEquals(true, t);
+    }
+
+    @Theory
+    public void LengthIncrementsCorrectly(Fixture f) {
+        List<String> s = f.init();
+        Position<String> x = s.insertBack("Paul");
+        Position<String> y = s.insertFront("Mary");
+        Position<String> z = s.insertBefore(x,"Happy");
+        Position<String> w = s.insertAfter(x,"Happy");
+
+
+        int l = s.length();
+        assertEquals(4, l);
+    }
+
+    @Theory
+    public void LengthDecrementsCorrectly(Fixture f) {
+        List<String> s = f.init();
+        Position<String> x = s.insertBack("Paul");
+        Position<String> y = s.insertFront("Mary");
+        Position<String> z = s.insertBefore(x,"Happy");
+        Position<String> w = s.insertAfter(x,"Happy");
+
+        String v = s.removeBack();
+        String t = s.removeFront();
+        String u = s.removeAt(x);
+        
+        int l = s.length();
+        assertEquals(1, l);
+        assertEquals("Happy", v);
+        assertEquals("Mary", t);
+        assertEquals("Paul", u);
+    }
+
+    @Theory
+    public void toStringDisplaysCorrectly(Fixture f) {
+        List<String> s = f.init();
+        Position<String> x = s.insertBack("Paul");
+        Position<String> y = s.insertBack("Mary");
+        Position<String> z = s.insertBack("Happy");
+
+       
+        String t = s.toString();
+        assertEquals("[Paul, Mary, Happy]", t);
+    }
+
+    @Theory
+    public void oneElementToStringisCorrect(Fixture f) {
+        List<String> s = f.init();
+        Position<String> x = s.insertBack("Paul");
+
+       
+        String t = s.toString();
+        assertEquals("[Paul]", t);
+    }
+
+    @Theory
+    public void noElementToStringisCorrect(Fixture f) {
+        List<String> s = f.init();
+       
+        String t = s.toString();
+        assertEquals("[]", t);
+    }
+
+    @Theory
+    public void iteratorForwardisGood(Fixture f) {
+        List<String> s = f.init();
+        String u = "";
+        for(int i = 0; i < 20; i++) {
+            s.insertBack(Integer.toString(i));
+            u += Integer.toString(i);
+        }
+        Iterator<String> iter = s.forward();
+        String t = "";
+        int size = 0;
+        while (iter.valid()) {
+            size += 1;
+            t += iter.get();
+            iter.next();
+        }
+        assertEquals(20, size);
+        assertEquals(u, t);
+    }
+
+    @Theory
+    public void iteratorBackwardisGood(Fixture f) {
+        List<String> s = f.init();
+        String u = "";
+        for(int i = 0; i < 20; i++) {
+            s.insertFront(Integer.toString(i)); //instead of inserting in back
+            u += Integer.toString(i);
+        }
+        Iterator<String> iter = s.backward();
+        String t = "";
+        int size = 0;
+        while (iter.valid()) {
+            size += 1;
+            t += iter.get();
+            iter.next();
+        }
+        assertEquals(20, size);
+        assertEquals(u, t);
+    }
+
+    @Theory
+    public void getputWorks(Fixture f) {
+
+        List<String> s = f.init();
+
+        Position<String> x = s.insertFront("Hi");
+        Position<String> y = s.insertBack("Bye");
+        x.put("Peter");
+        y.put("Griffin");
+
+        assertEquals("Peter", x.get());
+        assertEquals("Griffin", y.get());
+      
+
+    }
+
+    @Theory
+    public void firstlastfrontbackTest(Fixture f) {
+
+        List<String> s = f.init();
+        for(int i = 0; i < 20; i++) {
+            s.insertFront(Integer.toString(i)); //instead of inserting in back
+            s.insertBack(Integer.toString(i));
+        }
+
+        Position<String> x = s.insertFront("Hi");
+        Position<String> y = s.insertBack("Bye");
+        assertEquals(x, s.front());
+        assertEquals(y, s.back());
+        boolean a = s.first(x);
+        boolean b = s.first(y);
+        boolean c = s.last(x);
+        boolean d = s.last(y);
+        assertFalse(b);
+        assertFalse(c);
+        assertTrue(d);
+        assertTrue(a);
+
+    }
+
+    @Theory
+    public void lotsofOperationsStressTest(Fixture f) {
+        List<String> s = f.init();
+        String u = "";
+        for(int i = 0; i < 100; i++) {
+            s.insertFront(Integer.toString(i)); //instead of inserting in back
+            s.insertBack(Integer.toString(i));
+        }
+
+        for(int i = 100; i >= 0; i--) {
+
+            u += Integer.toString(i);
+
+        }
+
+        for(int i = 0; i <= 100; i++) {
+
+            u += Integer.toString(i);
+
+        }
+        Position<String> x = s.insertFront("100");
+        Position<String> y = s.insertBack("100");
+
+        String v = "";
+
+        Position<String> z = s.front();
+        for(int i = 0; i < s.length() - 1; i++) {
+            v += z.get();
+            z = s.next(z);
+
+        }
+        v += z.get();
+
+        assertEquals(u, v);
+
+    }
+
+    @Theory
+    public void lotsofRemovalsStressTest(Fixture f) {
+        List<String> s = f.init();
+        String u = "";
+        Position<String> x = s.insertBack("0");
+        Position<String> y = s.insertFront("0");
+        for(int i = 1; i <= 100; i++) {
+            s.insertFront(Integer.toString(i)); //instead of inserting in back
+            s.insertBack(Integer.toString(i));
+        }
+
+        for(int i = 100; i > 0; i--) {
+
+            s.removeFront();
+
+        }
+
+        for(int i = 1; i <= 100; i++) {
+
+            s.removeBack();
+
+        }
+        s.removeAt(x);
+        s.removeAt(y);
+
+        s.insertFront("Peter");
+
+        Position<String> a = s.front();
+
+        Position<String> b = s.back();
+
+        assertEquals("Peter", a.get());
+        assertEquals("Peter", b.get());
+
+    }
+
+}

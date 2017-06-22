@@ -1,0 +1,15 @@
+adt Variable
+  uses Any //gives that all types can use = 
+  defines Variable<T: Any>
+  operations:
+    new: T ---> Variable <T>
+    get: Variable <T> ---> T
+    set: Variable<T> x T ---> Variable<T>
+  axiom
+   /* get(new<Integer>()) =0
+    get(new<String>()) = ""*/
+    get(new(t)) = t //instead
+    get(set(v, t)) = t
+
+//all t in T
+//for all v in V<t>

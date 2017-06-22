@@ -1,0 +1,64 @@
+Jesse Xing
+jxing3@jhu.edu
+
+Problem 1
+
+Program basically takes integers from system input and stores the ones that aren't
+repeats in a simple array titled num, ignoring and printing an error for any input
+that isn't an integer. It then prints out all the number in the array at the end.
+An expansion function had to be written to expand the array 2 times whenever the array
+had been filled to the max and there was still more input.
+
+Problem 2
+
+adt FlexibleArray
+  uses Any, Integer
+  defines FlexibleArray<T: Any>
+  operations
+    new: Integer x Integer x T -/-> FlexibleArray<T> 
+    get: FlexibleArray<T> x Integer -/-> T
+    set: FlexibleArray<T> x Integer x T -/-> FlexibleArray<T>
+    length: FlexibleArray<T> ---> Integer
+    lower: FlexibleArray<T> ---> Integer
+    upper: FlexibleArray<T> ---> Integer
+  preconditions
+    new(i1,i2, t): i1 <= i2
+    get(a, i): lower(a) <= i <= upper(a)
+    set(a, i, t): lower(a) <= i <= upper(a)
+  axioms
+    lower(new(i1,i2,t))= i1
+    lower(set(a,i,t))= lower(a)
+    upper(new(i1,i2,t)) = i2
+    upper(set(a,i,t))= upper(a)
+    length(new(i1, i2, t)) = (i2-i1) +1
+    length(set(a, i, t)) = length(a)
+    get(new(i1, i2, t), i) = t
+    get(set(a, i, t), j) = if i = j then t else get(a, j)
+
+The flexible array is for the most very similar to the array adt that we did in 
+class. I had to add two operations lower and upper that received the values of the
+upper and lower bounds of the array when it was created and returned those values.
+New was also changed to take lower and upper bounds instead of length. 
+I also changed the preconditions, so that new could not accept lower bounds that are 
+higher than the upper bounds. Likewise, get could only take indexes between the lower
+and upper bounds set up for the array. There possibly could have been a way to do it
+where there's only one additional operation lower bound or upper bound, and the other
+could have been derived from the length of the array. However, I thought that it was 
+useful to have both lower and upper bound defined in the operations.
+
+I prefer to use zero-based arrays. They seem easier to initialize and expand in the 
+future because they would only require one input, the length of the array. Plus,
+I can't really think of an application when I would need arrays with lower bounds
+other than zero. I think it just makes it more complicated, because you would then
+have to keep track of which indices to use. With a zero-based array, you know that 
+the max indice you could use is one less than the length of the array.
+
+Problem 3
+
+My sparse array basically stores the default values and length in separate variables 
+when initialized and creates a null rep node. When the array is set, it looks through
+the nodes, from one to the next to find a matched node position with the given index.
+If it doesn't find one, it will create a new node and prepend to the beginning of the
+rep node structure. When the user calls get, the program looks through the nodes again
+to see if there is a matched node position with the inputed index. If there isn't, it
+will output the default value. If there is, it will output the value on the node.   

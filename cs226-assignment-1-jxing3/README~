@@ -1,0 +1,55 @@
+Problem 1
+
+It was an interesting problem to explore. I think I may
+have made it more complicated than necessary however.
+Instead of just making the array the size of the number of
+command line arguments, I decided to utilize a method that 
+checks if the array is full and replaces the array with one
+twice as large if it is. Likewise, I created a separate array
+that stores all the unique numbers instead of just printing 
+out the unique elements to output immediately as it checks. 
+
+Problem 2
+
+adt UglyVariable
+  uses Any, Boolean
+  defines UglyVariable<T: Any>
+  operations:
+    new: ---> UglyVariable<T>
+    ini: UglyVariable<T>--->Boolean
+    get: UglyVariable<T> -/-> T
+    set: UglyVariable<T> x T ---> Variable<T>
+  preconditions
+    get(v): ini(v)=true
+  axiom
+    ini(new())= false
+    ini(set(v,t))= true
+    get(set(v,t)) = t
+
+
+The essential difference between an initialized variable and
+an unitialized variable, is that for the unitialized variable, 
+we can't use the get operation unless the variable has ben set 
+at least once, so get(new()) would return an error. Because of this
+we need to keep track of whether or not the variable has been
+initialized with a boolean. We need to change the boolean from false
+when it's first initialized to true whenever the variable has been set.
+Using a unitialized variable may be useful in cases when we don't know
+what value to initialize the variable to until the program runs and 
+received user input. Initialized variables are useful when we know
+what value the variable should receive before the program needs to be
+run.
+
+Problem 3
+
+
+This problem was interesting and it certainly reinforced my understanding
+of implementing an interface and utilizing polymorphism. Overall, there wasn't
+too much drama with the problem since it was rather straightforward. PolyCount 
+works by creating counter objects from our classes and than incrementing them up
+and down and then displaying their values and finally checking if the start value
+and the end value are the same (since there is a same numbers of ups as there
+are downs) Interestingly, PolyCount doesn't actually create ResetableCounter objects,
+so it can't utilize the reset() operation in our classes. It doesn't actually fully
+test our classes.
+

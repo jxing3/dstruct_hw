@@ -1,0 +1,19 @@
+want checkstyle-5.6-all.jar- copy into same directory as homework stuff
+download archive and decompress it
+
+download jhu_checks.xml
+
+java -jar checkstyle-5.6-all.jar -c jhu_checks.xml Hello.java
+
+extends RuntimeException - need too many try catches with Exception 
+for compiler to stop complaining
+
+Exception- checked at compile time //unexpected should handle explicitly
+
+RuntimeException- unchecked //if happens you screwed up
+
+Array<Integer> -is orders of magnitude slower than Array<int>
+
+it makes an object of type Integer from your int
+
+this is called autoboxing //don't do it for processing of large data

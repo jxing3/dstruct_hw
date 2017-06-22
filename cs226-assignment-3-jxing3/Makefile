@@ -1,0 +1,27 @@
+# $Id: Makefile 529 2006-09-09 16:43:14Z phf $
+# A really simplistic Makefile...
+all:
+	javac -Xlint:all *.java
+doc:
+	javadoc -d html *.java
+style:
+	java -jar checkstyle-5.6-all.jar -c jhu_checks.xml Array.java
+	java -jar checkstyle-5.6-all.jar -c jhu_checks.xml SimpleArray.java
+	java -jar checkstyle-5.6-all.jar -c jhu_checks.xml Statable.java
+	java -jar checkstyle-5.6-all.jar -c jhu_checks.xml InvalidIndexException.java
+	java -jar checkstyle-5.6-all.jar -c jhu_checks.xml InvalidLengthException.java
+	java -jar checkstyle-5.6-all.jar -c jhu_checks.xml SortingAlgorithm.java
+	java -jar checkstyle-5.6-all.jar -c jhu_checks.xml NullSort.java
+	java -jar checkstyle-5.6-all.jar -c jhu_checks.xml SelectionSort.java
+	java -jar checkstyle-5.6-all.jar -c jhu_checks.xml Run.java
+	java -jar checkstyle-5.6-all.jar -c jhu_checks.xml InsertionSort.java
+	java -jar checkstyle-5.6-all.jar -c jhu_checks.xml BubbleSort.java
+	java -jar checkstyle-5.6-all.jar -c jhu_checks.xml StatableArray.java
+test:
+	java -ea Run 1000 <sorted.data
+	java -ea Run 1000 <reverse.data
+	java -ea Run 1000 <random.data
+clean:
+	rm -rf html *.class sorting.tar.gz
+archive:
+	tar zcvf cs226-assignment-3-jxing3.tar.gz Array.java SimpleArray.java Statable.java InvalidIndexException.java InvalidLengthException.java SortingAlgorithm.java NullSort.java SelectionSort.java Run.java BubbleSort.java InsertionSort.java TestStatableArray.java StatableArray.java README *.data

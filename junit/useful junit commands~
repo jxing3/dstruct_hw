@@ -1,0 +1,4 @@
+javac -classpath /usr/share/java/junit4-4.10.jar:. -Xlint:all ArrayTest.java
+
+
+java -classpath /usr/share/java/junit4-4.10.jar:. org.junit.runner.JUnitCore ArrayTest

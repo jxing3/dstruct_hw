@@ -1,0 +1,422 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<!-- saved from url=(0064)http://gaming.jhu.edu/~phf/2013/fall/cs226/assignment-tree.shtml -->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"><!--$Id: _begin.shtml 1025 2012-07-01 23:47:19Z phf $--><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
+  <link rel="stylesheet" href="./JHU   CS   600.226  Data Structures_files/default.css" type="text/css">
+<!--  <link rel="stylesheet" href="../../../css/course/orangish.css" type="text/css" />-->
+  <meta name="description" content="">
+  <meta name="keywords" content="">
+  <title>JHU / CS / 600.226: Data Structures</title>
+ </head>
+ <!-- This used to be a secret message. -->
+ <body>
+  <div id="head">
+ <!--$Id: _header.shtml 1136 2012-09-03 14:17:43Z phf $-->
+ <h1>600.226: Data Structures</h1>
+ <p class="right">
+  <a href="http://www.cs.jhu.edu/">Department of Computer Science</a><br>
+  <a href="http://www.jhu.edu/">The Johns Hopkins University</a>
+ </p>
+</div>
+
+  <div id="offering">
+ <!--$Id: _offering.shtml 1309 2013-09-04 15:37:57Z phf $-->
+ <p class="left">
+  Fall Semester 2013
+ </p>
+ <p class="right">
+  September 4, 2013 – December 6, 2013
+ </p>
+</div>
+
+  <div id="root">
+   <div id="menu">
+ <!--$Id: _menu.shtml 1311 2013-09-06 19:18:19Z phf $-->
+ <ul>
+  <li><a href="http://gaming.jhu.edu/~phf/2013/fall/cs226/">Home</a></li>
+  <li><a href="http://piazza.com/jhu/fall2013/600226">Piazza</a></li>
+  <li><a href="http://gaming.jhu.edu/~phf/policies.shtml">Policies</a></li>
+ </ul>
+</div>
+
+
+
+<!--$Id: assignment-tree.shtml 1341 2013-10-12 01:17:24Z phf $-->
+
+
+<div id="main">
+
+<h2>Assignment 6: Trees of Files</h2>
+
+<p>
+<strong>Out on:</strong>
+October 11, 2013
+<br>
+<strong>Due by:</strong>
+October 18, 2013 before 10:00 pm
+<br>
+<strong>Collaboration:</strong>
+None
+<br>
+<strong>Grading:</strong>
+Packaging 10%,
+Style 10% (where applicable),
+Testing 20% (where applicable),
+Functionality 60% (where applicable)
+</p>
+
+<h3>Overview</h3>
+
+<p>
+ The sixth assignment is all about trees, and the trees are full
+ of files (and directories)!
+
+ You'll implement a general n-ary tree following the interface we
+ designed in lecture, but you're free to pick your
+ <strong>representation</strong>
+ of the tree in <strong>any</strong> way that fulfills the interface.
+
+ You'll also use your tree implementation to develop a simulation
+ of a simple Unix-like file system.
+
+ You'll need to grab
+ <a href="http://gaming.jhu.edu/~phf/2013/fall/cs226/src/trees.tar.gz">this archive</a>
+ for interfaces and exception classes.
+
+ Maybe you want to take a quick tour of the files
+ before you read on?
+</p>
+
+<h3>Problem 1: Tree Implementation (60%)</h3>
+
+<p>
+ Your first task for this assignment is to develop an efficient
+ implementation of the 
+ <code>Tree&lt;T&gt;</code>
+ interface for general n-ary trees (see archive above).
+
+ The interface follows our design from lecture rather closely,
+ with just a few minor differences.
+
+ Obviously you'll also have to implement the
+ <code>Position&lt;T&gt;</code>
+ interface; as before, the class you write for this
+ purpose should be <strong>nested</strong> inside
+ your tree implementation.
+
+ Furthermore you <strong>must</strong> use (and you
+ <strong>may</strong> have to implement, see below)
+ the Java interfaces
+ <code>java.util.Iterator&lt;T&gt;</code>
+ and
+ <code>java.lang.Iterable&lt;T&gt;</code>
+ since they are part of our
+ <code>Tree&lt;T&gt;</code>
+ interface as well.
+</p>
+
+<p>
+ <strong>Please name your class implementing our interface
+ <code>TreeImplementation&lt;T&gt;</code> and put it into a
+ file called <code>TreeImplementation.java</code> for this
+ assignment!</strong>
+</p>
+
+<p>
+ The reason why we stray from our usual naming scheme is that
+ we will allow you a <strong>lot</strong> more freedom in
+ choosing your exact tree representation. (Our usual naming
+ convention uses the implementation technique as part of the
+ class name, but without a proscribed representation that's
+ not feasible.)
+
+ For example, it's up to you whether you want to implement
+ <code>Node&lt;T&gt;</code> objects that <strong>really</strong>
+ store an <strong>arbitrary number of child pointers</strong>
+ or if you'd rather use the <strong>left child-right sibling</strong>
+ encoding that represents n-ary trees using nodes with
+ a <strong>fixed</strong> number of pointers.
+
+ Furthermore you are allowed to use the Java collection
+ classes
+ <code>java.util.ArrayList&lt;T&gt;</code>
+ and
+ <code>java.util.LinkedList&lt;T&gt;</code>
+ if you would like to.
+
+ Since you have to <strong>somehow</strong> implement various
+ <code>java.util.Iterator&lt;T&gt;</code>
+ and
+ <code>java.lang.Iterable&lt;T&gt;</code>
+ things, this may indeed reduce your work quite
+ a bit (the Java classes <strong>already</strong> support those
+ interfaces).
+</p>
+
+<p>
+ You should provide a <code>toString()</code> method
+ in addition to the methods required by the
+ <code>Tree&lt;T&gt;</code>
+ interface.
+
+ The string you return should list the elements of the tree as
+ they would be processed during a <strong>pre-order</strong>
+ traversal, otherwise the format is similar to previous
+ assignments.
+
+ For example,
+ <code>[]</code> is the empty tree and <code>[1, 2, 3]</code>
+ is the tree with <code>1</code> at the root and <code>2</code>
+ "before" <code>3</code> in <code>1</code>'s list of children.
+</p>
+
+<p>
+ Your <code>TreeImplementation&lt;T&gt;</code> class should come
+ with a full suite of JUnit 4 test cases <strong>using
+ theories</strong> in a file <code>TestTree.java</code>.
+
+ Be sure to test <strong>all</strong> methods and be sure
+ to test <strong>all</strong> exceptions for error situations
+ as well.
+</p>
+
+<h3>Problem 2: File System Simulation (40%)</h3>
+
+<p>
+ Your second task for this assignment is to write a simple
+ file system simulation called <code>DOS.java</code> (for
+ the obvious historical reasons).
+
+ You will use a
+ <code>Tree&lt;T&gt;</code>
+ to keep track of the layout of a simple file system in which
+ all entries are either <strong>files</strong> or
+ <strong>directories</strong>.
+
+ The initial tree has a single directory called <code>/</code>
+ (that's simply a slash character) as its root, and the initial
+ position inside the file system (our "current directory")
+ is the corresponding node in the tree.
+
+ The user can issue the following commands to interact with the
+ simulation (where "name" stands for any sequence of the upper-case
+ and lower-case letters; the only "special" name is ".." for the
+ parent directory):
+</p>
+
+<ul>
+  <li>
+   <code>ls</code>:
+   print the names of all entries (files and directories)
+   in the current directory, in alphabetical order; for
+   directories, print a "/" character at the end of the
+   actual name
+  </li>
+  <li>
+   <code>cd name</code>:
+   make "name" (which must be a directory) the current directory;
+   if name is ".." go up to the parent directory of the current
+   directory; the parent of <code>/</code> is <code>/</code> (as
+   in Unix); it's an error to <code>cd</code> into a non-existant
+   directory or into a file
+  </li>
+  <li>
+   <code>mkdir name</code>: 
+   create a directory called "name" in the current directory; it's
+   an error to create a directory with the name of an existing
+   entry
+  </li>
+  <li>
+   <code>rmdir name</code>: 
+   remove a directory called "name" from the current directory;
+   it's an error to remove a non-empty directory; it's an error
+   to remove a file with this command; it's an error if no directory
+   "name" exists
+  </li>
+  <li>
+   <code>mk name</code>: 
+   create a file called "name" in the current directory; it's
+   an error to create a file with the name of an existing entry
+  </li>
+  <li>
+   <code>rm name</code>: 
+   remove a file called "name" from the current directory;
+   it's an error to remove a directory with this command;
+   it's an error if no file "name" exists
+  </li>
+  <li>
+   <code>pwd</code>: 
+   print the <strong>absolute path</strong> to the current working
+   directory (see below for an example)
+  </li>
+  <li>
+   <code>quit</code>: 
+   exit the program, stop the simulation
+  </li>
+</ul>
+
+<p>
+ Here is a sample interaction with the simulation; note the
+ <code>&gt;</code> prompts to enter a command and the format
+ of the error messages:
+</p>
+
+<pre>&gt; ls
+&gt; pwd
+/
+&gt; cd ..
+&gt; pwd
+/
+&gt; mkdir tst
+&gt; ls
+tst/
+&gt; mkdir bla
+&gt; ls
+bla/
+tst/
+&gt; rm bla
+? error: bla is a directory, use rmdir instead
+&gt; rmdir bla
+&gt; ls
+tst/
+&gt; cd tst
+&gt; pwd
+/tst
+&gt; ls
+&gt; mk bla
+&gt; ls
+bla
+&gt; mkdir hey
+&gt; ls
+bla
+hey/
+&gt; cd hey
+&gt; pwd
+/tst/hey
+&gt; quit
+</pre>
+
+<p>
+ You will have to make quite a few design decisions by yourself
+ to make this work.
+
+ You should probably write classes
+ <code>Entry</code>, <code>File</code>, and <code>Directory</code>,
+ all of which you store
+ inside a <code>Tree&lt;Entry&gt;</code> for the simulation...
+
+ Good luck!
+</p>
+
+<h3>Deliverables</h3>
+
+<p>
+ Please turn in a
+ <a href="http://www.gzip.org/"><code>gzip</code></a>
+ compressed
+ <a href="http://catb.org/~esr/jargon/html/T/tarball.html">tarball</a>
+ of your assignment;
+ the filename should be
+ <code>cs226-assignment-6-<em>name</em>.tar.gz</code>
+ with <code><em>name</em></code> replaced by the first part of the
+ email address you used to register on <a href="http://piazza.com/">Piazza</a>
+ (so I would use <code>cs226-assignment-6-phf.tar.gz</code>).
+
+ The tarball should contain <strong>no</strong> derived files whatsoever
+ (i.e. no <code>.class</code> files, no <code>.html</code> files, etc.),
+ but allow building <strong>all</strong> derived files.
+
+ Include a <code>README</code> file that briefly explains what your
+ programs do and contains any other notes you want us to check out
+ before grading; your answers to <strong>written</strong> problems
+ should be in this file as well.
+</p>
+
+<h3>Grading</h3>
+
+<p>
+For reference, here is a short explanation of the grading criteria;
+some of the criteria don't apply to all problems, and not all of the
+criteria are used on all assignments.
+
+<strong>Packaging</strong> refers to the proper organization of the
+stuff you hand in, following both the guidelines for Deliverables
+above as well as the general submission instructions for assignments.
+
+<strong>Style</strong> refers to Java programming style, including
+things like consistent indentation, appropriate identifier names,
+useful comments, suitable <code>javadoc</code> documentation, etc.
+as enforced by <a href="http://checkstyle.sf.net/">checkstyle</a>
+with our <a href="http://gaming.jhu.edu/~phf/jhu_checks.xml">JHU configuration file</a>.
+Style also includes proper modularization of your code (into
+interfaces, classes, methods, and using public, protected, and
+private appropriately).
+Simple, clean, readable code is what you should be aiming for.
+
+<strong>Testing</strong> refers to proper unit tests for all of
+the data structure classes you developed for this assignment,
+using the <a href="http://www.junit.org/">JUnit 4</a> framework.
+Make sure you test <strong>all</strong> (implied) axioms that
+you can think of and <strong>all</strong> exception conditions
+that are relevant.
+
+<strong>Performance</strong> refers to how fast/with how little
+memory your program can produce the required results compared to
+other submissions.
+
+<strong>Functionality</strong> refers to your programs being
+able to do what they should according to the specification
+given above; if the specification is ambiguous and you had
+to make a certain choice, defend that choice in your
+<code>README</code> file.
+</p>
+
+<p>
+<strong>
+If your programs cannot be built you will get no points whatsoever.
+
+If your programs cannot be built without warnings using
+<code>javac -Xlint:all</code>
+we will take off 10% (except if you document a very good reason).
+
+If your programs fail miserably even once,
+i.e. terminate with an exception of any kind,
+we will take off 10% (however we'll also take those 10% off if
+you're trying to be smart by wrapping your whole program into
+a universal try-catch).
+
+Finally, make sure to include your name and email address in
+every file you turn in (well, in every file for which it makes
+sense anyway)!
+</strong>
+</p>
+
+</div>
+
+<!--$Id: _end.shtml 1136 2012-09-03 14:17:43Z phf $-->
+</div> <!-- root -->
+<div id="foot">
+ <!--$Id: _footer.shtml 1145 2013-07-02 12:33:09Z phf $-->
+ <p class="left">
+  Copyright © 2002–2013
+  <a href="http://www.factorial.com/forward/phf/work/">Peter H.
+   Fröhlich</a>.
+  All rights reserved.
+  <br>
+  Updated:
+  $Id: assignment-tree.shtml 1341 2013-10-12 01:17:24Z phf $
+ </p>
+ <p class="right">
+  <a href="http://validator.w3.org/check?uri=referer">
+   <img src="./JHU   CS   600.226  Data Structures_files/valid-xhtml11" alt="Valid XHTML 1.1" height="31" width="88">
+  </a>
+  <a href="http://jigsaw.w3.org/css-validator/check/referer">
+   <img src="./JHU   CS   600.226  Data Structures_files/vcss" alt="Valid CSS!" height="31" width="88">
+  </a>
+ </p>
+</div>
+
+
+
+
+</body></html>

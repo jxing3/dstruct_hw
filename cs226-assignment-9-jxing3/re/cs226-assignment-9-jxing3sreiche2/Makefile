@@ -1,0 +1,16 @@
+# $Id: Makefile 529 2006-09-09 16:43:14Z phf $
+# A really simplistic Makefile...
+all:
+	javac -Xlint:all *.java
+doc:
+	javadoc -d html *.java
+style:
+	java -jar checkstyle-5.6-all.jar -c jhu_checks.xml BinarySearchTreeMap.java
+	java -jar checkstyle-5.6-all.jar -c jhu_checks.xml TreapMap.java
+	java -jar checkstyle-5.6-all.jar -c jhu_checks.xml AvlTreeMap.java
+	java -jar checkstyle-5.6-all.jar -c jhu_checks.xml Words.java
+
+clean:
+	rm -rf html *.class sorting.tar.gz
+archive:
+	tar zcvf cs226-assignment-9-jxing3sreiche2.tar.gz AvlTreeMap.java OrderedMap.java Map.java TreapMap.java BinarySearchTreeMap.java Words.java README cracklib.txt cracklib5k.txt dictionary.txt dictionary1k.txt dictionary5k.txt war.txt war30k.txt war500.txt TestOrderedMap.java

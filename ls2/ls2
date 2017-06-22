@@ -1,0 +1,79 @@
+Data
+====
+
+type of data (properties <=[])-> data structure (properties)-> algorithms
+
+For N books names with <=k characters
+
+names = unsorted- search linear- N
+
+names < sorted- search binary - log N
+
+names [] (char by char)- trie - k
+
+Java Review
+==========
+
+    Packages- units you can organize code
+      ||                  ||
+   Classes            Interfaces
+     ||
+(data)variables/
+basic types  int, char, double
+(value semantics (int a =10, int b =a, a =7, assert b==10-true))
+
+reference types class interface, string
+(reference semantics (x a = new x(); x b = a; a.f = 7, assert b.f ==7;)  (both point to same object)
+
+(code)methods
+  if while switch
+  exp, (!for each)
+
+packages
+
+-java.util
+
+-java.io
+
+class within a class- nested classes (inner classes)
+
+inheritance (a->b)
+
+class extends 1 class (only one)
+
+interface
+========
+
+class implements n interfaces
+
+                   ||
+combination of signatures
+
+signature (name, parameters, and return type of a method (NO CODE))
+
+interface -gives the what
+
+class - how you do it (methods)
+
+Application
+==========
+
+will talk to interface called bookstore-(uses three different classes 
+that implements it-changes behavior)
+
+most reuse happens with interface
+
+interface polymorphism- application use interface can contact with multiple different classes
+
+cover -> generics, exceptions, nested classes, ...
+
+Counter
+======
+
+something that goes up (doesn't matter how)
+
+interface (counter is a display and button)
+
+implementation
+
+specification 

@@ -1,0 +1,29 @@
+we don't care about what we put in...just where it is
+
+eveything is happening with positions
+
+list - boxes with out w/o neighbors- no boxes is also a list- empty list
+
+operations
+
+new
+empty
+insertBack
+insertFront
+removeFront
+removeBack
+
+remove: List<T> x Position<T> -> List<T>
+
+insertBefore:
+insertAfter
+
+array- get an integer at constant time
+
+
+takes forever with integer position
+
+we want everything to be private so no one can write code
+regarding nodes- you can't change ur code anymore
+
+you're handing them a node, they just don't know

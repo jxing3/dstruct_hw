@@ -1,0 +1,50 @@
+instead of 3 methods
+
+preorder (op)
+
+inorder (op)
+
+postorder (op)
+
+client makes the operations - operations interface takes care of it
+
+
+op.preorder()
+
+op.inorder()
+
+op.postorder()
+
+interface Operator<T> {
+  pre (Position<T>);
+  in ( );
+  post ();
+
+}
+
+can call tranverse(op);
+
+don't need three different methods in traverse
+
+need helper method
+
+public tranverse(op) calls the private method to make it work
+
+private traverse(Node<T> n, Operation<T> o) 
+
+
+n-ary tree - go to the left child and out to the right
+
+traversals for n-ary trees - 
+
+
+parent, and lots of children
+
+           |
+ ||||  ||||||||   |||
+
+preorder - before we hit any of the children
+
+postorder - after we done with all the children
+
+in order - go to parent between each of the two children

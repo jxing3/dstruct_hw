@@ -1,0 +1,25 @@
+Jesse Xing
+jxing3@jhu.edu
+
+Problem 1
+
+SparseGraph.java implements the graph interface using vertex nodes that 
+store their incoming edges and outgoing edges in an arralist. Edge nodes 
+stored the vertice it was coming from and the one it was connecting to.
+The program utilized a position method of indexing using vertex and edge
+positions that are given to the client. The program with this is that they
+need to be converted back to vertex and edge node objects for processing
+when they handed back to SparseGraph. In each case, an unchecked cast was
+unavoidable possibly due to the fact that neither vertex nor edge positions
+implements both variables (v and e) that are availiable to the inner node 
+objects. Test cases were written in TestGraph.java to ensure the implementation
+operated accordingly with the interface. Overall, I thought the interface 
+
+Problem 2
+
+DOS.java is a simple file system simulation. Everything was implemented
+according to the specifications provided. I utilized an entry class and 
+subclasses directory and file to keep track and distinguish between 
+entries. It was somewhat difficult to modularize the code to pass
+the cyclomatic complexity, but I was ultimately able to do it by breaking
+seperate operations into different pieces of code.

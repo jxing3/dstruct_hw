@@ -1,0 +1,7 @@
+digraph {
+  "a";
+  "b";
+  "c";
+  "a" -> "b" [label="X"];
+  "b" -> "c" [label="Y"];
+}

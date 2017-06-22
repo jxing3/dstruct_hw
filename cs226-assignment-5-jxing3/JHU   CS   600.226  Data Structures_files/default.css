@@ -1,0 +1,181 @@
+/*
+  New and improved cascading style sheet for JHU courses.
+
+  $Id: default.css 88 2007-09-06 15:52:32Z phf $
+
+  Quite a departure from my earlier, unobstrusive design.
+  Finally uses menus and has content split into multiple
+  pages for browsing fun. :-) I based this on bloat.org
+  to some extent.
+
+  Copyright (c) 2001-2006 by Peter H. Froehlich <phf at acm.org>.
+  Freely distributable for educational purposes.
+*/
+
+/* basics: black on grey, sans */
+body {
+  background: #eee;
+  color: #000;
+  font-family: sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+pre {
+  background: #eee;
+}
+
+/* blue-ish headings */
+h1, h2, h3, h4, h5, h6 { color: #036; }
+
+/* blue-ish color scheme for links */
+a:link { color: #369; }
+a:visited { color: #036; }
+a:hover { color: #36f; }
+a:active { color: #f00; }
+
+#head {
+  border-bottom: 1px solid #000;
+  margin: 0;
+  padding: 1em;
+}
+#head h1 {
+  float: left;
+  margin: 0;
+  padding: 0;
+}
+#head p.right {
+  margin: 0;
+  padding: 0;
+  text-align: right;
+}
+
+/* offering was a quick hack, there's probably a better way */
+#offering {
+  background: #036;
+  border-bottom: 1px solid #fff;
+  color: #fff;
+  font-weight: bold;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+}
+#offering p.left {
+  float: left;
+  margin: 0;
+  padding: 0.4em 0.4em;
+  text-align: left;
+}
+#offering p.right {
+  margin: 0;
+  padding: 0.4em 0.4em;
+  text-align: right;
+}
+
+#root {
+  background: #036;
+  margin: 0;
+  padding: 0;
+}
+
+#menu {
+  background: #036;
+  color: #fff;
+  float: left;
+  width: 8em;
+}
+#menu ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+#menu li {
+  text-align: left;
+}
+#menu li a {
+  background: #036;
+  color: #fff;
+  display: block;
+  padding: 0.4em 0.4em;
+  text-decoration: none;
+  border-bottom: 1px solid #fff;
+}
+#menu li a:hover {
+  background: #369;
+  color: #fff;
+}
+
+#main {
+  background: #fff;
+  margin: 0;
+  margin-left: 8em;
+  padding: 1em;
+  padding-left: 1em;
+  text-align: justify;
+}
+#main h1 {
+  color: red; /* debugging aid */
+}
+#main h2 {
+  margin: 0;
+  padding: 0;
+  border-bottom: 2px solid #ccc;
+}
+#main h3 {
+  margin: 0;
+  padding: 0;
+  border-bottom: 1px solid #ccc;
+}
+#main h3, h4, h5, h6 {
+  margin: 0;
+  margin-top: 1em;
+  padding: 0;
+}
+#main p {
+  font-family: serif;
+  line-height: 1.2em;
+  margin: 0;
+  margin-top: 1em;
+  padding: 0;
+}
+#main ul, ol {
+  font-family: serif;
+  line-height: 1.2em;
+}
+#main li {
+  margin: 0;
+  margin-top: 0.5em;
+  padding: 0;
+}
+#main table {
+  font-family: serif;
+  border: 1px solid #ccc;
+  margin: 0;
+  margin-top: 1em;
+  padding: 0;
+}
+#main th, td {
+  border: 1px solid #ccc;
+  text-align: center;
+  padding-left: 1em;
+  padding-right: 1em;
+}
+
+#foot {
+  border-top: 1px solid #000;
+  clear: both;
+  font-size: 0.8em;
+  margin: 0;
+  padding: 1em;
+}
+#foot p.left {
+  float: left;
+  margin: 0;
+  padding: 0;
+  text-align: left;
+}
+#foot p.right {
+  margin: 0;
+  padding: 0;
+  text-align: right;
+}

@@ -1,0 +1,185 @@
+/**
+    Unbounded generic double-ended queue made from a simple array.
+    @param <T> Type for queue elements.
+*/
+public class ArrayDequeue<T> implements Dequeue<T> {
+    private T[] rep;
+    private int front;
+    private int back;
+    private int size;
+
+/**
+   Constructor for arrayDequeue: creates an array to represent the structure of
+   size 2.
+
+*/
+
+    public ArrayDequeue() {
+
+        this.rep = (T[]) new Object[2];
+
+    }
+
+    /*grows array by 2 and shifts all data so that front is at 0 and
+    back is at size*/
+
+    private void grow() {
+        T[] bigger = (T[]) new Object[this.rep.length * 2];
+        int j = 0;
+        int i = this.front;
+
+        while (i != (this.back + this.rep.length - 1) % this.rep.length) {
+
+            bigger[j] = this.rep[i];
+            i = (i + this.rep.length + 1) % this.rep.length;
+            j++;
+        }
+        bigger[j] = this.rep[(this.back + this.rep.length - 1)
+            % this.rep.length];
+        this.rep = bigger;
+        this.front = 0;
+        this.back = this.size;
+    }
+
+
+   /**
+        No elements?
+        @return True if no elements, false otherwise.
+    */
+
+    public boolean empty() {
+
+        if (this.size == 0) {
+            return true;
+
+        }
+        return false;
+    }
+
+    /**
+        How many elements?
+        @return Number of elements in the queue.
+    */
+    public int length() {
+        return this.size;
+    }
+
+    /**
+        Front element?
+        @throws EmptyQueueException If queue is empty.
+        @return First element in the queue.
+    */
+    public T front() throws EmptyQueueException {
+        if (this.empty()) {
+            throw new EmptyQueueException();
+        }
+        return this.rep[this.front];
+
+    }
+
+    /**
+        Back element?
+        @throws EmptyQueueException If queue is empty.
+        @return Last element in the queue.
+    */
+    public T back() throws EmptyQueueException {
+
+        if (this.empty()) {
+            throw new EmptyQueueException();
+        }
+        return this.rep[(this.back - 1 + this.rep.length) % this.rep.length];
+
+    }
+
+    /**
+        Insert a new front element.
+        @param t Element to insert.
+    */
+    public void insertFront(T t) {
+        this.front = (this.front + this.rep.length - 1)  % this.rep.length;
+
+        this.rep[this.front] = t;
+        this.size++;
+
+        if (this.size == this.rep.length) {
+
+            this.grow();
+        }
+
+    }
+
+    /**
+        Insert a new back element.
+        @param t Element to insert.
+    */
+    public void insertBack(T t) {
+
+        this.back = (this.back + this.rep.length)  % this.rep.length;
+
+        this.rep[this.back] = t;
+        this.back = (this.back + 1 + this.rep.length)  % this.rep.length;
+        this.size++;
+        if (this.size == this.rep.length) {
+
+            this.grow();
+        }
+
+    }
+
+    /**
+        Remove front element.
+        @throws EmptyQueueException If queue is empty.
+    */
+    public void removeFront() throws EmptyQueueException {
+
+        if (this.empty()) {
+            throw new EmptyQueueException();
+        }
+
+        this.front = (this.front + 1 + this.rep.length) % this.rep.length;
+        this.size--;
+
+    }
+
+    /**
+        Remove back element.
+        @throws EmptyQueueException If queue is empty.
+    */
+    public void removeBack() throws EmptyQueueException {
+
+        if (this.empty()) {
+            throw new EmptyQueueException();
+        }
+        this.back = (this.back - 1 + this.rep.length) % this.rep.length;
+        this.size--;
+
+    }
+
+   /**
+      Returns string of Dequeue from front to back in following format:
+      [f, 2, ....,b].
+      @return the string specified in description
+
+   */
+
+    public String toString() {
+        String s = "[";
+        int i = this.front;
+
+        if (!this.empty()) {
+            while (i != (this.back + this.rep.length - 1) % this.rep.length) {
+
+                s += this.rep[i] + ", ";
+                i = (i + this.rep.length + 1) % this.rep.length;
+            }
+
+            s += this.rep[(this.back + this.rep.length - 1) % this.rep.length];
+        }
+
+        s += "]";
+
+        return s;
+
+    }
+
+}
